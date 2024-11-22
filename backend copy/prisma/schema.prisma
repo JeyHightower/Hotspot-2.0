@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int    @id @default(autoincrement())
+  username       String @unique @db.VarChar(30)
+  email          String @unique @db.VarChar(256)
+  hashedPassword String @db.VarChar(60)
+  firstName      String @db.Text
+  lastName       String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  spots    Spot[]
+  reviews  Review[]
+  bookings Booking[]
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  spot      Spot     @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  spotId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Spot {
+  id          Int     @id @default(autoincrement())
+  owner       User    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     Int
+  address     String
+  city        String
+  state       String
+  country     String
+  lat         Decimal
+  lng         Decimal
+  name        String
+  description String
+  price       Decimal
+
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  reviews  Review[]
+  images   SpotImage[]
+  bookings Booking[]
+}
+
+model SpotImage {
+  id      Int     @id @default(autoincrement())
+  spot    Spot    @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  spotId  Int
+  url     String
+  preview Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @default(now())
+}
+
+model Review {
+  id     Int    @id @default(autoincrement())
+  spot   Spot   @relation(fields: [spotId], references: [id], onDelete: Cascade) 
+  spotId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  review String
+  stars  Int
+
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  images ReviewImage[]
+
+  @@unique([userId, spotId])
+}
+
+model ReviewImage {
+  id       Int    @id @default(autoincrement())
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int
+  url      String
+
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @default(now())
+}
