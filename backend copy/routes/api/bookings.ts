@@ -1,15 +1,13 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { check } from "express-validator";
 import { handleValidationErrors, parseI32 } from "../../utils/validation.js";
-
-const router = Router();
-
 import bcrypt from "bcryptjs";
 import { setTokenCookie, restoreUser, requireAuth } from "../../utils/auth.js";
 import { bookingOverlap } from "../../utils/validation.js";
 import { prisma } from "../../dbclient.js";
 import { Booking } from "@prisma/client";
 
+const router = Router();
 function formatDate(d: Date): string {
 	return d.toISOString().split("T")[0]!;
 }

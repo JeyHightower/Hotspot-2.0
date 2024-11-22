@@ -9,7 +9,7 @@ async function main() {
 				username: "Demo-lition",
 				firstName: "John",
 				lastName: "Doe",
-				hashedPassword: bcrypt.hashSync("password1"),
+				hashedPassword: bcrypt.hashSync("password"),
 			},
 			{
 				email: "user1@user.io",

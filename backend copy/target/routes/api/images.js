@@ -1,7 +1,7 @@
 import { Router } from "express";
-const router = Router();
 import { requireAuth } from "../../utils/auth.js";
 import { prisma } from "../../dbclient.js";
+const router = Router();
 // ! Delete spot by imageId
 router.delete("/spot-images/:imageId", requireAuth, async (req, res) => {
     try {

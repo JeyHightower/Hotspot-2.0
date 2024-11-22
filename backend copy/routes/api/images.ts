@@ -1,13 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { check } from "express-validator";
 import { handleValidationErrors } from "../../utils/validation.js";
-
-const router = Router();
-
 import bcrypt from "bcryptjs";
 import { setTokenCookie, restoreUser, requireAuth } from "../../utils/auth.js";
 import { prisma } from "../../dbclient.js";
 
+const router = Router();
 // ! Delete spot by imageId
 
 router.delete("/spot-images/:imageId", requireAuth, async (req, res) => {

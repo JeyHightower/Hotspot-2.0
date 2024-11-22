@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { check } from "express-validator";
 import { handleValidationErrors } from "../../utils/validation.js";
-const router = Router();
 import bcrypt from "bcryptjs";
 import { setTokenCookie } from "../../utils/auth.js";
 import { prisma } from "../../dbclient.js";
+const router = Router();
 const validateLogin = [
     check("credential")
         .exists({ checkFalsy: true })

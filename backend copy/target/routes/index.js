@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path"; // Import path at the top
-const router = express.Router();
 import api from "./api.js";
+const router = express.Router();
 router.use("/api", api);
 // Determine if in production
 const isProduction = process.env["NODE_ENV"] === "production";
@@ -23,6 +23,7 @@ if (isProduction) {
 // Serve CSRF token for both development and production
 router.get("/api/csrf/restore", (req, res) => {
     const csrfToken = req.csrfToken();
+    console.log(csrfToken);
     res.cookie("XSRF-TOKEN", csrfToken); // Use the same cookie name
     return res.json({ "XSRF-Token": csrfToken });
 });

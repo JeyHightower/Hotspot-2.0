@@ -1,11 +1,9 @@
 import express from "express";
 import path from "path"; // Import path at the top
+import api from "./api.js";
 const router = express.Router();
 
-import api from "./api.js";
-
 router.use("/api", api);
-
 // Determine if in production
 const isProduction = process.env["NODE_ENV"] === "production";
 

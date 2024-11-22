@@ -7,7 +7,7 @@ const rootReducer = combineReducers({
 });
 
 let enhancer;
-if(import.meta.env.MODE === 'production') {
+if(import.meta.env.NODE === 'production') {
     enhancer = applyMiddleware(thunk);
 } else {
     const logger = (await import("redux-logger")).default;

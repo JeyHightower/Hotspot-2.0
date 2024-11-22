@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { check } from "express-validator";
 import { handleValidationErrors, parseI32 } from "../../utils/validation.js";
-const router = Router();
 import { requireAuth } from "../../utils/auth.js";
 import { prisma } from "../../dbclient.js";
+const router = Router();
 function formatDate(d) {
     return d.toISOString().split("T")[0];
 }

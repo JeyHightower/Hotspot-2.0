@@ -26,12 +26,12 @@ app.use(csurf({
         httpOnly: true,
     },
 }));
+app.use(routes);
 app.get("/api/csrf/restore", (req, res) => {
     const csrfToken = req.csrfToken();
     res.cookie("XSRF_TOKEN", csrfToken);
     return res.json({ "XSRF-Token": csrfToken });
 });
-app.use(routes);
 app.use(async (_req, _res, next) => {
     const err = new Error("Requested resource could not be found.");
     err.title = "Resource not found";

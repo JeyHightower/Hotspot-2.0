@@ -37,6 +37,11 @@ app.use(
   })
 );
 
+
+app.use(routes);
+
+
+
 app.get("/api/csrf/restore", (req, res) => {
   const csrfToken = req.csrfToken();
   res.cookie("XSRF_TOKEN", csrfToken);
@@ -44,7 +49,6 @@ app.get("/api/csrf/restore", (req, res) => {
 });
 
 
-app.use(routes);
 
 declare global {
   export interface Error {
