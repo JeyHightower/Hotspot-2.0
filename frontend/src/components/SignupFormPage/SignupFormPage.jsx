@@ -120,6 +120,6 @@ function SignupFormPage() {
       </form>
     </>
   );
-};
+}
 
 export default SignupFormPage;
