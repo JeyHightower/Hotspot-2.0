@@ -23,20 +23,18 @@ const Layout = () => {
 };
 
 // Create the router with the necessary future flags
-const router = createBrowserRouter(
-  [
-    {
-      element: <Layout />,
-      children: [
-        {
-          path: '/',
-          element: <h1>Welcome!</h1>,
-        },
-        // Additional routes can be added here
-      ],
-    },
-  ]
-);
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      {
+        path: '/',
+        element: <h1>Welcome!</h1>,
+      },
+      // Additional routes can be added here
+    ],
+  },
+]);
 
 function App() {
   return <RouterProvider router={router} />;

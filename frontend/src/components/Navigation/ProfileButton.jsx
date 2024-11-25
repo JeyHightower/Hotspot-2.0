@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { FaCircleUser } from "react-icons/fa6";import * as sessionActions from '../../store/session';
+import { FaCircleUser  } from "react-icons/fa6";
+import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
@@ -12,7 +13,7 @@ const ProfileButton = ({ user }) => {
 
   const toggleMenu = (e) => {
     e.stopPropagation();
-    setShowMenu(!showMenu);
+    setShowMenu((prev) => !prev); // Toggle the menu
   };
 
   useEffect(() => {
@@ -37,12 +38,12 @@ const ProfileButton = ({ user }) => {
     closeMenu();
   };
 
-  const ulClassName = 'profile-dropdown' + (showMenu ? '' : 'hidden');
+  const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden'); // Add 'hidden' class when not showing
 
   return (
     <>
       <button onClick={toggleMenu}>
-        <FaCircleUser />
+        <FaCircleUser  />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
@@ -58,16 +59,16 @@ const ProfileButton = ({ user }) => {
           </>
         ) : (
           <>
-              <OpenModalMenuItem
-                itemText="Log In"
-                onItemClick={closeMenu}
-                modalComponent={<LoginFormModal />}
-              />
-              <OpenModalMenuItem
-                itemText="Sign Up"
-                onItemClick={closeMenu}
-                modalComponent={<SignupFormModal />}
-              />
+            <OpenModalMenuItem
+              itemText="Log In"
+              onItemClick={closeMenu}
+              modalComponent={<LoginFormModal />}
+            />
+            <OpenModalMenuItem
+              itemText="Sign Up"
+              onItemClick={closeMenu}
+              modalComponent={<SignupFormModal />}
+            />
           </>
         )}
       </ul>

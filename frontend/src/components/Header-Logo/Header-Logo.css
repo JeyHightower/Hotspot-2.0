@@ -1,0 +1,12 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the left */
+    padding: 10px 20px;
+    background-color: #f8f8f8; /* Change to your preferred color */
+}
+
+.logo {
+    height: 50px; /* Adjust the size of your logo */
+    cursor: pointer; /* Change cursor to pointer for better UX */
+}

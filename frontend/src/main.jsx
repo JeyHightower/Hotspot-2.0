@@ -9,6 +9,7 @@ import { ModalProvider } from './components/Context/ModalContext';
 import { Modal } from './components/Context/Modal';
 import './index.css';
 
+
 const store = configureStore();
 
 if (import.meta.env.MODE !== 'production') {
