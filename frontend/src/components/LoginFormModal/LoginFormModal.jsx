@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useModal } from '../Context/Modal';
 import * as sessionActions from '../../store/session';
 import './LoginFormModal.css';
 
 const LoginFormModal = () => {
   const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
-
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
