@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useModal } from '../Context/Modal';
 import * as sessionActions from '../../store/session';
-import './SignupFormPage.css';
-const SignupFormPage = () => {
+import './SignupFormModal.css';
+const SignupFormModal = () => {
     const sessionUser = useSelector((state) => state.session.user);
-    const navigate = useNavigate();
      const dispatch = useDispatch();
 
   const [username, setUsername] = useState('');
@@ -15,11 +14,9 @@ const SignupFormPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const { closeModal } = useModal();
 
-  //!redirect if user is already logged in (works when commented out it but breaks when commented in).
-//   if (sessionUser) {
-//     navigate('/', { replace: true });
-//   }
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,7 +30,8 @@ const SignupFormPage = () => {
           lastName,
           password,
         }),
-      ).catch(async (res) => {
+      ).then(closeModal)
+      .catch(async (res) => {
         const data = await res.json();
         if (data?.errors) {
           setErrors(data.errors);
@@ -122,4 +120,4 @@ const SignupFormPage = () => {
   );
 }
 
-export default SignupFormPage;
+export default SignupFormModal;
