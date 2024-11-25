@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import './SignupFormPage.css';
-function SignupFormPage() {
+const SignupFormPage = () => {
     const sessionUser = useSelector((state) => state.session.user);
     const navigate = useNavigate();
      const dispatch = useDispatch();
@@ -16,7 +16,7 @@ function SignupFormPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
 
-  //!redirect if user is already logged in(works when commented out it but breaks when commented in).
+  //!redirect if user is already logged in (works when commented out it but breaks when commented in).
 //   if (sessionUser) {
 //     navigate('/', { replace: true });
 //   }

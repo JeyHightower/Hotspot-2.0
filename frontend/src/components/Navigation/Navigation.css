@@ -1,0 +1,65 @@
+/* Navigation.css */
+
+/* Basic reset for the list */
+ul {
+    list-style-type: none; /* Remove default bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+  }
+  
+  /* Style for the navigation links */
+  li {
+    display: inline-block; /* Display list items inline */
+    margin-right: 20px; /* Space between items */
+  }
+  
+  /* Style for the links */
+  a {
+    text-decoration: none; /* Remove underline from links */
+    color: #333; /* Dark color for links */
+    font-weight: bold; /* Bold text */
+    transition: color 0.3s; /* Smooth color transition */
+  }
+  
+  /* Hover effect for links */
+  a:hover {
+    color: #007BFF; /* Change color on hover */
+  }
+  
+  /* Profile dropdown menu styles */
+  .profile-dropdown {
+    position: absolute; /* Positioning for dropdown */
+    top: 100%; /* Position below the button */
+    right: 0; /* Align to the right */
+    background-color: white; /* White background */
+    border: 1px solid #ccc; /* Light gray border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    z-index: 1000; /* Ensure dropdown is on top */
+    padding: 10px; /* Padding inside dropdown */
+    width: 200px; /* Set a width for the dropdown */
+  }
+  
+  /* Hidden class for dropdown */
+  .hidden {
+    display: none; /* Hide the dropdown */
+  }
+  
+  /* Style for dropdown items */
+  .profile-dropdown li {
+    margin: 0; /* Reset margin for dropdown items */
+  }
+  
+  /* Style for dropdown buttons */
+  .profile-dropdown button {
+    background: none; /* No background */
+    border: none; /* No border */
+    color: #007BFF; /* Link color */
+    cursor: pointer; /* Pointer cursor */
+    text-align: left; /* Align text to the left */
+    width: 100%; /* Full width for button */
+  }
+  
+  /* Hover effect for dropdown buttons */
+  .profile-dropdown button:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
