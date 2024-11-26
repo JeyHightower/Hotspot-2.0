@@ -72,3 +72,19 @@ button {
 button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+/* Disabled Button Styles */
+button:disabled {
+    background-color: #c0c0c0; /* Light gray background for disabled state */
+    color: #7d7d7d; /* Darker gray text for disabled state */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+}
+
+/* Disabled Button Hover Styles */
+button:disabled:hover {
+    background-color: #c0c0c0; /* Keep the same background when hovered */
+}
+
+input.error {
+    border-color: red; /* Red border for inputs with errors */
+}

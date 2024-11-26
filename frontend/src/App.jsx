@@ -31,7 +31,6 @@ const router = createBrowserRouter([
         path: '/',
         element: <h1>Welcome!</h1>,
       },
-      // Additional routes can be added here
     ],
   },
 ]);
