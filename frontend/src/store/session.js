@@ -8,7 +8,7 @@ const REMOVE_SESSION_USER = 'session/removeSessionUser';
 const setSessionUser = (user) => {
   return {
     type: SET_SESSION_USER,
-    payload: user
+    payload: user,
   };
 };
 
@@ -21,12 +21,12 @@ const removeSessionUser = () => {
 //!THUNK ACTIONS:
 export const loginThunk = (user) => async (dispatch) => {
   const { credential, password } = user;
-  const response = await csrfFetch("/api/session", {
-    method: "POST",
+  const response = await csrfFetch('/api/session', {
+    method: 'POST',
     body: JSON.stringify({
       credential,
       password,
-    })
+    }),
   });
   const data = await response.json();
   dispatch(setSessionUser(data.user));
@@ -34,7 +34,7 @@ export const loginThunk = (user) => async (dispatch) => {
 };
 
 export const restoreUserThunk = () => async (dispatch) => {
-  const response = await csrfFetch("/api/session");
+  const response = await csrfFetch('/api/session');
   const data = await response.json();
   dispatch(setSessionUser(data.user));
   return response;
@@ -42,15 +42,15 @@ export const restoreUserThunk = () => async (dispatch) => {
 
 export const signupThunk = (user) => async (dispatch) => {
   const { username, firstName, lastName, email, password } = user;
-  const response = await csrfFetch("/api/users", {
-    method: "POST",
+  const response = await csrfFetch('/api/users', {
+    method: 'POST',
     body: JSON.stringify({
       username,
       firstName,
       lastName,
       email,
-      password
-    })
+      password,
+    }),
   });
   const data = await response.json();
   dispatch(setSessionUser(data.user));
@@ -58,16 +58,16 @@ export const signupThunk = (user) => async (dispatch) => {
 };
 
 export const logoutThunk = () => async (dispatch) => {
-  const response = await csrfFetch("/api/session", {
-    method: "DELETE"
-});
+  const response = await csrfFetch('/api/session', {
+    method: 'DELETE',
+  });
   dispatch(removeSessionUser());
   return response;
 };
 
 //!INITIAL STATE:
 const initialState = {
-  user: null
+  user: null,
 };
 
 //!REDUCERS:

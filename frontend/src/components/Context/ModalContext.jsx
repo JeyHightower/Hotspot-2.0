@@ -1,6 +1,7 @@
 // ModalContext.js
 import { useRef, createContext, useState, useContext } from 'react';
 
+
 const ModalContext = createContext();
 
 export const ModalProvider = ({ children }) => {

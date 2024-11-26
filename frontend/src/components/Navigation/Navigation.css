@@ -90,3 +90,77 @@ a:hover {
   background-color: #f0f0f0; /* Light gray background on hover */
   color: #007BFF; /* Change text color on hover */
 }
+
+/* Profile button styling */
+.profile-button-container button {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+  font-size: 24px;
+  color: #2d2d2d;
+}
+
+.profile-button-container button:hover {
+  transform: scale(1.1);
+  color: #007BFF;
+}
+
+/* Enhanced dropdown styling */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  width: 240px;
+  z-index: 1000;
+}
+
+.profile-dropdown li {
+  display: block;
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.profile-dropdown li:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* User info styling */
+.profile-dropdown li.user-info {
+  font-weight: 500;
+  color: #2d2d2d;
+}
+
+.profile-dropdown li.user-email {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Logout button styling */
+.profile-dropdown button.logout-button {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 8px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  color: #e32636;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-dropdown button.logout-button:hover {
+  background-color: #ffe5e5;
+}

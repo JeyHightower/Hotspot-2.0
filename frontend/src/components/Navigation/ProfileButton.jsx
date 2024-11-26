@@ -39,22 +39,23 @@ const ProfileButton = ({ user }) => {
   };
 
   const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden'); // Add 'hidden' class when not showing
-
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaCircleUser  />
+      <button onClick={toggleMenu} className="profile-trigger">
+        <FaCircleUser />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>
+            <li className="user-info">{user.username}</li>
+            <li className="user-info">
               {user.firstName} {user.lastName}
             </li>
-            <li>{user.email}</li>
+            <li className="user-email">{user.email}</li>
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button className="logout-button" onClick={logout}>
+                Log Out
+              </button>
             </li>
           </>
         ) : (
