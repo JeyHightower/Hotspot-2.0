@@ -11,18 +11,39 @@ const LoginFormModal = () => {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  const resetForm = () => {
+    setCredential('');
+    setPassword('');
+    setErrors({});
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.loginThunk({ credential, password })).then(closeModal).catch(async (res) => {
-      const data = await res.json();
-      if(data && data.errors) {
-        setErrors(data.errors);
-      }
+  
+    return dispatch(sessionActions.loginThunk({ credential, password }))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+        } else {
+          setErrors({ credential: "The provided credentials were invalid" });
+        }
+      });
+  };
+
+  const handleDemoLogin = (e) => {
+    e.preventDefault();
+    return dispatch(sessionActions.loginThunk({credential: 'demo@user.io', password: 'password1'}))
+    .then(() => {
+      resetForm();
+      closeModal();
     });
   };
-       
+
+       const loginDisabled = credential.length < 4 || password.length < 6;
+
   return (
     <>
       <h1>Log In</h1>
@@ -45,8 +66,13 @@ const LoginFormModal = () => {
             required
           />
         </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+        {errors.credential && <p className="error">{errors.credential}</p>}
+        {errors.password && <p className="error">{errors.password}</p>}
+        {errors.general && <p className="error">{errors.general}</p>}
+        <button type="submit" disabled={loginDisabled}>Log In</button>
+        <button type="button" onClick={handleDemoLogin} className="demo-button">
+          Demo User
+        </button>
       </form>
     </>
   );
