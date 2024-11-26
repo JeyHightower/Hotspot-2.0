@@ -16,7 +16,7 @@
 		"start": "per-env",
 		"start:development": "dotenv nodemon ./target/bin/www.js",
 		"start:production": "node ./target/bin/www.js",
-		"build": "node psql-setup-script.js"
+		"build": "tsc && npx prisma generate"
 	},
 	"keywords": [],
 	"author": "",
