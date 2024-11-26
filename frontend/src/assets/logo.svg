@@ -1,0 +1,18 @@
+<svg width="150" height="40" viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient definition for a hot effect -->
+  <defs>
+    <linearGradient id="hotGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff4d4d"/>
+      <stop offset="100%" style="stop-color:#ff8533"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main text with heat gradient -->
+  <text x="10" y="30" font-family="Arial" font-size="24" font-weight="bold" fill="url(#hotGradient)">
+    HotSpotS
+  </text>
+  
+  <!-- Heat wave effect circles -->
+  <circle cx="130" cy="20" r="8" fill="#ff4d4d"/>
+  <circle cx="130" cy="20" r="4" fill="#ff8533"/>
+</svg>

@@ -23,7 +23,7 @@ a {
 
 /* Hover effect for links */
 a:hover {
-  color: #007BFF; /* Change color on hover */
+  color: red; /* Change color on hover */
 }
 
 /* Profile button container */
@@ -72,7 +72,7 @@ a:hover {
 /* Hover effect for dropdown buttons */
 .profile-dropdown button:hover {
   background-color: #f0f0f0; /* Light gray background on hover */
-  color: #007BFF; /* Change text color on hover */
+  color: red; /* Change text color on hover */
 }
 
 /* Optional: Style for dropdown items to look like links */
@@ -88,26 +88,26 @@ a:hover {
 /* Hover effect for dropdown links */
 .profile-dropdown li a:hover {
   background-color: #f0f0f0; /* Light gray background on hover */
-  color: #007BFF; /* Change text color on hover */
+  color: red; /* Change text color on hover */
 }
 
 /* Profile button styling */
 .profile-button-container button {
+  font-size: 32px; /* Increased from 24px */
+  padding: 12px;
+  color: #1a1a1a;
   background: transparent;
   border: none;
-  padding: 8px;
-  border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
-  transition: transform 0.2s ease;
-  font-size: 24px;
-  color: #2d2d2d;
+  transition: all 0.3s ease;
 }
 
 .profile-button-container button:hover {
   transform: scale(1.1);
-  color: #007BFF;
+  color: #ff385c; /* Modern red shade, similar to Airbnb */
+  filter: drop-shadow(0 0 8px rgba(255, 56, 92, 0.2));
 }
 
 /* Enhanced dropdown styling */
