@@ -1,0 +1,17 @@
+{
+  "name": "hotspot-2.0",
+  "version": "1.0.0",
+  "description": "Hotspot-2.0 full stack application",
+  "main": "index.js",
+  "scripts": {
+    "render-postbuild": "npm run build --prefix frontend",
+    "install": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm install --prefix backend start",
+    "dev:frontend": "npm install --prefix frontend start",
+    "build": "npm install && npm run build --prefix backend && npm run build --prefix frontend && npm run prisma --prefix backend db:push",
+    "start": "npm start --prefix backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
