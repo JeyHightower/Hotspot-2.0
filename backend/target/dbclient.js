@@ -1,6 +1,4 @@
-import pkg from '@prisma/client';
-
-const { Prisma, PrismaClient } = pkg;
+import { Prisma, PrismaClient } from "@prisma/client";
 const userValidate = Prisma.defineExtension({
     name: "userValidate",
     query: {

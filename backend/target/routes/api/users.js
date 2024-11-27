@@ -33,7 +33,7 @@ const validateSignup = [
         .withMessage("lastName must be passed"),
     handleValidationErrors,
 ];
-router.post("/", validateSignup, async (req, res, next) => {
+router.post('/', validateSignup, async (req, res) => {
     const { email, password, username, firstName, lastName } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
     try {
@@ -63,7 +63,7 @@ router.post("/", validateSignup, async (req, res, next) => {
             for (const field of fields) {
                 err.errors[field] = `User with that ${field} already exists`;
             }
-            return next(err);
+            throw err;
         }
         else {
             throw e;

@@ -160,4 +160,10 @@ router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
     }
 });
 export default router;
+router.get('/', async (req, res) => {
+    // existing code
+});
+router.post('/:spotId/reviews', async (req, res) => {
+    // existing code
+});
 //# sourceMappingURL=reviews.js.map

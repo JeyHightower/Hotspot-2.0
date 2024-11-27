@@ -15,7 +15,7 @@ const validateLogin = [
         .withMessage("Please provide a password."),
     handleValidationErrors,
 ];
-router.post("/", validateLogin, async (req, res, next) => {
+router.post('/', validateLogin, async (req, res) => {
     const { credential, password } = req.body;
     console.log(credential, password);
     const user = await prisma.user.findFirst({

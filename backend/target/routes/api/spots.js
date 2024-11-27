@@ -4,6 +4,20 @@ import { check, checkSchema } from "express-validator";
 import { requireAuth } from "../../utils/auth.js";
 import { prisma } from "../../dbclient.js";
 const router = Router();
+async function getSpot(id, res, cb) {
+    let spotId = parseSpotId(id, res);
+    if (spotId) {
+        let data = await cb(spotId);
+        if (data) {
+            return data;
+        }
+        res.status(404).json({ message: "Spot couldn't be found" });
+        return null;
+    }
+    else {
+        return null;
+    }
+}
 function transformSpot(wholeSpot) {
     const { images, reviews, lat, lng, price, ...spot } = wholeSpot;
     return {
@@ -24,20 +38,6 @@ function parseSpotId(spotId, res) {
     }
     else {
         res.status(404).json({ message: "Spot couldn't be found" });
-        return null;
-    }
-}
-async function getSpot(id, res, cb) {
-    let spotId = parseSpotId(id, res);
-    if (spotId) {
-        let data = await cb(spotId);
-        if (data) {
-            return data;
-        }
-        res.status(404).json({ message: "Spot couldn't be found" });
-        return null;
-    }
-    else {
         return null;
     }
 }
@@ -86,7 +86,7 @@ const validateNewSpot = [
     handleValidationErrors,
 ];
 router.get("/:spotId", async (req, res) => {
-    const spot = await getSpot(req.params.spotId, res, (spotId) => prisma.spot.findFirst({
+    const spot = await getSpot(req.params["spotId"], res, (spotId) => prisma.spot.findFirst({
         where: { id: spotId },
         include: {
             images: { select: { id: true, url: true, preview: true } },
@@ -340,7 +340,7 @@ const getChecks = checkSchema({
     maxLng: { isDecimal: true, optional: true },
     minPrice: { isFloat: { options: { min: 0 } }, optional: true },
     maxPrice: { isFloat: { options: { min: 0 } }, optional: true },
-}, ["query"]);
+}, ['query']);
 router.get("/", getChecks, handleValidationErrors, async (req, res) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
     const where = {};
