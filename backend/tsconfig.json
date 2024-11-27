@@ -22,6 +22,7 @@
 	  "allowUnusedLabels": true,
 	  "allowUnreachableCode": true,
 	  "skipLibCheck": true,
+	  "types": ["node", "express"]
 	},
 	"include": ["routes/**/*", "app.ts", "dbclient.ts", "bin/**/*"]
   }
