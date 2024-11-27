@@ -2,165 +2,111 @@
 
 /* Basic reset for the list */
 ul {
-  list-style-type: none; /* Remove default bullet points */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 /* Style for the navigation links */
 li {
-  display: inline-block; /* Display list items inline */
-  margin-right: 20px; /* Space between items */
+  display: inline-block;
+  margin-right: 25px;
 }
 
 /* Style for the links */
 a {
-  text-decoration: none; /* Remove underline from links */
-  color: #333; /* Dark color for links */
-  font-weight: bold; /* Bold text */
-  transition: color 0.3s; /* Smooth color transition */
+  text-decoration: none;
+  color: #2d2d2d;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
 }
 
 /* Hover effect for links */
 a:hover {
-  color: red; /* Change color on hover */
+  color: #FF416C;
+  background-color: rgba(255, 65, 108, 0.1);
 }
 
 /* Profile button container */
 .profile-button-container {
-  position: relative; /* Position relative to allow dropdown positioning */
-  float: right; /* Align the button container to the right */
-}
-
-/* Profile dropdown menu styles */
-.profile-dropdown {
-  position: absolute; /* Positioning for dropdown */
-  top: 100%; /* Position below the button */
-  right: 0; /* Align to the right of the button */
-  background-color: white; /* White background */
-  border: 1px solid #ccc; /* Light gray border */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  z-index: 1000; /* Ensure dropdown is on top */
-  padding: 10px; /* Padding inside dropdown */
-  width: 200px; /* Set a width for the dropdown */
-  border-radius: 4px; /* Slightly rounded corners */
-}
-
-/* Hidden class for dropdown */
-.hidden {
-  display: none; /* Hide the dropdown */
-}
-
-/* Style for dropdown items */
-.profile-dropdown li {
-  margin: 5px 0; /* Add vertical margin between dropdown items */
-}
-
-/* Style for dropdown buttons */
-.profile-dropdown button {
-  background: none; /* No background */
-  border: none; /* No border */
-  color: #333; /* Dark color for text */
-  cursor: pointer; /* Pointer cursor */
-  text-align: left; /* Align text to the left */
-  width: 100%; /* Full width for button */
-  padding: 8px 10px; /* Padding for better click area */
-  border-radius: 4px; /* Slightly rounded corners for buttons */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover */
-}
-
-/* Hover effect for dropdown buttons */
-.profile-dropdown button:hover {
-  background-color: #f0f0f0; /* Light gray background on hover */
-  color: red; /* Change text color on hover */
-}
-
-/* Optional: Style for dropdown items to look like links */
-.profile-dropdown li a {
-  color: #333; /* Dark color for links */
-  text-decoration: none; /* Remove underline */
-  display: block; /* Make the link a block element */
-  padding: 8px 10px; /* Padding for better click area */
-  border-radius: 4px; /* Slightly rounded corners */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover */
-}
-
-/* Hover effect for dropdown links */
-.profile-dropdown li a:hover {
-  background-color: #f0f0f0; /* Light gray background on hover */
-  color: red; /* Change text color on hover */
+  position: relative;
+  margin-left: auto;
 }
 
 /* Profile button styling */
 .profile-button-container button {
-  font-size: 32px; /* Increased from 24px */
+  font-size: 24px;
   padding: 12px;
-  color: #1a1a1a;
+  color: #2d2d2d;
   background: transparent;
   border: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
   transition: all 0.3s ease;
 }
-
 .profile-button-container button:hover {
-  transform: scale(1.1);
-  color: #ff385c; /* Modern red shade, similar to Airbnb */
-  filter: drop-shadow(0 0 8px rgba(255, 56, 92, 0.2));
+transform: scale(1.05);
+color: #FF416C;
 }
 
 /* Enhanced dropdown styling */
 .profile-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  padding: 12px;
-  width: 240px;
+  top: calc(100% + 15px);
+  right: -10px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 280px;
   z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.profile-button-container {
+  position: relative;
+  margin-left: auto;
+  padding-right: 10px;
 }
 
 .profile-dropdown li {
   display: block;
-  padding: 8px 12px;
-  margin: 4px 0;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.profile-dropdown li:not(:last-child) {
-  border-bottom: 1px solid #f0f0f0;
+  margin: 10px 0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  white-space: nowrap;
 }
 
 /* User info styling */
 .profile-dropdown li.user-info {
-  font-weight: 500;
+  font-weight: 600;
   color: #2d2d2d;
-}
-
-.profile-dropdown li.user-email {
-  color: #666;
-  font-size: 13px;
+  background: linear-gradient(90deg, #fff5f5, #fff);
 }
 
 /* Logout button styling */
 .profile-dropdown button.logout-button {
   width: 100%;
-  padding: 8px 12px;
-  margin-top: 8px;
-  background-color: #f0f0f0;
+  padding: 10px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  color: white;
   border: none;
-  border-radius: 6px;
-  color: #e32636;
+  border-radius: 8px;
   font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .profile-dropdown button.logout-button:hover {
-  background-color: #ffe5e5;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 65, 108, 0.2);
+}
+
+/* Hidden class for dropdown */
+.hidden {
+display: none; /* Hide the dropdown */
 }

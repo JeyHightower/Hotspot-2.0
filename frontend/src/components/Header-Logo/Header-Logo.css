@@ -1,12 +1,19 @@
 .header {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Align items to the left */
-    padding: 10px 20px;
-    background-color: #f8f8f8; /* Change to your preferred color */
+    justify-content: space-between;
+    padding: 15px 40px;
+    background: linear-gradient(to right, #ffffff, #fff5f5);
+    box-shadow: 0 2px 15px rgba(255, 65, 108, 0.1);
 }
 
 .logo {
-    height: 50px; /* Adjust the size of your logo */
-    cursor: pointer; /* Change cursor to pointer for better UX */
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(255, 65, 108, 0.2));
 }
