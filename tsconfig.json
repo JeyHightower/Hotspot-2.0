@@ -26,8 +26,8 @@
 	},
 	"typeRoots": [
         "./node_modules/@types",
-        "./node_modules/@types/express",
-        "./node_modules/@types/node"
+        "./backend/node_modules/@types",
+        "./frontend/node_modules/@types"
       ],
-	"include": ["routes/**/*", "app.ts", "dbclient.ts", "bin/**/*"]
+	"include": ["./backend/routes/**/*", "./backend/app.ts", "./backend/dbclient.ts", "./backend/bin/**/*"]
   }
