@@ -1,33 +1,38 @@
 {
-	"compilerOptions": {
-	  "target": "ES2023",
-	  "module": "Node16",
-	  "moduleResolution": "Node16",
-	  "incremental": true,
-	  "outDir": "target",
-	  "sourceMap": true,
-	  "esModuleInterop": true,
-	  "forceConsistentCasingInFileNames": true,
-	  "strict": true,
-	  "noImplicitAny": true,
-	  "noImplicitThis": true,
-	  "useUnknownInCatchVariables": true,
-	  "alwaysStrict": true,
-	  "exactOptionalPropertyTypes": true,
-	  "noImplicitReturns": true,
-	  "noFallthroughCasesInSwitch": true,
-	  "noUncheckedIndexedAccess": true,
-	  "noImplicitOverride": true,
-	  "noPropertyAccessFromIndexSignature": true,
-	  "allowUnusedLabels": true,
-	  "allowUnreachableCode": true,
-	  "skipLibCheck": true,
-	  "types": ["node", "express"]
-	},
-	"typeRoots": [
-        "./node_modules/@types",
-        "./backend/node_modules/@types",
-        "./frontend/node_modules/@types"
-      ],
-	"include": ["./backend/routes/**/*", "./backend/app.ts", "./backend/dbclient.ts", "./backend/bin/**/*"]
-  }
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "incremental": true,
+    "outDir": "target",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "allowUnusedLabels": true,
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
+    "types": ["node", "express"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./backend/node_modules/@types",
+      "./frontend/node_modules/@types"
+    ]
+  },
+  "include": [
+    "./backend/routes/**/*",
+    "./backend/app.ts",
+    "./backend/dbclient.ts",
+    "./backend/bin/**/*"
+  ]
+}
