@@ -30,5 +30,5 @@
 	  ],
 	  "types": ["node", "express"]
 	},
-	"include": ["routes/**/*", "app.ts", "dbclient.ts"]
+	"include": ["routes/**/*", "app.ts", "dbclient.ts", "bin/**/*"]
   }
