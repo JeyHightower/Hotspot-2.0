@@ -1,5 +1,6 @@
 import { prisma } from "../dbclient.js";
 import bcrypt from "bcryptjs";
+import type { NodeJs } from 'node';
 
 async function main() {
 	await prisma.user.createMany({
@@ -72,4 +73,5 @@ main()
 		console.error(e);
 		await prisma.$disconnect();
 		process.exit(1);
+
 	});
