@@ -7,7 +7,7 @@
     "render-postbuild": "npm run build --prefix frontend",
     "dev:backend": "npm install --prefix backend start",
     "dev:frontend": "npm install --prefix frontend start",
-    "build": "cd backend && npm install @types/express @types/morgan @types/cors @types/csurf @types/cookie-parser @types/node @types/bcryptjs @types/jsonwebtoken && tsc && npx prisma generate && cd ../frontend && npm run build && cd ../backend && npx prisma db:push",
+    "build": "cd backend && npm install && npm install -D && tsc && npx prisma generate && cd ../frontend && npm run build && cd ../backend && npx prisma db",
     "start": "npm start --prefix backend"
   },
   "keywords": [],
