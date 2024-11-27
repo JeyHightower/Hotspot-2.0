@@ -24,7 +24,9 @@
 	  "skipLibCheck": true,
 	  "typeRoots": [
 		"./node_modules/@types",
-		"./node_modules/@types/morgan"
+		"./node_modules/@types/morgan",
+		"./node_modules/@types/express",
+		"./node_modules/@types/node"
 	  ],
 	  "types": ["node", "express"]
 	},
