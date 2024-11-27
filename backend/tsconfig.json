@@ -22,12 +22,6 @@
 	  "allowUnusedLabels": true,
 	  "allowUnreachableCode": true,
 	  "skipLibCheck": true,
-	  "typeRoots": [
-		"./node_modules/@types",
-		//"./node_modules/@types/morgan",
-		//"./node_modules/@types/express",
-		//"./node_modules/@types/node"
-	  ],
 	  "types": ["node", "express"]
 	},
 	"include": ["routes/**/*", "app.ts", "dbclient.ts", "bin/**/*"]
