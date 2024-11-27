@@ -1,15 +1,15 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response } from "express";
 import { check } from "express-validator";
 import { handleValidationErrors, parseI32 } from "../../utils/validation.js";
-import bcrypt from "bcryptjs";
 import { setTokenCookie, restoreUser, requireAuth } from "../../utils/auth.js";
 import { bookingOverlap } from "../../utils/validation.js";
 import { prisma } from "../../dbclient.js";
 import { Booking } from "@prisma/client";
 
 const router = Router();
+
 function formatDate(d: Date): string {
-	return d.toISOString().split("T")[0]!;
+  return d.toISOString().split("T")[0]!;
 }
 
 router.get("/current", requireAuth, async (req, res) => {
@@ -57,18 +57,16 @@ router.get("/current", requireAuth, async (req, res) => {
 });
 
 const validateNewBooking = [
-	check("startDate")
-		.exists({ checkFalsy: true })
-		.isDate()
-		.withMessage("startDate is required"),
-	check("endDate")
-		.exists({ checkFalsy: true })
-		.isDate()
-		.withMessage("endDate is required"),
-
-	handleValidationErrors,
+  check("startDate")
+    .exists({ checkFalsy: true })
+    .isDate()
+    .withMessage("startDate is required"),
+  check("endDate")
+    .exists({ checkFalsy: true })
+    .isDate()
+    .withMessage("endDate is required"),
+  handleValidationErrors,
 ];
-
 router.put(
 	"/:bookingId",
 	requireAuth,

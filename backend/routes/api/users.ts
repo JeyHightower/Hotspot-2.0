@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router } from "express";
 import { handleValidationErrors } from "../../utils/validation.js";
 import bcrypt from "bcryptjs";
 import { check } from "express-validator";
@@ -9,6 +9,7 @@ import {
 	PrismaClientKnownRequestError,
 	PrismaClientValidationError,
 } from "@prisma/client/runtime/library";
+import { Request, Response } from 'express';
 
 const router = Router();
 
@@ -40,53 +41,48 @@ const validateSignup = [
 	handleValidationErrors,
 ];
 
-router.post(
-	"/",
-	validateSignup,
-	async (req: Request, res: Response, next: NextFunction) => {
-		const { email, password, username, firstName, lastName } = req.body;
-		const hashedPassword = bcrypt.hashSync(password);
+router.post('/', validateSignup, async (req: Request, res: Response) => {
+	const { email, password, username, firstName, lastName } = req.body;
+	const hashedPassword = bcrypt.hashSync(password);
 
-		try {
-			const user = await prisma.user.create({
-				data: { email, username, hashedPassword, firstName, lastName },
-			});
+	try {
+		const user = await prisma.user.create({
+			data: { email, username, hashedPassword, firstName, lastName },
+		});
 
-			const safeUser = {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-			};
+		const safeUser = {
+			id: user.id,
+			email: user.email,
+			username: user.username,
+		};
 
-			setTokenCookie(res, safeUser);
+		setTokenCookie(res, safeUser);
 
-			res.status(201);
+		res.status(201);
 
-			return res.json({
-				user: { ...safeUser, firstName, lastName },
-			});
-		} catch (e) {
-			if (e instanceof PrismaClientKnownRequestError) {
-				let fields = e.meta?.["target"];
+		return res.json({
+			user: { ...safeUser, firstName, lastName },
+		});
+	} catch (e) {
+		if (e instanceof PrismaClientKnownRequestError) {
+			let fields = e.meta?.["target"];
 
-				if (!(fields instanceof Array)) {
-					throw Error("meta.target must be array");
-				}
-
-				let err = new Error("User already exists");
-				err.message = "User already exists";
-				err.errors = {};
-
-				for (const field of fields) {
-					err.errors[field] = `User with that ${field} already exists`;
-				}
-
-				return next(err);
-			} else {
-				throw e;
+			if (!(fields instanceof Array)) {
+				throw Error("meta.target must be array");
 			}
-		}
-	},
-);
 
+			let err = new Error("User already exists");
+			err.message = "User already exists";
+			err.errors = {};
+
+			for (const field of fields) {
+				err.errors[field] = `User with that ${field} already exists`;
+			}
+
+			throw err;
+		} else {
+			throw e;
+		}
+	}
+});
 export default router;

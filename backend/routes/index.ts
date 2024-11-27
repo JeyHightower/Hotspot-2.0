@@ -1,6 +1,8 @@
 import express from "express";
 import path from "path"; // Import path at the top
 import api from "./api.js";
+import { Request, Response } from 'express';
+
 const router = express.Router();
 
 router.use("/api", api);
@@ -25,12 +27,21 @@ if (isProduction) {
   });
 }
 
+
 // Serve CSRF token for both development and production
-router.get("/api/csrf/restore", (req, res) => {
+router.get("/api/csrf/restore", (req: Request, res: Response) => {
   const csrfToken = req.csrfToken();
   console.log(csrfToken);
   res.cookie("XSRF-TOKEN", csrfToken); // Use the same cookie name
   return res.json({ "XSRF-Token": csrfToken });
+});
+
+router.get('/', async (req: Request, res: Response) => {
+  // existing code
+});
+
+router.get('*', async (req: Request, res: Response) => {
+  // existing code
 });
 
 export default router;

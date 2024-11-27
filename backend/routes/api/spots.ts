@@ -17,11 +17,32 @@ import { Booking, Prisma, Spot } from "@prisma/client";
 
 const router = Router();
 
+async function getSpot<T>(
+  id: string | undefined,
+  res: Response,
+  cb: (id: number) => Promise<T>
+): Promise<T | null> {
+	let spotId = parseSpotId(id, res);
+
+	if (spotId) {
+		let data = await cb(spotId);
+
+		if (data) {
+			return data;
+		}
+
+		res.status(404).json({ message: "Spot couldn't be found" });
+		return null;
+	} else {
+		return null;
+	}
+}
+
 function transformSpot(
-	wholeSpot: Spot & {
-		reviews: { stars: number }[];
-		images: { url: string }[];
-	},
+  wholeSpot: Spot & {
+    reviews: { stars: number }[];
+    images: { url: string }[];
+  }
 ): object {
 	const { images, reviews, lat, lng, price, ...spot } = wholeSpot;
 
@@ -47,143 +68,92 @@ function parseSpotId(spotId: string | undefined, res: Response): number | null {
 		return null;
 	}
 }
-
-async function getSpot<T>(
-	id: string | undefined,
-	res: Response,
-	cb: (id: number) => Promise<T>,
-): Promise<T | null> {
-	let spotId = parseSpotId(id, res);
-
-	if (spotId) {
-		let data = await cb(spotId);
-
-		if (data) {
-			return data;
-		}
-
-		res.status(404).json({ message: "Spot couldn't be found" });
-		return null;
-	} else {
-		return null;
+	function formatDate(d: Date): string {
+		return d.toISOString().split("T")[0]!;
 	}
-}
 
-function formatDate(d: Date): string {
-	return d.toISOString().split("T")[0]!;
-}
-
-router.get("/current", requireAuth, async (req, res) => {
-	const allSpots = await prisma.spot.findMany({
-		where: { ownerId: req.user!.id },
-		include: {
-			images: { where: { preview: true }, select: { url: true } },
-			reviews: { select: { stars: true } },
-		},
-	});
-
-	const modspots = allSpots.map(transformSpot);
-
-	res.json({ Spots: modspots });
-});
-
-const validateNewSpot = [
-	check("address")
-		.exists({ checkFalsy: true })
-		.withMessage("Street address is required"),
-	check("city").exists({ checkFalsy: true }).withMessage("City is required"),
-	check("state").exists({ checkFalsy: true }).withMessage("State is required"),
-	check("country")
-		.exists({ checkFalsy: true })
-		.withMessage("Country is required"),
-	check("lat")
-		.exists({ checkFalsy: true })
-		.isNumeric()
-		.withMessage("Latitude is not valid"),
-	check("lng")
-		.exists({ checkFalsy: true })
-		.isNumeric()
-		.withMessage("Longitude is not valid"),
-	check("name")
-		.exists({ checkFalsy: true })
-		.isLength({ max: 50 })
-		.withMessage("Name must be less than 50 characters"),
-	check("description")
-		.exists({ checkFalsy: true })
-		.withMessage("Description is required"),
-	check("price")
-		.exists({ checkFalsy: true })
-		.isNumeric()
-		.withMessage("Price per day is required"),
-
-	handleValidationErrors,
-];
-
-router.get("/:spotId", async (req, res) => {
-	const spot = await getSpot(req.params.spotId, res, (spotId) =>
-		prisma.spot.findFirst({
-			where: { id: spotId },
+	router.get("/current", requireAuth, async (req: Request, res: Response) => {
+		const allSpots = await prisma.spot.findMany({
+			where: { ownerId: req.user!.id },
 			include: {
-				images: { select: { id: true, url: true, preview: true } },
+				images: { where: { preview: true }, select: { url: true } },
 				reviews: { select: { stars: true } },
-				owner: {
-					select: { id: true, firstName: true, lastName: true },
-				},
 			},
-		}),
-	);
+		});
 
-	if (!spot) {
-		return;
-	}
+		const modspots = allSpots.map(transformSpot);
 
-	const { reviews, images, owner, ...rest } = spot;
-
-	return res.json({
-		...rest,
-		numReviews: reviews.length,
-		avgStarRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
-		SpotImages: images,
-		Owner: owner,
+		res.json({ Spots: modspots });
 	});
-});
 
-router.put(
-	"/:spotId",
-	requireAuth,
-	validateNewSpot,
-	async (req: Request, res: Response) => {
-		let user = req.user!;
+	const validateNewSpot = [
+		check("address")
+			.exists({ checkFalsy: true })
+			.withMessage("Street address is required"),
+		check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+		check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+		check("country")
+			.exists({ checkFalsy: true })
+			.withMessage("Country is required"),
+		check("lat")
+			.exists({ checkFalsy: true })
+			.isNumeric()
+			.withMessage("Latitude is not valid"),
+		check("lng")
+			.exists({ checkFalsy: true })
+			.isNumeric()
+			.withMessage("Longitude is not valid"),
+		check("name")
+			.exists({ checkFalsy: true })
+			.isLength({ max: 50 })
+			.withMessage("Name must be less than 50 characters"),
+		check("description")
+			.exists({ checkFalsy: true })
+			.withMessage("Description is required"),
+		check("price")
+			.exists({ checkFalsy: true })
+			.isNumeric()
+			.withMessage("Price per day is required"),
 
-		const {
-			address,
-			city,
-			state,
-			country,
-			lat,
-			lng,
-			name,
-			description,
-			price,
-		} = req.body;
+		handleValidationErrors,
+	];
 
-		const spot = await getSpot(req.params["spotId"], res, (id) =>
-			prisma.spot.findUnique({ where: { id } }),
+	router.get("/:spotId", async (req: Request, res: Response) => {
+		const spot = await getSpot(req.params["spotId"], res, (spotId) =>
+			prisma.spot.findFirst({
+				where: { id: spotId },
+				include: {
+					images: { select: { id: true, url: true, preview: true } },
+					reviews: { select: { stars: true } },
+					owner: {
+						select: { id: true, firstName: true, lastName: true },
+					},
+				},
+			}),
 		);
 
 		if (!spot) {
 			return;
 		}
 
-		if (spot.ownerId !== user.id) {
-			return res
-				.status(403)
-				.json({ message: "You do not have permission to edit this spot" });
-		}
+		const { reviews, images, owner, ...rest } = spot;
 
-		let updated = await prisma.spot.update({
-			where: { id: spot.id },
-			data: {
+		return res.json({
+			...rest,
+			numReviews: reviews.length,
+			avgStarRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
+			SpotImages: images,
+			Owner: owner,
+		});
+	});
+	router.put(
+		"/:spotId",
+		requireAuth,
+		validateNewSpot,
+		async (req: Request, res: Response) => {
+			let user = req.user!;
+
+			const {
 				address,
 				city,
 				state,
@@ -193,39 +163,66 @@ router.put(
 				name,
 				description,
 				price,
-				updatedAt: new Date(),
-			},
-		});
+			} = req.body;
 
-		return res.status(200).json({ ...updated, lat, lng, price });
-	},
-);
+			const spot = await getSpot(req.params["spotId"], res, (id) =>
+				prisma.spot.findUnique({ where: { id } }),
+			);
 
-router.delete("/:spotId", requireAuth, async (req, res) => {
-	let user = req.user!;
+			if (!spot) {
+				return;
+			}
 
-	const spot = await getSpot(req.params["spotId"], res, (spotId) =>
-		prisma.spot.findFirst({
-			where: { id: spotId },
-			select: { id: true, ownerId: true },
-		}),
+			if (spot.ownerId !== user.id) {
+				return res
+					.status(403)
+					.json({ message: "You do not have permission to edit this spot" });
+			}
+
+			let updated = await prisma.spot.update({
+				where: { id: spot.id },
+				data: {
+					address,
+					city,
+					state,
+					country,
+					lat,
+					lng,
+					name,
+					description,
+					price,
+					updatedAt: new Date(),
+				},
+			});
+
+			return res.status(200).json({ ...updated, lat, lng, price });
+		},
 	);
 
-	if (!spot) {
-		return;
-	}
+	router.delete("/:spotId", requireAuth, async (req: Request, res: Response) => {
+		let user = req.user!;
 
-	if (spot.ownerId !== user.id) {
-		return res
-			.status(403)
-			.json({ message: "You do not have permission to delete this spot" });
-	}
+		const spot = await getSpot(req.params["spotId"], res, (spotId) =>
+			prisma.spot.findFirst({
+				where: { id: spotId },
+				select: { id: true, ownerId: true },
+			}),
+		);
 
-	await prisma.spot.delete({ where: { id: spot.id } });
+		if (!spot) {
+			return;
+		}
 
-	return res.status(200).json({ message: "Successfully deleted" });
-});
+		if (spot.ownerId !== user.id) {
+			return res
+				.status(403)
+				.json({ message: "You do not have permission to delete this spot" });
+		}
 
+		await prisma.spot.delete({ where: { id: spot.id } });
+
+		return res.status(200).json({ message: "Successfully deleted" });
+	});
 router.get("/:spotId/bookings", requireAuth, async (req, res) => {
 	const user = req.user!;
 
@@ -471,20 +468,23 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
 	});
 });
 
-const getChecks = checkSchema(
-	{
-		page: { isInt: { options: { min: 1, max: 10 } }, optional: true },
-		size: { isInt: { options: { min: 1, max: 20 } }, optional: true },
-		minLat: { isDecimal: true, optional: true },
-		maxLat: { isDecimal: true, optional: true },
-		minLng: { isDecimal: true, optional: true },
-		maxLng: { isDecimal: true, optional: true },
-		minPrice: { isFloat: { options: { min: 0 } }, optional: true },
-		maxPrice: { isFloat: { options: { min: 0 } }, optional: true },
-	},
-	["query"],
-);
 
+interface SpotWithDetails extends Spot {
+  reviews: { stars: number }[];
+  images: { url: string }[];
+}
+
+
+const getChecks = checkSchema({
+  page: { isInt: { options: { min: 1, max: 10 } }, optional: true },
+  size: { isInt: { options: { min: 1, max: 20 } }, optional: true },
+  minLat: { isDecimal: true, optional: true },
+  maxLat: { isDecimal: true, optional: true },
+  minLng: { isDecimal: true, optional: true },
+  maxLng: { isDecimal: true, optional: true },
+  minPrice: { isFloat: { options: { min: 0 } }, optional: true },
+  maxPrice: { isFloat: { options: { min: 0 } }, optional: true },
+}, ['query']);
 router.get(
 	"/",
 	getChecks,
@@ -586,7 +586,9 @@ router.post(
 		});
 
 		return res.status(201).json({ ...spot, lat, lng, price });
-	},
+	}
 );
+	
+
 
 export default router;

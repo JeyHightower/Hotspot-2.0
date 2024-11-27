@@ -158,6 +158,9 @@ router.post(
 	},
 );
 
+
+
+
 const validateReviewEdit = [
 	check("review")
 		.exists({ values: "falsy" })
@@ -167,10 +170,8 @@ const validateReviewEdit = [
 		.exists({ values: "falsy" })
 		.isInt({ min: 1, max: 5 })
 		.withMessage("Stars must be an integer from 1 to 5"),
-
 	handleValidationErrors,
 ];
-
 router.put(
 	"/:reviewId",
 	requireAuth,
@@ -215,3 +216,14 @@ router.put(
 );
 
 export default router;
+
+
+import { Worker } from 'node:worker_threads';
+
+router.get('/', async (req: Request, res: Response) => {
+  // existing code
+});
+
+router.post('/:spotId/reviews', async (req: Request, res: Response) => {
+  // existing code
+});
