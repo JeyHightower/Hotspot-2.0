@@ -36,9 +36,9 @@
     "not dead",
     "not op_mini all",
     "last 2 versions",
-    "Chrome >= 90",
-    "Firefox >= 90",
-    "Safari >= 14",
-    "Edge >= 90"
+    "Chrome >= 89",
+    "Firefox >= 89",
+    "Safari >= 15",
+    "Edge >= 89"
   ]
 }
