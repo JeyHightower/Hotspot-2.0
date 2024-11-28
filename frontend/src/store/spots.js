@@ -30,7 +30,7 @@ const spotsReducer = (state = initialState, action) => {
   const handlers = {
     [GET_ALL_SPOTS]: (state, action) => {
       const newAllSpots = {};
-      action.spots.forEach((spot) => {
+      action.spots.Spots.forEach((spot) => {
         newAllSpots[spot.id] = spot;
       });
       return {
