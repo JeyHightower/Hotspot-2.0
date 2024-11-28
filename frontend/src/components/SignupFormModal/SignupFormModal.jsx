@@ -43,8 +43,10 @@ const SignupFormModal = () => {
     });
   };
 
+  const signupDisabled = username.length < 4 || !firstName || !lastName || !email || password.length < 6 || !confirmPassword;
+
   return (
-    <>
+    <div className="signup-modal">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">
@@ -54,6 +56,7 @@ const SignupFormModal = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
             required
           />
         </label>
@@ -65,6 +68,7 @@ const SignupFormModal = () => {
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            placeholder="First Name"
             required
           />
         </label>
@@ -76,6 +80,7 @@ const SignupFormModal = () => {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            placeholder="Last Name"
             required
           />
         </label>
@@ -87,6 +92,7 @@ const SignupFormModal = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
             required
           />
         </label>
@@ -98,6 +104,7 @@ const SignupFormModal = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
             required
           />
         </label>
@@ -109,13 +116,14 @@ const SignupFormModal = () => {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
             required
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={signupDisabled}>Sign Up</button>
       </form>
-    </>
+    </div>
   );
 }
 

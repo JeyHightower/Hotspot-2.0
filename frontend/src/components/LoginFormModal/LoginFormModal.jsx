@@ -45,7 +45,7 @@ const LoginFormModal = () => {
        const loginDisabled = credential.length < 4 || password.length < 6;
 
   return (
-    <>
+    <div className="login-modal">
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -74,7 +74,7 @@ const LoginFormModal = () => {
           Demo User
         </button>
       </form>
-    </>
+    </div>
   );
 };
 
