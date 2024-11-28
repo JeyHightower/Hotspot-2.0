@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { FaCircleUser } from 'react-icons/fa6';
+import { FaCircleUser, FaBars } from 'react-icons/fa6';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
@@ -45,6 +45,7 @@ const ProfileButton = ({ user }) => {
   return (
     <>
       <button onClick={toggleMenu} className="profile-trigger">
+        <FaBars className="menu-bars" />
         <FaCircleUser />
       </button>
       <ul className={ulClassName} ref={ulRef}>

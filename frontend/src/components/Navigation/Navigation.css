@@ -110,3 +110,15 @@ color: #FF416C;
 .hidden {
 display: none; /* Hide the dropdown */
 }
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  gap: 5px;
+}
+
+.menu-bars {
+  font-size: 0.8em;
+  color: #333;
+}
