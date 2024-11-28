@@ -51,52 +51,66 @@ a:hover {
 transform: scale(1.05);
 color: #FF416C;
 }
-
 /* Enhanced dropdown styling */
 .profile-dropdown {
-  display: flex;
-  flex-direction: column;
   position: absolute;
-  right: 0;
-  top: 100%;
-  background: white;
+  right: 20px;
+  top: 60px;
+  width: 180px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 15px;
-  box-shadow: 0 8px 30px rgba(255, 65, 108, 0.1);
-  min-width: 240px;
-  margin-top: 8px;
-  padding: 16px;
+  padding: 15px;
+  z-index: 1000;
+  text-align: center; /* Centers text */
 }
 
-.profile-button-container {
-  position: relative;
-  margin-left: auto;
-  padding-right: 10px;
-}
 .profile-dropdown li {
-  width: 100%;
-  padding: 12px;
-  border-bottom: 2px solid #f0f0f0;
-  transition: all 0.3s ease;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2d2d2d;
+  padding: 8px 12px;
+  list-style: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
   cursor: pointer;
+  display: flex;
+  justify-content: center; /* Centers flex items */
+  align-items: center;
 }
 
 .profile-dropdown li:hover {
-  background: linear-gradient(to right, #ffffff, #fff5f5);
+  background: rgba(255, 65, 108, 0.1);
+  color: #FF416C;
   transform: translateX(5px);
 }
-.profile-dropdown li:last-child {
-  border-bottom: none;
+
+.profile-button-container {
+position: relative;
+margin-left: auto;
+padding-right: 10px;
+}
+.profile-dropdown li {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2d2d2d;
+  padding: 8px 0;
+  list-style: none;
 }
 
 .profile-dropdown button {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
+  margin: 12px 0 5px 0;
   background: linear-gradient(90deg, #FF416C, #FF4B2B);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -104,6 +118,10 @@ color: #FF416C;
 .profile-dropdown button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 65, 108, 0.2);
+}
+
+.hidden {
+  display: none;
 }
 
 .user-info {
