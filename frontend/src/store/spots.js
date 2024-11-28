@@ -12,7 +12,7 @@ const getAllSpots = (spots) => {
 };
 
 //!THUNK ACTIONS:
-export const getAllSpotsThunk = () => async (dispatch) => {
+export const fetchAllSpotsThunk = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots');
   const spots = await response.json();
   dispatch(getAllSpots(spots));
