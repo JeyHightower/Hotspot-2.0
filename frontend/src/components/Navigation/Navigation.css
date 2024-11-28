@@ -54,17 +54,17 @@ color: #FF416C;
 
 /* Enhanced dropdown styling */
 .profile-dropdown {
+  display: flex;
+  flex-direction: column;
   position: absolute;
-  top: calc(100% + 15px);
-  right: -10px;
+  right: 0;
+  top: 100%;
   background: white;
   border-radius: 15px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  width: 280px;
-  z-index: 1000;
-  max-height: 400px;
-  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(255, 65, 108, 0.1);
+  min-width: 240px;
+  margin-top: 8px;
+  padding: 16px;
 }
 
 .profile-button-container {
@@ -72,40 +72,55 @@ color: #FF416C;
   margin-left: auto;
   padding-right: 10px;
 }
-
 .profile-dropdown li {
-  display: block;
-  margin: 10px 0;
-  padding: 10px 15px;
-  border-radius: 8px;
-  white-space: nowrap;
-}
-
-/* User info styling */
-.profile-dropdown li.user-info {
-  font-weight: 600;
-  color: #2d2d2d;
-  background: linear-gradient(90deg, #fff5f5, #fff);
-}
-
-/* Logout button styling */
-.profile-dropdown button.logout-button {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 12px;
+  border-bottom: 2px solid #f0f0f0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-dropdown li:hover {
+  background: linear-gradient(to right, #ffffff, #fff5f5);
+  transform: translateX(5px);
+}
+.profile-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.profile-dropdown button {
+  width: 100%;
+  padding: 12px;
   background: linear-gradient(90deg, #FF416C, #FF4B2B);
   color: white;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
   font-weight: 500;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-.profile-dropdown button.logout-button:hover {
+.profile-dropdown button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 65, 108, 0.2);
 }
 
+.user-info {
+  font-weight: 500;
+  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.user-email {
+  color: #222222;
+}
+
+.user-email {
+  color: #717171;
+}
 /* Hidden class for dropdown */
 .hidden {
 display: none; /* Hide the dropdown */
