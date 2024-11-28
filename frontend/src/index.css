@@ -1,1 +1,6 @@
 /* TODO: Add sitewide styles */
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
