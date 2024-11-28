@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { FaCircleUser  } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
+import { FaCircleUser } from 'react-icons/fa6';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
@@ -8,6 +9,7 @@ import SignupFormModal from '../SignupFormModal/SignupFormModal';
 
 const ProfileButton = ({ user }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -36,6 +38,7 @@ const ProfileButton = ({ user }) => {
     e.preventDefault();
     dispatch(sessionActions.logoutThunk());
     closeMenu();
+    navigate('/');
   };
 
   const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden'); // Add 'hidden' class when not showing
@@ -47,7 +50,7 @@ const ProfileButton = ({ user }) => {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li className="user-info">{user.username}</li>
+            <li className="user-info">Hello, {user.firstName}</li>
             <li className="user-info">
               {user.firstName} {user.lastName}
             </li>
@@ -75,6 +78,6 @@ const ProfileButton = ({ user }) => {
       </ul>
     </>
   );
-}
+};
 
 export default ProfileButton;
