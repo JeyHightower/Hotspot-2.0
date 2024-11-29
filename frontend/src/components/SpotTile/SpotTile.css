@@ -39,3 +39,21 @@
     background-clip: text;
     color: transparent;
 }
+
+.rating-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+    color: #2d2d2d;
+}
+
+.rating svg {
+    color: #FF416C;
+}
