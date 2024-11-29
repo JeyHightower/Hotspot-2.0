@@ -5,6 +5,7 @@ import configureStore from './store/store';
 import { Provider } from 'react-redux';
 import { restoreCSRF, csrfFetch } from './store/csrf';
 import * as sessionActions from './store/session';
+import * as spotsActions from './store/spots';
 import { ModalProvider } from './components/Context/ModalContext';
 import { Modal } from './components/Context/Modal';
 import './index.css';
@@ -18,6 +19,7 @@ if (import.meta.env.MODE !== 'production') {
   window.csrfFetch = csrfFetch;
   window.store = store;
   window.sessionActions = sessionActions;
+  window.spotsActions = spotsActions;
 }
 
 
