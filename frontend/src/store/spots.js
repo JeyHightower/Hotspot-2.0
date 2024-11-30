@@ -2,6 +2,7 @@ import { csrfFetch } from './csrf';
 
 //!ACTION TYPES:
 const GET_ALL_SPOTS = 'spots/getAllSpots';
+const GET_SINGLE_SPOT = 'spots/getSingleSpot';
 
 //!ACTION CREATORS:
 const getAllSpots = (spots) => {
@@ -11,6 +12,13 @@ const getAllSpots = (spots) => {
   };
 };
 
+const getSingleSpot = (spot) => {
+    return {
+        type: GET_SINGLE_SPOT,
+        spot,
+    }
+}
+
 //!THUNK ACTIONS:
 export const fetchAllSpotsThunk = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots');
@@ -18,6 +26,14 @@ export const fetchAllSpotsThunk = () => async (dispatch) => {
   dispatch(getAllSpots(spots));
   return spots;
 };
+
+export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
+    const response =await csrfFetch(`/api/spots/${spotId}`);
+    const spot = await response.json();
+    dispatch(getSingleSpot(spot));
+    return spot;
+    
+}
 
 //!INITIAL STATE:
 const initialState = {
@@ -38,6 +54,12 @@ const spotsReducer = (state = initialState, action) => {
         allSpots: newAllSpots,
       };
     },
+    [GET_SINGLE_SPOT]: (state, action) => {
+        return {
+            ...state,
+            singleSpot: action.spot
+        };
+    }
   };
   const handler = handlers[action.type];
   return handler ? handler(state, action) : state;
