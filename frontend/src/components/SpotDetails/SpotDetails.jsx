@@ -1,6 +1,24 @@
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSingleSpotThunk } from '../../store/spots';
+
 import './SpotDetails.css';
 
-const SpotDetails = ({ spot }) => {
+const SpotDetails = () => {
+
+  const { spotId } = useParams();
+  const dispatch = useDispatch();
+  const spot = useSelector((state) => state.spots.singleSpot.spotId);
+  
+
+
+  useEffect(() => {
+    dispatch(fetchSingleSpotThunk(spotId));
+  }, [dispatch, spotId]);
+
+  if (!spot || !spot.Id) return <div>Loading...</div>;
+
   const {
     id,
     name,
@@ -15,7 +33,8 @@ const SpotDetails = ({ spot }) => {
 
   const isComingSoon = () => {
     alert('Feature Coming Soon!');
-  }
+  };
+
 
   return (
     <div className="spot-details">
@@ -25,7 +44,7 @@ const SpotDetails = ({ spot }) => {
           {city}, {state}, {country}
         </div>
         <div className-="spot-images-grid">
-          <div className="main-imagee">
+          <div className="main-images">
             {SpotImages && SpotImages[0] && (
               <img src={SpotImages[0].url} alt="Main spot view" />
             )}
@@ -42,15 +61,21 @@ const SpotDetails = ({ spot }) => {
           </div>
         </div>
         <div className="spot-info-container">
-            <div classNme = "host-description">
-                <h2>Hosted by{Owner?.firstName} {Owner?.lastName}</h2>
-                <p>{description}</p>
-        </div>
-        <div className='callout-box'>
-            <div className='price-info'>
-                <span className='price'>${price}</ span> night</div>'
+          <div classNme="host-description">
+            <h2>
+              Hosted by{Owner?.firstName} {Owner?.lastName}
+            </h2>
+            <p>{description}</p>
+          </div>
+          <div className="callout-box">
+            <div className="price-info">
+              <span className="price">${price}</span> night
             </div>
-            <button className='reserve-button' onClick={isComingSoon}>Reserve</button>
+            '
+          </div>
+          <button className="reserve-button" onClick={isComingSoon}>
+            Reserve
+          </button>
         </div>
       </div>
     </div>
