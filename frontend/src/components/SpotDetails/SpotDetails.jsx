@@ -2,15 +2,22 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSingleSpotThunk } from '../../store/spots';
-
+import OpenModalButton  from '../OpenModalButton/OpenModalButton';
+import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
+import { deleteReviewThunk } from '../../store/reviews';
+import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import './SpotDetails.css';
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.singleSpot(spotId));
+  const spot = useSelector((state) => state.spots.singleSpot);
   const user = useSelector((state) => state.session.user);
-  const reviews = spot?. Reviews || [];
+  const hasReviewed = spot?.Reviews?.some(
+    (review) => review.userId === user?.id,
+  );
+  const Owner = spot?.Owner;
+  const reviews = spot?.Reviews || [];
 
   useEffect(() => {
     dispatch(fetchSingleSpotThunk(spotId));
@@ -25,7 +32,6 @@ const SpotDetails = () => {
     city,
     state,
     country,
-    Owner,
     SpotImages,
     avgRating,
     numReviews,
@@ -35,10 +41,9 @@ const SpotDetails = () => {
     alert('Feature Coming Soon!');
   };
 
-  const ratingDisplay = !spot.numReviews
-    ? 'New'
-    : Number(spot.avgRating).toFixed(2);
+  const ratingDisplay = !numReviews ? 'New' : Number(avgRating).toFixed(2);
   const reviewText = numReviews === 1 ? 'Review' : 'Reviews';
+  const canReview = user && !hasReviewed && user.id !== Owner?.id;
 
   const formatReviewDate = (date) => {
     const options = { month: 'long', year: 'numeric' };
@@ -53,6 +58,11 @@ const SpotDetails = () => {
         {numReviews === 1 ? 'Review' : 'Reviews'}
       </>
     );
+  };
+
+  const handleDeleteReview = (reviewId) => async () => {
+    await dispatch(deleteReviewThunk(reviewId));
+    dispatch(fetchSingleSpotThunk(spotId));
   };
 
   return (
@@ -89,12 +99,13 @@ const SpotDetails = () => {
 
           <div className="callout-box">
             <div className="price-review-summary">
-                <div className="price-line">
-                    <span className="price">${price}</span> night
-                </div>
-                <div className="rating-line">
-                    <i className="fas fa-star"></i>{reviewSummary()}
-                </div>
+              <div className="price-line">
+                <span className="price">${price}</span> night
+              </div>
+              <div className="rating-line">
+                <i className="fas fa-star"></i>
+                {reviewSummary()}
+              </div>
             </div>
             <div className="rating-display">
               <i className="fas fa-star"></i>
@@ -117,28 +128,53 @@ const SpotDetails = () => {
       <div className="reviews-section">
         <h2 className="reviews-header">
           <i className="fas fa-star"></i> {reviewSummary()}
-          {ratingDisplay} · {numReviews} {reviewText}
         </h2>
+        
+        {canReview && (
+          <OpenModalButton
+            buttonText="Post Your Review"
+            modalComponent={
+              <ReviewFormModal 
+                spotId={spotId}
+                onReviewSubmit={() => {
+                  dispatch(fetchSingleSpotThunk(spotId));
+                }}
+              />
+            }
+          />
+        )}
+        
         {reviews?.length > 0 ? (
-            <div className="reviews-list">
-                {reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map(review => (
-                    <div key={review.id} className="review-item">
-                        <h3>{review.User.firstName}</h3>
-                        <div className="review-date">{formatReviewDate(review.createdAt)}
-                            </div>
-                            <p>{review.review}</p>
-                            </div>
-                ))}
-       </div> ) : (
-            user && user.id !== Owner.id && (
-                <p>Be the first to post a review!</p>
-              )
-            )}
+          <div className="reviews-list">
+            {reviews
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map(review => (
+                <div key={review.id} className="review-item">
+                  <h3>{review.User.firstName}</h3>
+                  <div className="review-date">
+                    {formatReviewDate(review.createdAt)}
+                  </div>
+                  <p>{review.review}</p>
+                  {user?.id === review.userId && (
+                    <OpenModalButton
+                      buttonText="Delete"
+                      modalComponent={
+                        <DeleteConfirmModal
+                          onDelete={handleDeleteReview(review.id)}
+                          type="Review"
+                        />
+                      }
+                    />
+                  )}
+                </div>
+              ))}
           </div>
-        </div>
-      );
-
-    };       
+        ) : (
+          user && user.id !== Owner?.id && <p>Be the first to post a review!</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default SpotDetails;

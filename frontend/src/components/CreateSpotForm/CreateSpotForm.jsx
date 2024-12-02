@@ -21,7 +21,6 @@ const CreateSpotForm = () => {
     previewImage: '',
     images: ['', '', '', '']
   });
-
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -58,8 +57,8 @@ const CreateSpotForm = () => {
       
       <form onSubmit={handleSubmit}>
         <section>
-          <h2>Where&apos;s your place located?</h2>
-          <p>Guests will only get your exact address once they booked a reservation.</p>
+          <h2>Where's your place located?</h2>
+          <p>Don't worry, we'll only share...</p>
           
           <div className="form-group">
             <label>Country</label>
@@ -116,10 +115,9 @@ const CreateSpotForm = () => {
           />
           {errors.description && <span className="error">{errors.description}</span>}
         </section>
-
         <section>
           <h2>Create a title for your spot</h2>
-          <p>Catch guests' attention with a spot title that highlights what makes your place special.</p>
+          <p>Don't worry, we'll only share...</p>
           <input
             type="text"
             value={formData.name}

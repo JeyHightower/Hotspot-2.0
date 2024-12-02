@@ -10,7 +10,6 @@ import { ModalProvider } from './components/Context/ModalContext';
 import { Modal } from './components/Context/Modal';
 import './index.css';
 
-
 const store = configureStore();
 
 if (import.meta.env.MODE !== 'production') {
@@ -22,14 +21,13 @@ if (import.meta.env.MODE !== 'production') {
   window.spotsActions = spotsActions;
 }
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ModalProvider>
-    <Provider store={store}>
-      <App />
-      <Modal />
-    </Provider>
+      <Provider store={store}>
+        <App />
+        <Modal />
+      </Provider>
     </ModalProvider>
   </React.StrictMode>
 );
