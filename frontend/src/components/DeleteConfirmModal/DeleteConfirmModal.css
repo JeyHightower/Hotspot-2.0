@@ -1,0 +1,33 @@
+.delete-confirm-modal {
+    padding: 20px;
+    width: 400px;
+}
+
+.delete-confirm-modal h2 {
+    margin-bottom: 15px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.delete-button {
+    background-color: #ff5a5f;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: #444;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

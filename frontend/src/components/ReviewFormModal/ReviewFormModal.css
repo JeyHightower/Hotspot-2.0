@@ -1,0 +1,51 @@
+
+.review-form-modal {
+  padding: 20px;
+  width: 400px;
+}
+
+.review-form-modal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.review-form-modal textarea {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.stars-input {
+  margin-bottom: 20px;
+}
+
+.star {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.error {
+  color: red;
+  margin: 10px 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff5a5f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
