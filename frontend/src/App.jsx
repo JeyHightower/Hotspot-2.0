@@ -46,3 +46,25 @@ function App() {
 }
 
 export default App;
+
+// In your spot tile component
+const SpotTile = ({ spot }) => {
+  const avgRating = spot.avgRating ? spot.avgRating.toFixed(1) : 'New';
+
+  return (
+    <div className="spot-tile">
+      <img src={spot.previewImage} alt={spot.name} />
+      <div className="spot-info">
+        <div className="location-rating">
+          <span>{spot.city}, {spot.state}</span>
+          <span className="rating">
+            <i className="fas fa-star"></i> {avgRating}
+          </span>
+        </div>
+        <div className="price">
+          ${spot.price} night
+        </div>
+      </div>
+    </div>
+  );
+};
