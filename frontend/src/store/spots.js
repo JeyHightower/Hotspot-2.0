@@ -33,7 +33,18 @@ export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
     dispatch(getSingleSpot(spot));
     return spot;
     
-}
+};
+
+export const generateRandomSpotsThunk = (count) => async (dispatch) => {
+    const response = await csrfFetch('/api/spots/generate-random', {
+      method: 'POST',
+      body: JSON.stringify({ count })
+    });
+    const data = await response.json();
+    dispatch(fetchAllSpotsThunk()); // Refresh the spots list
+    return data;
+  };
+  
 
 //!INITIAL STATE:
 const initialState = {
