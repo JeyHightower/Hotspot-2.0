@@ -1,10 +1,12 @@
-import { createBrowserRouter, RouterProvider, Outlet, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
 import SpotsIndex from './components/SpotsIndex/SpotsIndex';
 import SpotDetails from './components/SpotDetails/SpotDetails';
+import CreateSpotForm from './components/CreateSpotForm/CreateSpotForm';
+
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -36,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/:spotId',
         element: <SpotDetails />,
+      },
+      {
+        path: '/spots/new',
+        element: <CreateSpotForm />
       }
     ],
   },
@@ -46,25 +52,3 @@ function App() {
 }
 
 export default App;
-
-// In your spot tile component
-const SpotTile = ({ spot }) => {
-  const avgRating = spot.avgRating ? spot.avgRating.toFixed(1) : 'New';
-
-  return (
-    <div className="spot-tile">
-      <img src={spot.previewImage} alt={spot.name} />
-      <div className="spot-info">
-        <div className="location-rating">
-          <span>{spot.city}, {spot.state}</span>
-          <span className="rating">
-            <i className="fas fa-star"></i> {avgRating}
-          </span>
-        </div>
-        <div className="price">
-          ${spot.price} night
-        </div>
-      </div>
-    </div>
-  );
-};
