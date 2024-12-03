@@ -1,0 +1,13 @@
+{
+  "env": "development",
+  "port": 3000,
+  "host": "localhost",
+  "cors": {
+    "origin": "http://localhost:5173",
+    "credentials": true
+  },
+  "security": {
+    "jwtSecret": "your_jwt_secret",
+    "bcryptRounds": 10
+  }
+}
