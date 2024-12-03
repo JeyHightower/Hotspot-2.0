@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSingleSpotThunk } from '../../store/spots';
-import OpenModalButton  from '../OpenModalButton/OpenModalButton';
+import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
-import { deleteReviewThunk } from '../../store/reviews';
 import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import './SpotDetails.css';
 
 const SpotDetails = () => {
   const { spotId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.singleSpot);
   const user = useSelector((state) => state.session.user);
@@ -73,7 +73,7 @@ const SpotDetails = () => {
           {city}, {state}, {country}
         </div>
         <div className="spot-images-grid">
-          <div className="main-images">
+          <div className="main-image">
             {SpotImages && SpotImages[0] && (
               <img src={SpotImages[0].url} alt="Main spot view" />
             )}
@@ -89,6 +89,7 @@ const SpotDetails = () => {
               ))}
           </div>
         </div>
+
         <div className="spot-info-container">
           <div className="host-description">
             <h2>
@@ -107,71 +108,58 @@ const SpotDetails = () => {
                 {reviewSummary()}
               </div>
             </div>
-            <div className="rating-display">
-              <i className="fas fa-star"></i>
-              {ratingDisplay}
-            </div>
+            <button onClick={isComingSoon}>Reserve</button>
           </div>
-          <div className="price-review-summary">
-            <div className="price-line">
-              <span className="price">${price}</span> night
-            </div>
-            <div className="rating-line">
-              <i className="fas fa-star"></i>
-              {ratingDisplay} · {numReviews} {reviewText}
-            </div>
-          </div>
-          <button onClick={isComingSoon}>Reserve</button>
         </div>
-      </div>
 
-      <div className="reviews-section">
-        <h2 className="reviews-header">
-          <i className="fas fa-star"></i> {reviewSummary()}
-        </h2>
-        
-        {canReview && (
-          <OpenModalButton
-            buttonText="Post Your Review"
-            modalComponent={
-              <ReviewFormModal 
-                spotId={spotId}
-                onReviewSubmit={() => {
-                  dispatch(fetchSingleSpotThunk(spotId));
-                }}
-              />
-            }
-          />
-        )}
-        
-        {reviews?.length > 0 ? (
-          <div className="reviews-list">
-            {reviews
-              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              .map(review => (
-                <div key={review.id} className="review-item">
-                  <h3>{review.User.firstName}</h3>
-                  <div className="review-date">
-                    {formatReviewDate(review.createdAt)}
+        <div className="reviews-section">
+          <h2 className="reviews-header">
+            <i className="fas fa-star"></i> {reviewSummary()}
+          </h2>
+          
+          {canReview && (
+            <OpenModalButton
+              buttonText="Post Your Review"
+              modalComponent={
+                <ReviewFormModal 
+                  spotId={spotId}
+                  onReviewSubmit={() => {
+                    dispatch(fetchSingleSpotThunk(spotId));
+                  }}
+                />
+              }
+            />
+          )}
+          
+          {reviews?.length > 0 ? (
+            <div className="reviews-list">
+              {reviews
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map(review => (
+                  <div key={review.id} className="review-item">
+                    <h3>{review.User.firstName}</h3>
+                    <div className="review-date">
+                      {formatReviewDate(review.createdAt)}
+                    </div>
+                    <p>{review.review}</p>
+                    {user?.id === review.userId && (
+                      <OpenModalButton
+                        buttonText="Delete"
+                        modalComponent={
+                          <DeleteConfirmModal
+                            onDelete={handleDeleteReview(review.id)}
+                            type="Review"
+                          />
+                        }
+                      />
+                    )}
                   </div>
-                  <p>{review.review}</p>
-                  {user?.id === review.userId && (
-                    <OpenModalButton
-                      buttonText="Delete"
-                      modalComponent={
-                        <DeleteConfirmModal
-                          onDelete={handleDeleteReview(review.id)}
-                          type="Review"
-                        />
-                      }
-                    />
-                  )}
-                </div>
-              ))}
-          </div>
-        ) : (
-          user && user.id !== Owner?.id && <p>Be the first to post a review!</p>
-        )}
+                ))}
+            </div>
+          ) : (
+            user && user.id !== Owner?.id && <p>Be the first to post a review!</p>
+          )}
+        </div>
       </div>
     </div>
   );
