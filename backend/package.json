@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"type": "module",
 	"prisma": {
-		"seed": "node target/prisma/seed.js"
+		 "seed": "ts-node prisma/seed.ts"
 	},
 	"scripts": {
 		"init-repo": "bash init-repo.sh",
@@ -16,6 +16,7 @@
 		"start": "per-env",
 		"start:development": "dotenv nodemon ./target/bin/www.js",
 		"start:production": "node ./target/bin/www.js",
+		"seed": "node --loader ts-node/esm prisma/seed.ts",
 		"build": "tsc && npx prisma generate"
 	},
 	"keywords": [],
