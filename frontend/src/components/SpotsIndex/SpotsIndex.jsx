@@ -15,7 +15,7 @@ const SpotsIndex = () => {
   return (
     <div className="spots-grid">
       {Object.values(allSpots).map((spot) => (
-       <SpotTile key={spot.id} spot={spot} />
+        <SpotTile key={spot.id} spot={spot} />
       ))}
     </div>
   );

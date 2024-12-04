@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSingleSpotThunk } from '../../store/spots';
+import { deleteReviewThunk } from '../../store/reviews';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
 import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
@@ -9,9 +10,8 @@ import './SpotDetails.css';
 
 const SpotDetails = () => {
   const { spotId } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.singleSpot);
+  const spot = useSelector((state) => state.spots[0].singleSpot);
   const user = useSelector((state) => state.session.user);
   const hasReviewed = spot?.Reviews?.some(
     (review) => review.userId === user?.id,
@@ -41,8 +41,8 @@ const SpotDetails = () => {
     alert('Feature Coming Soon!');
   };
 
-  const ratingDisplay = !numReviews ? 'New' : Number(avgRating).toFixed(2);
-  const reviewText = numReviews === 1 ? 'Review' : 'Reviews';
+
+  
   const canReview = user && !hasReviewed && user.id !== Owner?.id;
 
   const formatReviewDate = (date) => {

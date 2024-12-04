@@ -1,3 +1,14 @@
+const imageUrls = [
+    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6',
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c',
+    'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83',
+    'https://images.unsplash.com/photo-1568605114967-8130f3a36994',
+    'https://images.unsplash.com/photo-1570129477492-45c003edd2be'
+];
+
 export const generateRandomSpot = () => {
   const cities = ['San Francisco', 'New York', 'Los Angeles', 'Chicago', 'Miami'];
   const states = ['CA', 'NY', 'FL', 'IL', 'TX'];
@@ -20,11 +31,9 @@ export const generateRandomSpot = () => {
     lng: (Math.random() * (-70 - -125) + -125).toFixed(7),
     price: Math.floor(Math.random() * 900) + 100,
     images: [
-      `https://picsum.photos/800/600?random=${Math.random()}`,
-      `https://picsum.photos/800/600?random=${Math.random()}`,
-      `https://picsum.photos/800/600?random=${Math.random()}`,
-      `https://picsum.photos/800/600?random=${Math.random()}`,
-      `https://picsum.photos/800/600?random=${Math.random()}`
+      imageUrls[Math.floor(Math.random() * imageUrls.length)],
+      imageUrls[Math.floor(Math.random() * imageUrls.length)],
+      imageUrls[Math.floor(Math.random() * imageUrls.length)]
     ]
   };
 };

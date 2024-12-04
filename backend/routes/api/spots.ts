@@ -362,10 +362,12 @@ router.post('/generate-random', requireAuth, async (req: Request, res: Response)
 				city: randomSpot.city || '',
 				state: randomSpot.state || '',
 				images: {
-					create: randomSpot.images.map(url => ({
-						url,
-						preview: true
-					}))
+					create: randomSpot.images
+						.filter((url): url is string => url !== undefined)
+						.map(url => ({
+							url,
+							preview: true
+						}))
 				}
 			}
 		});
@@ -373,8 +375,7 @@ router.post('/generate-random', requireAuth, async (req: Request, res: Response)
 	}
 	
 	res.json({ spots });
-});
-const validateNewSpotImage = [
+});const validateNewSpotImage = [
   check('url').exists({ checkFalsy: true }).withMessage('URL is required'),
   check('preview')
     .exists({ checkFalsy: true })

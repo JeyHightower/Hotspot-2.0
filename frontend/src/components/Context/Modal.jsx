@@ -1,10 +1,10 @@
 
 // Modal.jsx
 import ReactDOM from 'react-dom';
-import  { useModal } from '../Context/ModalContext'; // Adjust the path as necessary
+import { useModal } from '../Context/ModalContext'; // Adjust the path as necessary
 import './Modal.css';
 
-export const Modal = () => {
+ const Modal = () => {
     const { modalRef, modalContent, closeModal } = useModal();
 
     if (!modalRef || !modalRef.current || !modalContent) return null;
@@ -17,6 +17,8 @@ export const Modal = () => {
         modalRef.current
     );
 };
+
+export default Modal;
 
 
 

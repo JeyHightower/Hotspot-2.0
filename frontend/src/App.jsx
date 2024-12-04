@@ -1,33 +1,13 @@
-import { createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import Navigation from './components/Navigation/Navigation';
-import * as sessionActions from './store/session';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Layout from '../src/Layout';
 import SpotsIndex from './components/SpotsIndex/SpotsIndex';
 import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpotForm from './components/CreateSpotForm/CreateSpotForm';
 import ManageSpots from './components/ManageSpots/ManageSpots';
 
 
-const Layout = () => {
-  const dispatch = useDispatch();
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    dispatch(sessionActions.restoreUserThunk()).then(() => {
-      setIsLoaded(true);
-    });
-  }, [dispatch]);
-
-  return (
-    <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Outlet />}
-    </>
-  );
-};
-
-// Create the router with the necessary future flags
+/// Router configuration with nested children
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -37,24 +17,29 @@ const router = createBrowserRouter([
         element: <SpotsIndex />,
       },
       {
-        path: '/spots/current',
-        element: <ManageSpots />,
-
+        path: '/spots',
+        children: [
+          {
+            path: 'current',
+            element: <ManageSpots />,
+          },
+          {
+            path: ':spotId',
+            element: <SpotDetails />,
+          },
+          {
+            path: 'new',
+            element: <CreateSpotForm />,
+          },
+        ],
       },
-      {
-        path: '/spots/:spotId',
-        element: <SpotDetails />,
-      },
-      {
-        path: '/spots/new',
-        element: <CreateSpotForm />
-      }
     ],
   },
 ]);
 
-function App() {
-  return <RouterProvider router={router} />;
+function App(){
+  return <RouterProvider router={router} />
 }
 
-export default App;
+
+export default App;;

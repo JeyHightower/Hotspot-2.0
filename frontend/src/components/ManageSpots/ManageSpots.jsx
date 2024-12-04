@@ -11,7 +11,7 @@
       const dispatch = useDispatch();
       const navigate = useNavigate();
       const user = useSelector(state => state.session.user);
-      const allSpots = useSelector(state => state.spots.allSpots);
+      const allSpots = useSelector(state => state.spots[0].allSpots);
     
       const userSpots = Object.values(allSpots).filter(spot => 
           spot.ownerId === user?.id

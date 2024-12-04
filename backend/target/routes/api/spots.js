@@ -261,7 +261,9 @@ router.post('/generate-random', requireAuth, async (req, res) => {
                 city: randomSpot.city || '',
                 state: randomSpot.state || '',
                 images: {
-                    create: randomSpot.images.map(url => ({
+                    create: randomSpot.images
+                        .filter((url) => url !== undefined)
+                        .map(url => ({
                         url,
                         preview: true
                     }))
