@@ -5,6 +5,7 @@ import { createSpotThunk } from '../../store/spots';
 import './CreateSpotForm.css';
 
 const CreateSpotForm = () => {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,17 +21,20 @@ const CreateSpotForm = () => {
     name: '',
     price: '',
     previewImage: '',
-    images: ['', '', '', ''] // Additional image URLs
+    images: ['', '', '', ''],
   });
 
-  // Validate images
+  //! Validate Images
   const validateImages = (images) => {
     const validImageTypes = ['jpg', 'jpeg', 'png'];
-    return images.every(url => 
-        !url || validImageTypes.some(type => url.toLowerCase().endsWith(type))
+    return images.every(
+      (url) =>
+        !url ||
+        validImageTypes.some((type) => url.toLowerCase().endsWith(type)),
     );
   };
 
+  //! Validate Form
   const validateForm = () => {
     const validationErrors = {};
     if (!formData.country) validationErrors.country = 'Country is required';
@@ -47,12 +51,15 @@ const CreateSpotForm = () => {
     return validationErrors;
   };
 
+  //! Handle Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateForm();
 
-    // Add image validation
-    const allImages = [formData.previewImage, ...formData.images.filter(img => img !== '')];
+    const validationErrors = validateForm();
+    const allImages = [
+      formData.previewImage,
+      ...formData.images.filter((img) => img !== ''),
+    ];
     if (!validateImages(allImages)) {
       validationErrors.images = 'Images must end in .png, .jpg, or .jpeg';
     }
@@ -75,7 +82,10 @@ const CreateSpotForm = () => {
       <form onSubmit={handleSubmit}>
         <section>
           <h2>Where&apos;s your place located?</h2>
-          <p>Don&apos;t worry, we&apos;ll only share...</p>
+          <p>
+            Guests will only get your exact address once they booked a
+            reservation.
+          </p>
 
           <div className="form-group">
             <label>Country</label>
