@@ -3,10 +3,9 @@ import { FaStar } from 'react-icons/fa';
 import './SpotTile.css';
 
 const SpotTile = ({ spot }) => {
-    console.log(spot)
     const navigate = useNavigate();
     const defaultImage = 'https://placehold.co/600x400?text=No+Image';
-    const previewImage = spot?.previewImage || 'default-image-url.jpg';
+   
     
     const imageUrl = spot.previewImage || spot.SpotImages?.[0]?.url || defaultImage;
 
