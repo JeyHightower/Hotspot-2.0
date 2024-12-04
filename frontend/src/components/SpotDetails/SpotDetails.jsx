@@ -11,8 +11,10 @@ import './SpotDetails.css';
 const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots[0].singleSpot);
+  
+  const spot = useSelector((state) => state.spots.singleSpot);
   const user = useSelector((state) => state.session.user);
+ 
   const hasReviewed = spot?.Reviews?.some(
     (review) => review.userId === user?.id,
   );

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../Header-Logo/Header-Logo';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
