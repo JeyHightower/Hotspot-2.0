@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchAllSpotsThunk } from '../../store/spots';
-import SpotTile from '../SpotTile/SpotTile';
 import './SpotsIndex.css';
 
 const SpotsIndex = () => {
@@ -15,7 +14,19 @@ const SpotsIndex = () => {
   return (
     <div className="spots-grid">
       {Object.values(allSpots).map((spot) => (
-        <SpotTile key={spot.id} spot={spot} />
+        <div className="spot-tile" key={spot.id}>
+          <img src={spot.previewImage} alt={spot.name} />
+          <div className="spot-details">
+            <div className="location-price">
+              <div className="spot-location">{spot.city}, {spot.state}</div>
+              <div className="spot-price">${spot.price} night</div>
+            </div>
+            <div className="spot-rating">
+              <i className="fas fa-star"></i>
+              {spot.avgRating || 'New'}
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   );

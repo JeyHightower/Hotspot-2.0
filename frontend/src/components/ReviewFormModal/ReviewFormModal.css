@@ -11,23 +11,34 @@
 
 .review-form-modal textarea {
   width: 100%;
-  min-height: 100px;
-  margin-bottom: 15px;
-  padding: 10px;
+  min-height: 120px;
+  padding: 12px;
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+textarea:focus {
+  border-color: #FF416C;
+  box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.1);
 }
 
 .stars-input {
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
 }
 
 .star {
   font-size: 24px;
   cursor: pointer;
-  color: #ccc;
+  transition: color 0.2s ease;
 }
 
 .star.filled {
-  color: gold;
+  color: #FF416C;
 }
 
 .error {
