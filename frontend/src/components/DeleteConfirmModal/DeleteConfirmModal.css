@@ -1,33 +1,47 @@
 .delete-confirm-modal {
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 20px 35px 20px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
     width: 400px;
 }
 
 .delete-confirm-modal h2 {
-    margin-bottom: 15px;
+    background: linear-gradient(90deg, #FF416C, #FF4B2B);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.delete-button, .cancel-button {
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
 }
 
 .delete-button {
-    background-color: #ff5a5f;
+    background: linear-gradient(90deg, #FF416C, #FF4B2B);
     color: white;
-    padding: 10px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
 }
 
 .cancel-button {
-    background-color: #444;
+    background: linear-gradient(90deg, #666, #444);
     color: white;
-    padding: 10px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
 }

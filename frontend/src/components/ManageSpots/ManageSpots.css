@@ -1,0 +1,30 @@
+
+.manage-spots {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+.manage-spots h1 {
+  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 30px;
+}
+
+.spot-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.spot-actions button {
+  flex: 1;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
