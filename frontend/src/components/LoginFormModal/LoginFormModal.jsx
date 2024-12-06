@@ -33,19 +33,12 @@ const LoginFormModal = () => {
   };
 
   const handleDemoLogin = () => {
-    const demoUser = {
-      credential: 'Demo-lition' || 'demo@user.io',
-      password: 'password1',
-    };
-
-    dispatch(sessionActions.loginThunk(demoUser))
-      .then(() => {
-        resetForm();
-        closeModal();
-      })
-      .catch((error) => {
-        console.error('Demo login failed:', error);
-      });
+    dispatch(
+      sessionActions.loginThunk({
+        credential: 'Demo-lition',
+        password: 'password1',
+      }),
+    ).then(closeModal);
   };
 
   const loginDisabled = credential.length < 4 || password.length < 6;
@@ -75,7 +68,7 @@ const LoginFormModal = () => {
         {errors.credential && <p className="error">{errors.credential}</p>}
         {errors.password && <p className="error">{errors.password}</p>}
         {errors.general && <p className="error">{errors.general}</p>}
-        <button type="submit" disabled={loginDisabled}>
+        <button type="submit" onClick={handleSubmit} disabled={loginDisabled}>
           Log In
         </button>
         <button type="button" onClick={handleDemoLogin} className="demo-button">
