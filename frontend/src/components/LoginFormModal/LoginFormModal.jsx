@@ -16,12 +16,11 @@ const LoginFormModal = () => {
     setPassword('');
     setErrors({});
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
 
-    return dispatch(sessionActions.loginThunk({ credential, password }))
+    dispatch(sessionActions.loginThunk({ credential, password }))
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
@@ -34,12 +33,19 @@ const LoginFormModal = () => {
   };
 
   const handleDemoLogin = () => {
-    dispatch(
-      sessionActions.loginThunk({
-        credential: 'Demo-lition' || 'demo@user.io', // Using username instead of email
-        password: 'password1',
-      }),
-    ).then(closeModal);
+    const demoUser = {
+      credential: 'Demo-lition' || 'demo@user.io',
+      password: 'password1',
+    };
+
+    dispatch(sessionActions.loginThunk(demoUser))
+      .then(() => {
+        resetForm();
+        closeModal();
+      })
+      .catch((error) => {
+        console.error('Demo login failed:', error);
+      });
   };
 
   const loginDisabled = credential.length < 4 || password.length < 6;
