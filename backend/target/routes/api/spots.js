@@ -433,4 +433,3 @@ router.post('/', requireAuth, validateNewSpot, async (req, res) => {
     return res.status(201).json({ ...spot, lat, lng, price });
 });
 export default router;
-//# sourceMappingURL=spots.js.map

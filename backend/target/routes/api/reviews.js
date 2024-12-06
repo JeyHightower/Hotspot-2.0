@@ -166,4 +166,3 @@ router.get('/', async (req, res) => {
 router.post('/:spotId/reviews', async (req, res) => {
     // existing code
 });
-//# sourceMappingURL=reviews.js.map

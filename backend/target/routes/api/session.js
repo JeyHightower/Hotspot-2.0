@@ -59,4 +59,3 @@ router.get("/", (req, res) => {
         return res.json({ user: null });
 });
 export default router;
-//# sourceMappingURL=session.js.map

@@ -71,4 +71,3 @@ router.post('/', validateSignup, async (req, res) => {
     }
 });
 export default router;
-//# sourceMappingURL=users.js.map

@@ -19,4 +19,3 @@ const userValidate = Prisma.defineExtension({
     },
 });
 export const prisma = new PrismaClient().$extends(userValidate);
-//# sourceMappingURL=dbclient.js.map

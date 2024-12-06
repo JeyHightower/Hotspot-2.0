@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create users first
+  //! Create users first
   const users = await prisma.user.createMany({
     data: [
       {
@@ -30,7 +30,7 @@ async function main() {
     ],
   });
 
-  // Get all created users
+  //! Get all created users
   const allUsers = await prisma.user.findMany();
 
   const spotSeeds = [
@@ -250,7 +250,7 @@ async function main() {
     },
   ];
 
-  // Create spots and distribute them among users
+  //!Create spots and distribute them among users
   for (const spot of spotSeeds) {
     await prisma.spot.create({
       data: {

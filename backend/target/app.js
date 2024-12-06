@@ -42,4 +42,3 @@ app.use((err, req, res, _next) => {
     res.status(err.status || 500);
 });
 export { app, prisma };
-//# sourceMappingURL=app.js.map

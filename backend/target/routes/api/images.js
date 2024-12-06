@@ -65,4 +65,3 @@ router.delete("/review-images/:imageId", requireAuth, async (req, res) => {
     }
 });
 export default router;
-//# sourceMappingURL=images.js.map

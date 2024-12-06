@@ -34,4 +34,3 @@ router.get('*', async (req, res) => {
     // existing code
 });
 export default router;
-//# sourceMappingURL=index.js.map

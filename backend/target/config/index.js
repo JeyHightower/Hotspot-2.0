@@ -10,4 +10,3 @@ const data = {
 };
 data.isProduction = data.environment === "production";
 export default data;
-//# sourceMappingURL=index.js.map

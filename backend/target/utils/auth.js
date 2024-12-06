@@ -55,4 +55,3 @@ export function requireAuth(req, _res, next) {
     err.status = 401;
     return next(err);
 }
-//# sourceMappingURL=auth.js.map

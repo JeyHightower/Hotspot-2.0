@@ -18,4 +18,3 @@ router.use("/reviews", reviewRouter);
 router.use("/bookings", bookingRouter);
 router.use(imagesRouter);
 export default router;
-//# sourceMappingURL=api.js.map

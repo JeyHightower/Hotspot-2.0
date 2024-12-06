@@ -167,4 +167,3 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
     };
 });
 export default router;
-//# sourceMappingURL=bookings.js.map
