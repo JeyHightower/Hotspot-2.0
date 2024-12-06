@@ -40,11 +40,9 @@ const SpotDetails = () => {
   } = spot;
 
   const isComingSoon = () => {
-    alert('Feature Coming Soon!');
+    alert('Feature coming soon');
   };
 
-
-  
   const canReview = user && !hasReviewed && user.id !== Owner?.id;
 
   const formatReviewDate = (date) => {
