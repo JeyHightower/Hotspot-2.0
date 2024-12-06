@@ -32,7 +32,7 @@ async function main() {
 
   //! Get all created users
   const allUsers = await prisma.user.findMany();
-
+  
   const spotSeeds = [
     {
       address: '123 Oceanfront Drive',
@@ -68,7 +68,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/monet/Select-34444025/original/944d56fa-e9a6-48fb-a9c5-e4e3778042c9',
+            url: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1',
             preview: true,
           },
         ],
@@ -145,7 +145,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/e8e52332-f67e-4673-a211-0f9e3ac6f6bb.jpg',
+            url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2',
             preview: true,
           },
         ],
@@ -165,7 +165,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52255440/original/6080cdd9-0c9c-4cc7-9424-7948c94e5d3c.jpeg',
+            url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4',
             preview: true,
           },
         ],
@@ -184,7 +184,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52800305/original/3ae97076-6969-4191-a74b-3689e4f13b6c.jpeg',
+            url: 'https://images.unsplash.com/photo-1577493340887-b7bfff550145',
             preview: true,
           },
         ],
@@ -223,7 +223,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-715961225376981707/original/5e590901-c7e1-46da-8680-4532b4ba5030.jpeg',
+            url: 'https://images.unsplash.com/photo-1505881502353-a1986add3762',
             preview: true,
           },
         ],
@@ -242,7 +242,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-40012920/original/d8a7b6ec-6c87-4def-9d55-3ba9e8759901.jpeg',
+            url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d',
             preview: true,
           },
         ],
