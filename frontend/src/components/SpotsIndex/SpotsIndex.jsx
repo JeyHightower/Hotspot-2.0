@@ -5,7 +5,11 @@ import './SpotsIndex.css';
 
 const SpotsIndex = () => {
   const dispatch = useDispatch();
-  const allSpots = useSelector((state) => state.spots.allSpots);
+  // Add this console.log to see what data we're getting
+  const allSpots = useSelector((state) => {
+    console.log('Redux spots state:', state.spots.allSpots);
+    return state.spots.allSpots;
+  });
 
   useEffect(() => {
     dispatch(fetchAllSpotsThunk());

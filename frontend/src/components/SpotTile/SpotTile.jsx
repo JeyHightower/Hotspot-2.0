@@ -8,7 +8,8 @@ const SpotTile = ({ spot }) => {
 
   const imageUrl =
     spot.previewImage || spot.SpotImages?.[0]?.url || defaultImage;
-  console.log(imageUrl);
+  // Add logging to check image URLs
+  console.log('Image URL:', imageUrl);
 
   return (
     <div className="spot-tile" onClick={() => navigate(`/spots/${spot.id}`)}>

@@ -145,7 +145,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/e8e52332-f67e-4673-a211-0f9e3ac6f6bb.jpg?im_w=1200',
+            url: 'https://a0.muscache.com/im/pictures/e8e52332-f67e-4673-a211-0f9e3ac6f6bb.jpg',
             preview: true,
           },
         ],
@@ -165,7 +165,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52255440/original/6080cdd9-0c9c-4cc7-9424-7948c94e5d3c.jpeg?im_w=1200',
+            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52255440/original/6080cdd9-0c9c-4cc7-9424-7948c94e5d3c.jpeg',
             preview: true,
           },
         ],
@@ -184,7 +184,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52800305/original/3ae97076-6969-4191-a74b-3689e4f13b6c.jpeg?im_w=1200',
+            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52800305/original/3ae97076-6969-4191-a74b-3689e4f13b6c.jpeg',
             preview: true,
           },
         ],
@@ -223,7 +223,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-715961225376981707/original/5e590901-c7e1-46da-8680-4532b4ba5030.jpeg?im_w=1200',
+            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-715961225376981707/original/5e590901-c7e1-46da-8680-4532b4ba5030.jpeg',
             preview: true,
           },
         ],
@@ -249,7 +249,6 @@ async function main() {
       },
     },
   ];
-
   //!Create spots and distribute them among users
   for (const spot of spotSeeds) {
     await prisma.spot.create({

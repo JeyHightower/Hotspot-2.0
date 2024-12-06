@@ -1,6 +1,5 @@
 const imageUrls = [
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6',
-    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9',
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
     'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c',

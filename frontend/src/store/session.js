@@ -84,7 +84,6 @@ const sessionReducer = (state = initialState, action) => {
   };
   const handler = handlers[action.type];
 
-  //?return new state or current state;
   return handler ? handler(state, action) : state;
 };
 
