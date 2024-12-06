@@ -240,7 +240,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1601918774946-25832a4be0d6?auto=format&fit=crop&w=1200',
+            url: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
