@@ -45,10 +45,10 @@ const SpotDetails = () => {
 
   const canReview = user && !hasReviewed && user.id !== Owner?.id;
 
-  const formatReviewDate = (date) => {
-    const options = { month: 'long', year: 'numeric' };
-    return new Date(date).toLocaleDateString('en-US', options);
-  };
+  // const formatReviewDate = (date) => {
+  //   const options = { month: 'long', year: 'numeric' };
+  //   return new Date(date).toLocaleDateString('en-US', options);
+  // };
 
   const reviewSummary = () => {
     if (!numReviews) return 'New';

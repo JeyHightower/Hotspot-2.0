@@ -1,11 +1,10 @@
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Header from '../Header-Logo/Header-Logo';
 import './Navigation.css';
 import ProfileButton from './ProfileButton';
 
 function Navigation({ isLoaded }) {
-  const navigate = useNavigate();
   const sessionUser = useSelector((state) => state.session.user);
 
   return (
