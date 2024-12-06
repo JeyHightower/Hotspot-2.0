@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useModal } from '../Context/ModalContext';
 import * as sessionActions from '../../store/session';
+import { useModal } from '../Context/ModalContext';
 import './LoginFormModal.css';
 
 const LoginFormModal = () => {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
 
   const resetForm = () => {
     setCredential('');
@@ -20,7 +20,7 @@ const LoginFormModal = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-  
+
     return dispatch(sessionActions.loginThunk({ credential, password }))
       .then(closeModal)
       .catch(async (res) => {
@@ -28,23 +28,21 @@ const LoginFormModal = () => {
         if (data && data.errors) {
           setErrors(data.errors);
         } else {
-          setErrors({ credential: "The provided credentials were invalid" });
+          setErrors({ credential: 'The provided credentials were invalid' });
         }
       });
   };
 
-  const handleDemoLogin = (e) => {
-    e.preventDefault();
-    dispatch(sessionActions.loginThunk({
-      credential: 'demo@user.io', 
-      password: 'password1'
-    }))
-    .then(() => {
-      resetForm();
-      closeModal();
-    });
+  const handleDemoLogin = () => {
+    dispatch(
+      sessionActions.loginThunk({
+        credential: 'Demo-lition' || 'demo@user.io', // Using username instead of email
+        password: 'password1',
+      }),
+    ).then(closeModal);
   };
-       const loginDisabled = credential.length < 4 || password.length < 6;
+
+  const loginDisabled = credential.length < 4 || password.length < 6;
 
   return (
     <div className="login-modal">
@@ -71,7 +69,9 @@ const LoginFormModal = () => {
         {errors.credential && <p className="error">{errors.credential}</p>}
         {errors.password && <p className="error">{errors.password}</p>}
         {errors.general && <p className="error">{errors.general}</p>}
-        <button type="submit" disabled={loginDisabled}>Log In</button>
+        <button type="submit" disabled={loginDisabled}>
+          Log In
+        </button>
         <button type="button" onClick={handleDemoLogin} className="demo-button">
           Demo User
         </button>
