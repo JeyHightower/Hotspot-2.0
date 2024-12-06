@@ -46,7 +46,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-51809333/original/0da70267-d9da-4efb-9123-2714b651c9fd.jpeg',
+            url: 'https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -66,7 +66,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/monet/Select-34444025/original/944d56fa-e9a6-48fb-a9c5-e4e3778042c9',
+            url: 'https://images.unsplash.com/photo-1518732714860-b62714ce0c59?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -85,7 +85,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/e25a9b25-fa98-4160-bfd1-039287bf38b6.jpg',
+            url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -104,7 +104,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-34113796/original/f4f7b242-db33-46fc-9080-c3d6a6fd55ec.jpeg',
+            url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -123,7 +123,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-46695796/original/9bd67185-dc83-4473-a191-9486c62aec66.jpeg',
+            url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -143,7 +143,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/e8e52332-f67e-4673-a211-0f9e3ac6f6bb.jpg',
+            url: 'https://images.unsplash.com/photo-1506974210756-8e1b8985d348?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -163,7 +163,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52255440/original/6080cdd9-0c9c-4cc7-9424-7948c94e5d3c.jpeg',
+            url: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -182,7 +182,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-52800305/original/3ae97076-6969-4191-a74b-3689e4f13b6c.jpeg',
+            url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -201,7 +201,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-51809333/original/0da70267-d9da-4efb-9123-2714b651c9fd.jpeg',
+            url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -221,7 +221,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-715961225376981707/original/5e590901-c7e1-46da-8680-4532b4ba5030.jpeg',
+            url: 'https://images.unsplash.com/photo-1615571022219-eb45cf7faa9d?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
@@ -240,14 +240,13 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://a0.muscache.com/im/pictures/miso/Hosting-40012920/original/d8a7b6ec-6c87-4def-9d55-3ba9e8759901.jpeg',
+            url: 'https://images.unsplash.com/photo-1601918774946-25832a4be0d6?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
       },
     },
   ];
-
   for (const spot of spotSeeds) {
     await prisma.spot.create({
       data: {
