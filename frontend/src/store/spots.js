@@ -4,7 +4,6 @@ import { csrfFetch } from './csrf';
 const GET_ALL_SPOTS = 'spots/getAllSpots';
 const GET_SINGLE_SPOT = 'spots/getSingleSpot';
 const CREATE_SPOT = 'spots/createSpot';
-const UPDATE_SPOT = 'spots/updateSpot';
 const DELETE_SPOT = 'spots/deleteSpot';
 
 //!ACTION CREATORS:

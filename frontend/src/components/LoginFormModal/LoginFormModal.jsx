@@ -16,20 +16,23 @@ const LoginFormModal = () => {
     setPassword('');
     setErrors({});
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    
     e.preventDefault();
     setErrors({});
-
-    dispatch(sessionActions.loginThunk({ credential, password }))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        } else {
-          setErrors({ credential: 'The provided credentials were invalid' });
-        }
-      });
+  
+    try {
+      await dispatch(sessionActions.loginThunk({ credential, password }));
+      resetForm();
+      closeModal();
+    } catch (res) {
+      const data = await res.json();
+      if (data && data.errors) {
+        setErrors(data.errors);
+      } else {
+        setErrors({ credential: 'The provided credentials were invalid' });
+      }
+    }
   };
 
   const handleDemoLogin = () => {

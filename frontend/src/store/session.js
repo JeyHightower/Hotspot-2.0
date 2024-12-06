@@ -20,13 +20,14 @@ const removeSessionUser = () => {
 
 //!THUNK ACTIONS:
 export const loginThunk = (user) => async (dispatch) => {
+  console.log('Login thunk started');
   const { credential, password } = user;
   const response = await csrfFetch('/api/session', {
     method: 'POST',
     body: JSON.stringify({
       credential,
-      password,
-    }),
+      password
+    })
   });
   const data = await response.json();
   dispatch(setSessionUser(data.user));
@@ -81,6 +82,7 @@ const sessionReducer = (state = initialState, action) => {
       ...state,
       user: null,
     }),
+    
   };
   const handler = handlers[action.type];
 
