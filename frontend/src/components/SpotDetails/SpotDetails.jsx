@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSingleSpotThunk } from '../../store/spots';
+import { useParams } from 'react-router-dom';
 import { deleteReviewThunk } from '../../store/reviews';
+import { fetchSingleSpotThunk } from '../../store/spots';
+import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
-import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import './SpotDetails.css';
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  
+
   const spot = useSelector((state) => state.spots.singleSpot);
   const user = useSelector((state) => state.session.user);
- 
+
   const hasReviewed = spot?.Reviews?.some(
     (review) => review.userId === user?.id,
   );
@@ -111,17 +111,16 @@ const SpotDetails = () => {
             <button onClick={isComingSoon}>Reserve</button>
           </div>
         </div>
-
         <div className="reviews-section">
           <h2 className="reviews-header">
             <i className="fas fa-star"></i> {reviewSummary()}
           </h2>
-          
+
           {canReview && (
             <OpenModalButton
               buttonText="Post Your Review"
               modalComponent={
-                <ReviewFormModal 
+                <ReviewFormModal
                   spotId={spotId}
                   onReviewSubmit={() => {
                     dispatch(fetchSingleSpotThunk(spotId));
@@ -130,34 +129,17 @@ const SpotDetails = () => {
               }
             />
           )}
-          
-          {reviews?.length > 0 ? (
-            <div className="reviews-list">
-              {reviews
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map(review => (
-                  <div key={review.id} className="review-item">
-                    <h3>{review.User.firstName}</h3>
-                    <div className="review-date">
-                      {formatReviewDate(review.createdAt)}
-                    </div>
-                    <p>{review.review}</p>
-                    {user?.id === review.userId && (
-                      <OpenModalButton
-                        buttonText="Delete"
-                        modalComponent={
-                          <DeleteConfirmModal
-                            onDelete={handleDeleteReview(review.id)}
-                            type="Review"
-                          />
-                        }
-                      />
-                    )}
-                  </div>
-                ))}
-            </div>
-          ) : (
-            user && user.id !== Owner?.id && <p>Be the first to post a review!</p>
+
+          {user?.id === reviews.userId && (
+            <OpenModalButton
+              buttonText="Delete"
+              modalComponent={
+                <DeleteConfirmModal
+                  onDelete={handleDeleteReview(reviews.id)}
+                  type="Review"
+                />
+              }
+            />
           )}
         </div>
       </div>

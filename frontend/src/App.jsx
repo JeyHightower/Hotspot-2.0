@@ -5,9 +5,6 @@ import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpotForm from './components/CreateSpotForm/CreateSpotForm';
 import ManageSpots from './components/ManageSpots/ManageSpots';
 
-
-
-/// Router configuration with nested children
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -17,33 +14,27 @@ const router = createBrowserRouter([
         element: <SpotsIndex />,
       },
       {
-        path: '/spots',
-        children: [
-          {
-            path: 'current',
-            element: <ManageSpots />,
-          },
-          {
-            path: ':spotId',
-            element: <SpotDetails />,
-          },
-          {
-            path: 'new',
-            element: <CreateSpotForm />,
-          },
-          {
-            path:':spotId/edit',
-            element: <CreateSpotForm />
-          }
-        ],
+        path: '/spots/current',
+        element: <ManageSpots />,
+      },
+      {
+        path: '/spots/:spotId',
+        element: <SpotDetails />,
+      },
+      {
+        path: '/spots/new',
+        element: <CreateSpotForm />,
+      },
+      {
+        path: '/spots/:spotId/edit',
+        element: <CreateSpotForm />,
       },
     ],
   },
 ]);
 
-function App(){
-  return <RouterProvider router={router} />
+function App() {
+  return <RouterProvider router={router} />;
 }
-
 
 export default App;

@@ -13,9 +13,8 @@ const ManageSpots = () => {
   const user = useSelector((state) => state.session.user);
   const allSpots = useSelector((state) => state.spots.allSpots);
 
-
   const userSpots = Object.values(allSpots).filter(
-    (spot) => spot.ownerId === user?.id,
+    (spot) => spot.ownerId === user?.id
   );
 
   useEffect(() => {
@@ -36,9 +35,7 @@ const ManageSpots = () => {
     <div className="manage-spots">
       <h1>Manage Spots</h1>
       {userSpots.length === 0 ? (
-        <button
-          onClick={() => navigate('/spots/new')}
-          className="create-spot-button">
+        <button onClick={() => navigate('/spots/new')} className="create-spot-button">
           Create a New Spot
         </button>
       ) : (
@@ -47,11 +44,7 @@ const ManageSpots = () => {
             <div key={spot.id} className="spot-tile-container">
               <SpotTile spot={spot} />
               <div className="spot-actions">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/spots/${spot.id}/edit`);
-                  }}>
+                <button onClick={() => navigate(`/spots/${spot.id}/edit`)}>
                   Update
                 </button>
                 <OpenModalButton

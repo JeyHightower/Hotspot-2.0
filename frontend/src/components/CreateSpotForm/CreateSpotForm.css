@@ -5,25 +5,19 @@ body {
     margin: 0;
     padding: 0;
 }
-
 /* Container for the Create Spot Form */
 .create-spot-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 25px 20px 35px 20px;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .create-spot-form h1 {
-  margin: 0 0 20px 0;
-  font-size: 24px;
-  font-weight: 600;
   text-align: center;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  margin-bottom: 30px;
 }
 
 /* Form Styles */
@@ -42,26 +36,23 @@ form {
 
 /* Label Styles */
 label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #2d2d2d;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
+  font-weight: 500;
 }
 
 /* Input Styles */
-input[type="text"],
-input[type="number"],
-textarea {
-  width: calc(100% - 24px);
+input, textarea {
+  width: 100%;
   padding: 10px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  box-sizing: border-box;
-  border: 2px solid #f0f0f0;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  background: #fafafa;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 /* Input Focus Styles */
@@ -75,55 +66,43 @@ textarea:focus {
 
 /* Section Styles */
 section {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 65, 108, 0.1);
+  border-bottom: 1px solid #eee;
 }
 
 section h2 {
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: #2d2d2d;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 section p {
   color: #666;
-  font-size: 13px;
   margin-bottom: 15px;
 }
 
 /* Error Message Styles */
 .error {
-  color: #FF416C;
-  font-size: 14px;
-  margin: 5px 0;
+  color: #ff4b2b;
+  font-size: 12px;
+  margin-top: 5px;
 }
 
 /* Button Styles */
 button {
   width: 100%;
   padding: 12px;
-  margin: 15px 0 5px 0;
-  font-size: 15px;
-  font-weight: 500;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: #ff4b2b;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: transform 0.3s ease;
 }
 
 /* Button Hover Styles */
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 65, 108, 0.2);
+  background: #ff416c;
 }
-
-button:active {
-  transform: translateY(1px);
-}
-
 .create-spot-container {
   max-width: 800px;
   margin: 40px auto;
@@ -152,5 +131,9 @@ button:active {
 
 .form-section h3 {
   color: #2d2d2d;
+  margin-bottom: 15px;
+}
+
+.form-group {
   margin-bottom: 15px;
 }
