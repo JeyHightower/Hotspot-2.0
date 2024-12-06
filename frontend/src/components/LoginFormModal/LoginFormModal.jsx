@@ -35,13 +35,15 @@ const LoginFormModal = () => {
 
   const handleDemoLogin = (e) => {
     e.preventDefault();
-    return dispatch(sessionActions.loginThunk({credential: 'demo@user.io', password: 'password1'}))
+    dispatch(sessionActions.loginThunk({
+      credential: 'demo@user.io', 
+      password: 'password1'
+    }))
     .then(() => {
       resetForm();
       closeModal();
     });
   };
-
        const loginDisabled = credential.length < 4 || password.length < 6;
 
   return (

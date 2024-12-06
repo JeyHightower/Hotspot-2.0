@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../Header-Logo/Header-Logo';
-import ProfileButton from './ProfileButton';
 import './Navigation.css';
+import ProfileButton from './ProfileButton';
 
 function Navigation({ isLoaded }) {
   const navigate = useNavigate();

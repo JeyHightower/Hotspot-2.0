@@ -15,7 +15,7 @@ const ProfileButton = ({ user }) => {
 
   const toggleMenu = (e) => {
     e.stopPropagation();
-    setShowMenu((prev) => !prev); // Toggle the menu
+    setShowMenu((prev) => !prev);
   };
 
   useEffect(() => {
@@ -41,7 +41,8 @@ const ProfileButton = ({ user }) => {
     navigate('/');
   };
 
-  const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden'); // Add 'hidden' class when not showing
+  const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden');
+  
   return (
     <>
       <button onClick={toggleMenu} className="profile-trigger">
@@ -51,16 +52,14 @@ const ProfileButton = ({ user }) => {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li className="user-info">Hello, {user.firstName}</li>
-            <li className="user-info">
-              {user.firstName} {user.lastName}
-            </li>
-            <li className="user-email">{user.email}</li>
-            <li>
-              <button className="logout-button" onClick={logout}>
-                Log Out
-              </button>
-            </li>
+            <div className="user-info-container">
+              <span className="user-info">{user.firstName}</span>
+              <span className="user-info">{user.lastName}</span>
+            </div>
+            <div className="user-email">{user.email}</div>
+            <button className="logout-button" onClick={logout}>
+              Log Out
+            </button>
           </>
         ) : (
           <>
