@@ -66,7 +66,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1518732714860-b62714ce0c59?auto=format&fit=crop&w=1200',
+            url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=1200',
             preview: true,
           },
         ],
