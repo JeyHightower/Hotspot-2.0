@@ -1,4 +1,4 @@
-import { csrfFetch } from './csrf';
+import { csrfFetch, restoreCSRF } from './csrf';
 
 //!ACTION TYPES:
 const SET_SESSION_USER = 'session/setSessionUser';
@@ -20,15 +20,21 @@ const removeSessionUser = () => {
 
 //!THUNK ACTIONS:
 export const loginThunk = (user) => async (dispatch) => {
-  console.log('Login thunk started');
+  await restoreCSRF();
+
   const { credential, password } = user;
+
   const response = await csrfFetch('/api/session', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
       credential,
-      password
-    })
+      password,
+    }),
   });
+
   const data = await response.json();
   dispatch(setSessionUser(data.user));
   return response;
@@ -82,7 +88,6 @@ const sessionReducer = (state = initialState, action) => {
       ...state,
       user: null,
     }),
-    
   };
   const handler = handlers[action.type];
 
