@@ -15,7 +15,6 @@
     object-fit: cover;
     display: block;
 }
-
 .spot-info {
     padding: 16px;
     display: flex;
@@ -26,7 +25,7 @@
 .location-price {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
 .spot-location {
@@ -37,6 +36,7 @@
 }
 
 .spot-price {
+    font-size: 13px;
     font-weight: 500;
     background: linear-gradient(90deg, #FF416C, #FF4B2B);
     -webkit-background-clip: text;
@@ -52,8 +52,8 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    margin-left: auto;
 }
-
 .rating svg {
     color: #FF416C;
 }

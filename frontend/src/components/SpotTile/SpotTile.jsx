@@ -23,16 +23,13 @@ const SpotTile = ({ spot }) => {
         }}
       />
       <div className="spot-info">
-        <p className="spot-location">
-          {spot.city}, {spot.state}
-        </p>
-        <div className="rating-price">
-          <span className="rating">
-            <FaStar />{' '}
-            {spot.avgRating ? Number(spot.avgRating).toFixed(1) : 'New'}
-          </span>
+        <div className="location-price">
+          <p className="spot-location">{spot.city}, {spot.state}</p>
           <p className="spot-price">${spot.price} night</p>
         </div>
+        <span className="rating">
+          <FaStar /> {spot.avgRating ? Number(spot.avgRating).toFixed(1) : 'New'}
+        </span>
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ const ProfileButton = ({ user }) => {
         {user ? (
           <>
             <div className="user-info-container">
-              <span className="user-info">{user.firstName}</span>
+              <span className="user-info">Hello, {user.firstName}</span>
               <span className="user-info">{user.lastName}</span>
             </div>
             <div className="user-email">{user.email}</div>

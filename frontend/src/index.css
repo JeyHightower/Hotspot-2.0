@@ -113,3 +113,21 @@ input:focus, textarea:focus {
   font-size: var(--text-small);
   margin-top: var(--spacing-xs);
 }
+
+/* Add to your existing button styles */
+.auth-button {
+  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2);
+}
