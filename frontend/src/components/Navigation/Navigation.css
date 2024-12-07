@@ -37,7 +37,7 @@ a {
 }
 
 a:hover {
-  color: #FF416C;
+  color: #ff416c;
   background-color: rgba(255, 65, 108, 0.08);
 }
 
@@ -48,9 +48,10 @@ a:hover {
   gap: 20px;
   margin-left: auto;
 }
+
 .nav-right a {
   display: inline-block;
-  color: #FF416C;
+  color: #ff416c;
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 500;
@@ -64,14 +65,16 @@ a:hover {
 
 .nav-right a:hover {
   transform: translateY(-2px);
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
   color: white;
   box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2);
 }
+
 /* Profile section styling */
 .profile-button-container {
   position: relative;
   margin-left: auto;
+  order: 2; /* Moved order property here */
 }
 
 .profile-button-container button {
@@ -97,58 +100,53 @@ a:hover {
   position: absolute;
   right: 20px;
   top: 60px;
-  width: 220px;
+  width: auto; /* Let content determine width */
+  min-width: 200px; /* Minimum width to prevent squishing */
   background: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  padding: 16px;
-  animation: dropdownFade 0.3s ease;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
-
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.user-info-container {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.user-info {
+.user-info,
+.user-email,
+.logout-button {
   font-size: 14px;
-  font-weight: 600;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 10px;
-  display: inline;
+  font-weight: 500;
+  color: #ff416c;
+  white-space: nowrap;
+  margin: 0;
+}
+.logout-button {
+  font-size: 14px; /* Match text size */
+  font-weight: 500;
+  color: #ff416c;
+  padding: 6px 12px; /* Reduce padding to match size */
+  border: 2px solid #ff416c;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none; /* Remove any text decoration */
+  width: fit-content; /* Prevent button from stretching */
 }
 
-.user-email {
-  font-size: 12px;
-  color: #717171;
-  display: block;
-  margin: 12px 0;
+.logout-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2);
 }
-
 .profile-dropdown a {
   display: block;
   width: 80%;
   margin: 8px auto;
-  padding: 10px;
+  padding: 10 px;
   text-align: center;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
   color: white;
   border-radius: 6px;
   font-size: 14px;
@@ -168,7 +166,6 @@ a:hover {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(255, 65, 108, 0.1);
 }
-
 .hidden {
   display: none;
 }
@@ -187,7 +184,6 @@ a:hover {
 .create-spot-button {
   order: 1;
 }
-
-.profile-button-container {
-  order: 2;
+.user-info-container {
+  display: none; /* Remove this container's influence */
 }

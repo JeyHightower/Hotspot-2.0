@@ -42,7 +42,7 @@ const ProfileButton = ({ user }) => {
   };
 
   const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden');
-  
+
   return (
     <>
       <button onClick={toggleMenu} className="profile-trigger">
@@ -52,11 +52,8 @@ const ProfileButton = ({ user }) => {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <div className="user-info-container">
-              <span className="user-info">Hello, {user.firstName}</span>
-              <span className="user-info">{user.lastName}</span>
-            </div>
-            <div className="user-email">{user.email}</div>
+            <span className="user-info">Hello, {user.firstName}</span>
+            <span className="user-email">{user.email}</span>
             <button className="logout-button" onClick={logout}>
               Log Out
             </button>
