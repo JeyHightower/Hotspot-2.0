@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useModal } from '../Context/ModalContext';
 import * as sessionActions from '../../store/session';
+import { useModal } from '../Context/ModalContext';
 import './SignupFormModal.css';
 const SignupFormModal = () => {
-     const dispatch = useDispatch();
+  console.log('Rendering SignupFormModal');
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -14,8 +15,6 @@ const SignupFormModal = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,13 +28,14 @@ const SignupFormModal = () => {
           lastName,
           password,
         }),
-      ).then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data?.errors) {
-          setErrors(data.errors);
-        }
-      });
+      )
+        .then(closeModal)
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data?.errors) {
+            setErrors(data.errors);
+          }
+        });
     }
     return setErrors({
       confirmPassword:
@@ -43,8 +43,13 @@ const SignupFormModal = () => {
     });
   };
 
-  const signupDisabled = username.length < 4 || !firstName || !lastName || !email || password.length < 6 || !confirmPassword;
-
+  const signupDisabled =
+    username.length < 4 ||
+    !firstName ||
+    !lastName ||
+    !email ||
+    password.length < 6 ||
+    !confirmPassword;
   return (
     <div className="signup-modal">
       <h1>Sign Up</h1>
@@ -121,10 +126,12 @@ const SignupFormModal = () => {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit" disabled={signupDisabled}>Sign Up</button>
+        <button type="submit" disabled={signupDisabled}>
+          Sign Up
+        </button>
       </form>
     </div>
   );
-}
+};
 
 export default SignupFormModal;

@@ -5,8 +5,9 @@ nav {
   box-shadow: 0 2px 15px rgba(255, 65, 108, 0.08);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 99;
   backdrop-filter: blur(8px);
+  height: 80px;
 }
 
 /* Logo and navigation links */
