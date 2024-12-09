@@ -4,11 +4,11 @@
   "description": "Hotspot-2.0 full stack application",
   "main": "index.js",
   "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm install && npm install -D && npx prisma generate && npx prisma migrate deploy && tsc",
     "render-postbuild": "npm run build --prefix frontend",
     "dev:backend": "npm install --prefix backend start",
-    "dev:frontend": "npm install --prefix frontend start",
-   "build": "cd backend && npm install && npm install -D && npx prisma generate && npx prisma migrate deploy && tsc",
-    "start": "npm start --prefix backend"
+    "dev:frontend": "npm install --prefix frontend start"
   },
   "keywords": [],
   "author": "",
