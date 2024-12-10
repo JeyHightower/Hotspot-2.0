@@ -3,13 +3,14 @@ import { check } from 'express-validator';
 import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
 import { requireAuth } from '../../utils/auth.js';
 import { prisma } from '../../dbclient.js';
+import { sendResponse } from '../../utils/response.js';
 const router = Router();
 function formatDate(d) {
     return d.toISOString().split('T')[0];
 }
 router.get('/current', requireAuth, async (req, res) => {
     const user = req.user;
-    let bookings = await prisma.booking.findMany({
+    const bookings = await prisma.booking.findMany({
         where: { userId: user.id },
         include: {
             spot: {
@@ -42,8 +43,7 @@ router.get('/current', requireAuth, async (req, res) => {
             ...rest,
         };
     });
-    where: '';
-    return res.json({ Bookings: sequelized });
+    sendResponse(res, { Bookings: sequelized });
 });
 const validateNewBooking = [
     check('startDate')
@@ -121,50 +121,39 @@ router.put('/:bookingId', requireAuth, validateNewBooking, async (req, res) => {
         endDate: formatDate(newBooking.endDate),
     });
 });
-// delete booking by  bookingid
 router.delete('/:bookingId', requireAuth, async (req, res) => {
-    return async (req, res) => {
-        const { bookingId } = req.params;
-        if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
-            return res.status(404).json({ message: "Booking couldn't be found" });
+    const { bookingId } = req.params;
+    if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
+        res.status(404);
+        sendResponse(res, { message: "Booking couldn't be found" });
+        return;
+    }
+    const userId = req.user.id;
+    try {
+        const booking = await prisma.booking.findUnique({
+            where: { id: Number(bookingId) },
+            include: {
+                spot: { select: { ownerId: true } },
+            },
+        });
+        if (!booking) {
+            res.status(404);
+            sendResponse(res, { message: "Booking couldn't be found" });
+            return;
         }
-        const userId = req.user.id;
-        try {
-            const booking = await prisma.booking.findUnique({
-                where: {
-                    id: Number(bookingId),
-                },
-                include: {
-                    spot: {
-                        select: {
-                            ownerId: true,
-                        },
-                    },
-                },
-            });
-            if (!booking) {
-                if (!(await prisma.booking.findUnique({
-                    where: { id: Number(bookingId) },
-                }))) {
-                    return res.status(404).json({ message: "Booking couldn't be found" });
-                }
-                return res
-                    .status(403)
-                    .json({ message: 'You are not authorized to delete this booking' });
-            }
-            if (booking.userId !== userId && booking.spot.ownerId !== userId) {
-                return res
-                    .status(403)
-                    .json({ message: 'You are not authorized to delete this booking' });
-            }
-            await prisma.booking.delete({ where: { id: Number(bookingId) } });
-            return res.status(200).json({ message: 'successfully deleted' });
+        if (booking.userId !== userId && booking.spot.ownerId !== userId) {
+            res.status(403);
+            sendResponse(res, { message: 'You are not authorized to delete this booking' });
+            return;
         }
-        catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
-    };
+        await prisma.booking.delete({ where: { id: Number(bookingId) } });
+        sendResponse(res, { message: 'Successfully deleted' });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500);
+        sendResponse(res, { message: 'Internal Server Error' });
+    }
 });
 export default router;
 //# sourceMappingURL=bookings.js.map

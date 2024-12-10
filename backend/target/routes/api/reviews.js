@@ -3,6 +3,7 @@ import { handleValidationErrors } from '../../utils/validation.js';
 import { check } from 'express-validator';
 import { requireAuth } from '../../utils/auth.js';
 import { prisma } from '../../dbclient.js';
+import { sendResponse } from '../../utils/response.js';
 const router = Router();
 router.get('/current', requireAuth, async (req, res) => {
     const user = req.user;
@@ -34,12 +35,15 @@ router.get('/current', requireAuth, async (req, res) => {
         };
         return out;
     });
-    return res.json({ Reviews: sequelized });
+    sendResponse(res, { Reviews: sequelized });
 });
 router.delete('/:reviewId', requireAuth, async (req, res) => {
     const reviewId = Number(req.params['reviewId']);
-    if (isNaN(reviewId) || reviewId > 2 ** 31)
-        res.status(404).json({ message: "Review couldn't be found" });
+    if (isNaN(reviewId) || reviewId > 2 ** 31) {
+        res.status(404);
+        sendResponse(res, { message: "Review couldn't be found" });
+        return;
+    }
     const userId = req.user.id;
     try {
         const review = await prisma.review.findUnique({
@@ -50,25 +54,22 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
         });
         if (!review) {
             if (!(await prisma.review.findUnique({ where: { id: reviewId } }))) {
-                return res.status(404).json({
-                    message: "Review couldn't be found",
-                });
+                res.status(404);
+                sendResponse(res, { message: "Review couldn't be found" });
+                return;
             }
-            return res.status(403).json({
-                message: 'You are not authorized to delete this review',
-            });
+            res.status(403);
+            sendResponse(res, { message: 'You are not authorized to delete this review' });
+            return;
         }
         await prisma.review.delete({
             where: { id: reviewId },
         });
-        return res.status(200).json({
-            message: 'Successfully deleted',
-        });
+        sendResponse(res, { message: 'Successfully deleted' });
     }
     catch (error) {
-        return res.status(500).json({
-            message: 'Internal Server Error',
-        });
+        res.status(500);
+        sendResponse(res, { message: 'Internal Server Error' });
     }
 });
 const validateReviewImage = [
@@ -85,7 +86,8 @@ router.post('/:reviewId/images', requireAuth, validateReviewImage, async (req, r
         }
     }
     catch (e) {
-        return res.status(404).json({ message: "Review couldn't be found" });
+        res.status(404).json({ message: "Review couldn't be found" });
+        return;
     }
     const { url } = req.body;
     const review = await prisma.review.findFirst({
@@ -94,14 +96,14 @@ router.post('/:reviewId/images', requireAuth, validateReviewImage, async (req, r
     });
     if (review) {
         if (review.userId !== user.id) {
-            return res
-                .status(403)
-                .json({ message: 'You do not have permission to edit this review' });
+            res.status(403).json({ message: 'You do not have permission to edit this review' });
+            return;
         }
         if (review.images.length >= 10) {
-            return res.status(403).json({
+            res.status(403).json({
                 message: 'Maximum number of images for this resource was reached',
             });
+            return;
         }
         let img = await prisma.reviewImage.create({
             data: {
@@ -109,10 +111,10 @@ router.post('/:reviewId/images', requireAuth, validateReviewImage, async (req, r
                 url,
             },
         });
-        return res.status(201).json({ id: img.id, url });
+        res.status(201).json({ id: img.id, url });
     }
     else {
-        return res.status(404).json({ message: "Review couldn't be found" });
+        res.status(404).json({ message: "Review couldn't be found" });
     }
 });
 const validateReviewEdit = [

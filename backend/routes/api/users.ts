@@ -1,3 +1,5 @@
+
+import { sendResponse } from '../../utils/response.js';
 import { Router } from 'express';
 import { handleValidationErrors } from '../../utils/validation.js';
 import bcrypt from 'bcryptjs';
@@ -41,8 +43,7 @@ const validateSignup = [
   handleValidationErrors,
 ];
 
-router.post('/', validateSignup, async (req: Request, res: Response) => {
-  const { email, password, username, firstName, lastName } = req.body;
+router.post('/', validateSignup, async (req: Request, res: Response): Promise<void> => {  const { email, password, username, firstName, lastName } = req.body;
   const hashedPassword = bcrypt.hashSync(password);
 
   try {
@@ -57,32 +58,25 @@ router.post('/', validateSignup, async (req: Request, res: Response) => {
     };
 
     setTokenCookie(res, safeUser);
-
     res.status(201);
-
-    return res.json({
+    sendResponse(res, {
       user: { ...safeUser, firstName, lastName },
     });
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
       let fields = e.meta?.['target'];
-
       if (!(fields instanceof Array)) {
         throw Error('meta.target must be array');
       }
-
       let err = new Error('User already exists');
       err.message = 'User already exists';
       err.errors = {};
-
       for (const field of fields) {
         err.errors[field] = `User with that ${field} already exists`;
       }
-
       throw err;
     } else {
       throw e;
     }
   }
-});
-export default router;
+});export default router;

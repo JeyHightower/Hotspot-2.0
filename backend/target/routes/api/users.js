@@ -1,3 +1,4 @@
+import { sendResponse } from '../../utils/response.js';
 import { Router } from 'express';
 import { handleValidationErrors } from '../../utils/validation.js';
 import bcrypt from 'bcryptjs';
@@ -47,7 +48,7 @@ router.post('/', validateSignup, async (req, res) => {
         };
         setTokenCookie(res, safeUser);
         res.status(201);
-        return res.json({
+        sendResponse(res, {
             user: { ...safeUser, firstName, lastName },
         });
     }

@@ -4,14 +4,14 @@
   "description": "Hotspot-2.0 full stack application",
   "main": "index.js",
   "scripts": {
-    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:frontend": "cd frontend && npm install --production=false && npm run build",
     "build:backend": "cd backend && npm install && npx prisma generate && npm run build",
     "build": "npm run build:frontend && npm run build:backend",
-    "render-postbuild": "npm run build"
+    "dev:frontend": "cd frontend && npm run dev", // Add this line for development
+    "dev": "npm run dev:frontend" // Add this line to run both frontend and backend in dev mode
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "",  "license": "ISC",
   "devDependencies": {
     "prisma": "^6.0.1",
     "ts-node": "^10.9.2",

@@ -5,6 +5,7 @@ import { setTokenCookie, restoreUser, requireAuth } from '../../utils/auth.js';
 import { bookingOverlap } from '../../utils/validation.js';
 import { prisma } from '../../dbclient.js';
 import { Booking } from '@prisma/client';
+import { sendResponse } from '../../utils/response.js';
 
 const router = Router();
 
@@ -14,8 +15,7 @@ function formatDate(d: Date): string {
 
 router.get('/current', requireAuth, async (req, res) => {
   const user = req.user!;
-
-  let bookings = await prisma.booking.findMany({
+  const bookings = await prisma.booking.findMany({
     where: { userId: user.id },
     include: {
       spot: {
@@ -38,7 +38,6 @@ router.get('/current', requireAuth, async (req, res) => {
 
   const sequelized = bookings.map((b) => {
     const { spot, startDate, endDate, ...rest } = b;
-
     const { images, ...spotRest } = spot;
     return {
       Spot: {
@@ -51,9 +50,7 @@ router.get('/current', requireAuth, async (req, res) => {
     };
   });
 
-  where: '';
-
-  return res.json({ Bookings: sequelized });
+  sendResponse(res, { Bookings: sequelized });
 });
 
 const validateNewBooking = [
@@ -151,58 +148,46 @@ router.put(
   },
 );
 
-// delete booking by  bookingid
+import { Request, Response } from 'express';
 
-router.delete('/:bookingId', requireAuth, async (req, res) => {
-  return async (req: Request, res: Response) => {
-    const { bookingId } = req.params;
+router.delete('/:bookingId', requireAuth, async (req: Request, res: Response): Promise<void> => {
+  const { bookingId } = req.params;
 
-    if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
-      return res.status(404).json({ message: "Booking couldn't be found" });
+  if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
+    res.status(404);
+    sendResponse(res, { message: "Booking couldn't be found" });
+    return;
+  }
+
+  const userId = req.user!.id;
+
+  try {
+    const booking = await prisma.booking.findUnique({
+      where: { id: Number(bookingId) },
+      include: {
+        spot: { select: { ownerId: true } },
+      },
+    });
+
+    if (!booking) {
+      res.status(404);
+      sendResponse(res, { message: "Booking couldn't be found" });
+      return;
     }
 
-    const userId = req.user!.id;
-
-    try {
-      const booking = await prisma.booking.findUnique({
-        where: {
-          id: Number(bookingId),
-        },
-        include: {
-          spot: {
-            select: {
-              ownerId: true,
-            },
-          },
-        },
-      });
-
-      if (!booking) {
-        if (
-          !(await prisma.booking.findUnique({
-            where: { id: Number(bookingId) },
-          }))
-        ) {
-          return res.status(404).json({ message: "Booking couldn't be found" });
-        }
-        return res
-          .status(403)
-          .json({ message: 'You are not authorized to delete this booking' });
-      }
-
-      if (booking.userId !== userId && booking.spot.ownerId !== userId) {
-        return res
-          .status(403)
-          .json({ message: 'You are not authorized to delete this booking' });
-      }
-
-      await prisma.booking.delete({ where: { id: Number(bookingId) } });
-      return res.status(200).json({ message: 'successfully deleted' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal Server Error' });
+    if (booking.userId !== userId && booking.spot.ownerId !== userId) {
+      res.status(403);
+      sendResponse(res, { message: 'You are not authorized to delete this booking' });
+      return;
     }
-  };
+
+    await prisma.booking.delete({ where: { id: Number(bookingId) } });
+    sendResponse(res, { message: 'Successfully deleted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+    sendResponse(res, { message: 'Internal Server Error' });
+  }
 });
 
 export default router;

@@ -4,6 +4,7 @@ import { handleValidationErrors } from '../../utils/validation.js';
 import bcrypt from 'bcryptjs';
 import { setTokenCookie, restoreUser } from '../../utils/auth.js';
 import { prisma } from '../../dbclient.js';
+import { sendResponse } from '../../utils/response.js';
 
 const router = Router();
 
@@ -30,7 +31,8 @@ router.post('/', validateLogin, async (req: Request, res: Response) => {
 
   if (!user || !bcrypt.compareSync(password, user.hashedPassword)) {
     res.status(401);
-    return res.json({ message: 'Invalid credentials' });
+    sendResponse(res, { message: 'Invalid credentials' });
+    return;
   }
 
   const safeUser = {
@@ -40,17 +42,17 @@ router.post('/', validateLogin, async (req: Request, res: Response) => {
   };
 
   setTokenCookie(res, safeUser);
-
-  return res.json({
+  sendResponse(res, {
     user: { ...safeUser, firstName: user.firstName, lastName: user.lastName },
   });
 });
+
 router.delete('/', (_req: Request, res: Response) => {
   res.clearCookie('token');
-  return res.json({ message: 'success' });
+  sendResponse(res, { message: 'success' });
 });
 
-router.get('/', (req, res) => {
+router.get('/', (req: Request, res: Response) => {
   const { user } = req;
   if (user) {
     const safeUser = {
@@ -60,10 +62,10 @@ router.get('/', (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
     };
-    return res.json({
-      user: safeUser,
-    });
-  } else return res.json({ user: null });
+    sendResponse(res, { user: safeUser });
+  } else {
+    sendResponse(res, { user: null });
+  }
 });
 
 export default router;
