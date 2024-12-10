@@ -1,6 +1,6 @@
 .review-form-modal {
   width: 400px;
-  background: white;
+  background: rgba(255, 255, 255, 0.98);
   border-radius: 15px;
   padding: 25px;
   box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
@@ -64,6 +64,11 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.review-form-modal button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2);
 }
 
 .review-form-modal button:disabled {

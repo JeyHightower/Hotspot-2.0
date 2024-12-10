@@ -3,83 +3,74 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 600px;
-  min-width: 280px;
-  padding: 20px 15px 30px 15px;
+  width: 400px; /* Compact width for better focus */
+  padding: 20px;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
-  max-height: 80vh;
+  transform: translate(-50%, -50%); /* Center the modal on the screen */
+  background: #ffffff; /* Solid background for a clean look */
+  border-radius: 12px; /* Subtle rounding for modern design */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  max-height: 90vh;
   overflow-y: auto;
+  box-sizing: border-box; /* Include padding in width */
 }
 
 .create-spot-modal h1 {
-  margin: 15px 0 15px 0;
-  padding-top: 15px;
-  font-size: 22px;
+  margin: 0 0 20px 0;
+  font-size: 22px; /* Slightly larger for emphasis */
   font-weight: 600;
-  text-align: center;
-  background: linear-gradient(90deg, #ff416c, #ff4b2b);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  position: relative;
-  z-index: 2001;
+  text-align: center; /* Center the text within the h1 */
+  color: #333; /* Darker text for better readability */
+  width: 100%; /* Ensure it takes full width for centering */
 }
 
 .create-spot-modal form {
-  max-width: 520px;
-  width: 85%;
-  padding: 20px;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Consistent spacing between form elements */
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .create-spot-modal input,
 .create-spot-modal textarea {
-  width: calc(100% - 24px);
+  width: 100%; /* Ensure inputs take full width of form */
   padding: 10px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  border: 2px solid #f0f0f0;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  background: #fafafa;
-  box-sizing: border-box;
+  font-size: 14px;
+  border: 1px solid #ccc; /* Neutral border color */
+  border-radius: 6px; /* Consistent rounding */
+  transition: border-color 0.2s ease;
+  background: #f7f7f7; /* Light background for inputs */
+  box-sizing: border-box; /* Include padding and border in width */
 }
 
 .create-spot-modal input:focus,
 .create-spot-modal textarea:focus {
-  border-color: #ff416c;
-  box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.1);
-  transform: translateY(-1px);
-  background: white;
+  border-color: #ff416c; /* Accent color for focus */
+  box-shadow: 0 0 0 2px rgba(255, 65, 108, 0.1);
+  background: #fff; /* White background on focus */
 }
 
 .create-spot-modal button {
   width: 100%;
   padding: 12px;
   background: linear-gradient(90deg, #ff416c, #ff4b2b);
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 15px; /* Slightly larger for prominence */
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 10px;
 }
 
 .create-spot-modal button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2);
+  box-shadow: 0 2px 8px rgba(255, 65, 108, 0.2);
 }
 
 .create-spot-modal button:active {
@@ -87,12 +78,13 @@
 }
 
 .create-spot-modal button:disabled {
-  background: linear-gradient(90deg, #e0e0e0, #d0d0d0);
-  transform: none;
+  background: #e0e0e0;
+  cursor: not-allowed;
 }
 
 .create-spot-modal .error {
-  color: red;
-  font-size: 14px;
-  margin: 0 0 15px 0;
+  color: #ff416c;
+  font-size: 12px;
+  margin: 0;
+  text-align: center;
 }
