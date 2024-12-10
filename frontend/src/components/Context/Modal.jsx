@@ -1,7 +1,7 @@
 
 // Modal.jsx
 import ReactDOM from 'react-dom';
-import { useModal } from '../Context/ModalContext'; // Adjust the path as necessary
+import { useModal } from '../Context/useModal'; // Adjust the path as necessary
 import './Modal.css';
 
  const Modal = () => {

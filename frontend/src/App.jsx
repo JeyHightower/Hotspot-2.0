@@ -2,7 +2,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '../src/Layout';
 import SpotsIndex from './components/SpotsIndex/SpotsIndex';
 import SpotDetails from './components/SpotDetails/SpotDetails';
-import CreateSpotForm from './components/CreateSpotForm/CreateSpotForm';
+import UpdateSpotModal from './components/UpdateSpotModal/UpdateSpotModal';
+import CreateSpotForm from './components/CreateSpotModal/CreateSpotModal';
 import ManageSpots from './components/ManageSpots/ManageSpots';
 
 const router = createBrowserRouter([
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
         element: <SpotsIndex />,
       },
       {
-        path: '/spots/current',
+        path: '/spots/manage',
         element: <ManageSpots />,
       },
       {
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/spots/:spotId/edit',
-        element: <CreateSpotForm />,
+        element: <UpdateSpotModal />
       },
     ],
   },

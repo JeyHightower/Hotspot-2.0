@@ -1,21 +1,38 @@
 .review-form-modal {
-  padding: 20px;
   width: 400px;
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
 }
 
 .review-form-modal h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 20px;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .review-form-modal textarea {
   width: 100%;
   min-height: 120px;
   padding: 12px;
+  font-size: 14px;
   border: 2px solid #f0f0f0;
   border-radius: 8px;
   resize: vertical;
   margin-bottom: 15px;
+  transition: all 0.2s ease;
+}
+
+.review-form-modal textarea:focus {
+  border-color: #ff416c;
+  box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.1);
+  outline: none;
 }
 
 .stars-input {
@@ -33,26 +50,30 @@
 }
 
 .star.filled {
-  color: #FF416C;
+  color: #ff416c;
 }
 
-.error {
-  color: #ff4b2b;
-  margin: 10px 0;
-  text-align: center;
-}
-
-button {
+.review-form-modal button {
   width: 100%;
   padding: 12px;
-  background: #ff4b2b;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
   color: white;
   border: none;
   border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-button:disabled {
+.review-form-modal button:disabled {
   background: #cccccc;
   cursor: not-allowed;
+}
+
+.error {
+  color: #ff416c;
+  font-size: 12px;
+  margin: 8px 0;
+  text-align: center;
 }

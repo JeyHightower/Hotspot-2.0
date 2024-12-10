@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaCircleUser, FaBars } from 'react-icons/fa6';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
@@ -54,6 +54,7 @@ const ProfileButton = ({ user }) => {
           <>
             <span className="user-info">Hello, {user.firstName}</span>
             <span className="user-email">{user.email}</span>
+            <Link to="/spots/manage" onClick={closeMenu}>Manage Spots</Link>
             <button className="logout-button" onClick={logout}>
               Log Out
             </button>
