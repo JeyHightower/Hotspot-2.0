@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  fetchAllSpotsThunk,
-  fetchSingleSpotThunk,
-  updateSpotThunk,
-} from '../../store/spots';
+import { fetchSingleSpotThunk, updateSpotThunk } from '../../store/spots';
 import { useModal } from '../Context/useModal';
 import './UpdateSpotModal.css';
 
 const UpdateSpotModal = ({ spotId }) => {
-  if (!spotId) {
-    return null;
-  }
   const { closeModal } = useModal();
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.singleSpot);
@@ -80,6 +73,7 @@ const UpdateSpotModal = ({ spotId }) => {
     }
   };
 
+  // Move the conditional rendering of the modal to the end
   if (!spotId) {
     return null;
   }
@@ -157,7 +151,7 @@ const UpdateSpotModal = ({ spotId }) => {
             <section>
               <h2>Describe your place to guests</h2>
               <p>
-                Mention the best features of your space, any special amentities
+                Mention the best features of your space, any special amenities
                 like fast wifi or parking, and what you love about the
                 neighborhood.
               </p>
