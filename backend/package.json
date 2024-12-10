@@ -21,7 +21,7 @@
 		"build": "tsc && npx prisma generate"
 	},
 	"dependencies": {
-		"@prisma/client": "^5.22.0",
+		"@prisma/client": "^6.0.1",
 		"@types/bcryptjs": "^2.4.6",
 		"@types/cookie-parser": "^1.4.7",
 		"@types/cors": "^2.8.17",
@@ -47,7 +47,7 @@
 		"@types/node": "^22.10.1",
 		"dotenv-cli": "^7.4.2",
 		"nodemon": "^3.1.5",
-		"prisma": "^5.22.0",
+		"prisma": "^6.0.1",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.7.2"
 	}
