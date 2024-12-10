@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const auth_js_1 = require("../utils/auth.js");
+const session_js_1 = __importDefault(require("./api/session.js"));
+const users_js_1 = __importDefault(require("./api/users.js"));
+const spots_js_1 = __importDefault(require("./api/spots.js"));
+const reviews_js_1 = __importDefault(require("./api/reviews.js"));
+const bookings_js_1 = __importDefault(require("./api/bookings.js"));
+const images_js_1 = __importDefault(require("./api/images.js"));
+const router = express_1.default.Router();
+router.use(auth_js_1.restoreUser);
+router.use("/spots", spots_js_1.default);
+router.use("/session", session_js_1.default);
+router.use("/users", users_js_1.default);
+router.use("/reviews", reviews_js_1.default);
+router.use("/bookings", bookings_js_1.default);
+router.use(images_js_1.default);
+exports.default = router;

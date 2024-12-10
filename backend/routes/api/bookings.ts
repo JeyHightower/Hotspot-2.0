@@ -1,4 +1,5 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { check } from 'express-validator';
 import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
 import { setTokenCookie, restoreUser, requireAuth } from '../../utils/auth.js';
@@ -7,12 +8,23 @@ import { prisma } from '../../dbclient.js';
 import { Booking } from '@prisma/client';
 import { sendResponse } from '../../utils/response.js';
 
+
 const router = Router();
 
-function formatDate(d: Date): string {
-  return d.toISOString().split('T')[0]!;
+interface BookingRequest extends ExpressRequest {
+  user?: any;
+  body: {
+    startDate: string;
+    endDate: string;
+  };
+  params: {
+    bookingId?: string;
+  };
 }
 
+  export function formatDate(d: Date): string {
+    return d.toISOString().split('T')[0]!;
+  }
 router.get('/current', requireAuth, async (req, res) => {
   const user = req.user!;
   const bookings = await prisma.booking.findMany({
@@ -68,15 +80,16 @@ router.put(
   '/:bookingId',
   requireAuth,
   validateNewBooking,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response): Promise<void> => {
     const user = req.user!;
     let bookingId = parseI32(req.params['bookingId']);
     const { startDate, endDate } = req.body;
 
     if (!bookingId) {
-      return res.status(404).json({
+      res.status(404).json({
         message: "Booking couldn't be found",
       });
+      return;
     }
 
     const booking = await prisma.booking.findUnique({
@@ -85,22 +98,23 @@ router.put(
     });
 
     if (!booking) {
-      return res.status(404).json({
+      res.status(404).json({
         message: "Booking couldn't be found",
       });
+      return;
     }
 
     if (booking.userId !== user.id) {
-      return res
-        .status(403)
-        .json({ message: 'You do not have permission to edit this booking' });
+      res.status(403).json({ message: 'You do not have permission to edit this booking' });
+      return;
     }
 
     if (startDate >= endDate) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Bad Request',
         errors: { endDate: 'endDate cannot be on or before startDate' },
       });
+      return;
     }
 
     let overlap = await prisma.booking.findFirst({
@@ -130,7 +144,8 @@ router.put(
         err.errors.endDate = 'End date conflicts with an existing booking';
       }
 
-      return res.status(403).json(err);
+      res.status(403).json(err);
+      return;
     }
 
     const newBooking = await prisma.booking.update({
@@ -140,13 +155,12 @@ router.put(
         endDate,
       },
     });
-    return res.status(201).json({
+    res.status(201).json({
       ...newBooking,
       startDate: formatDate(newBooking.startDate),
       endDate: formatDate(newBooking.endDate),
     });
-  },
-);
+  },);
 
 import { Request, Response } from 'express';
 

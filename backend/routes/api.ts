@@ -2,8 +2,7 @@ import express from "express";
 import { restoreUser } from "../utils/auth.js";
 import sessionRouter from "./api/session.js";
 import userRouter from "./api/users.js";
-import spotRouter from "./api/spots.js";
-import reviewRouter from "./api/reviews.js";
+import spotRouter from "./api/spots.js";import reviewRouter from "./api/reviews.js";
 import bookingRouter from "./api/bookings.js";
 import imagesRouter from "./api/images.js";
 
