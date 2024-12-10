@@ -4,10 +4,11 @@
   "description": "Hotspot-2.0 full stack application",
   "main": "index.js",
   "scripts": {
+    "dev": "vite",
     "start": "cd backend && npm start",
-    "build:backend": "cd backend && npm install && npm install -D && npx prisma generate && npx prisma migrate deploy && tsc",
-    "build:frontend": "cd frontend && npx vite build --config vite.config.js",
-    "build": "npm run build:backend && npm run build:frontend",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:backend": "cd backend && npm install && npx prisma generate && npm run build",
+    "build": "npm run build:frontend && npm run build:backend",
     "render-postbuild": "npm run build",
     "dev:backend": "npm install --prefix backend && npm start --prefix backend",
     "dev:frontend": "npm install --prefix frontend && npm start --prefix frontend"
@@ -16,7 +17,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "prisma": "^6.0.1",
     "ts-node": "^10.9.2",
     "vite": "^6.0.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.0.1"
   }
 }

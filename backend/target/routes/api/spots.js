@@ -19,7 +19,6 @@ async function getSpot(id, res, cb) {
         return null;
     }
 }
-;
 function transformSpot(wholeSpot) {
     const { images, reviews, lat, lng, price, ...spot } = wholeSpot;
     return {
@@ -244,7 +243,7 @@ router.post('/:spotId/reviews', requireAuth, validateNewReview, async (req, res)
             userId: user.id,
             spotId: spot.id,
             review: String(review),
-            stars: Number(stars)
+            stars: Number(stars),
         },
     });
     return res.status(201).json(rev);
@@ -263,12 +262,12 @@ router.post('/generate-random', requireAuth, async (req, res) => {
                 images: {
                     create: randomSpot.images
                         .filter((url) => url !== undefined)
-                        .map(url => ({
+                        .map((url) => ({
                         url,
-                        preview: true
-                    }))
-                }
-            }
+                        preview: true,
+                    })),
+                },
+            },
         });
         spots.push(spot);
     }
@@ -433,3 +432,4 @@ router.post('/', requireAuth, validateNewSpot, async (req, res) => {
     return res.status(201).json({ ...spot, lat, lng, price });
 });
 export default router;
+//# sourceMappingURL=spots.js.map

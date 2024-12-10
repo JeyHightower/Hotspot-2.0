@@ -1,5 +1,5 @@
-import { validationResult } from "express-validator";
-import { prisma } from "../dbclient.js";
+import { validationResult } from 'express-validator';
+import { prisma } from '../dbclient.js';
 export function handleValidationErrors(req, res, next) {
     const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {
@@ -8,10 +8,10 @@ export function handleValidationErrors(req, res, next) {
             .array()
             //@ts-ignore
             .forEach((error) => (errors[error.path] = error.msg));
-        const err = Error("Bad Request");
+        const err = Error('Bad Request');
         err.errors = errors;
         err.status = 400;
-        err.title = "Bad Request";
+        err.title = 'Bad Request';
         next(err);
     }
     next();
@@ -37,3 +37,4 @@ export function parseI32(v) {
         return null;
     }
 }
+//# sourceMappingURL=validation.js.map

@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { handleValidationErrors } from "../../utils/validation.js";
-import { check } from "express-validator";
-import { requireAuth } from "../../utils/auth.js";
-import { prisma } from "../../dbclient.js";
+import { Router } from 'express';
+import { handleValidationErrors } from '../../utils/validation.js';
+import { check } from 'express-validator';
+import { requireAuth } from '../../utils/auth.js';
+import { prisma } from '../../dbclient.js';
 const router = Router();
-router.get("/current", requireAuth, async (req, res) => {
+router.get('/current', requireAuth, async (req, res) => {
     const user = req.user;
     const reviews = await prisma.review.findMany({
         where: { userId: user.id },
@@ -27,7 +27,7 @@ router.get("/current", requireAuth, async (req, res) => {
                 lat: Number(lat),
                 lng: Number(lng),
                 price: Number(price),
-                previewImage: spotImages[0]?.url ?? "",
+                previewImage: spotImages[0]?.url ?? '',
             },
             ReviewImages: images,
             ...rest,
@@ -36,8 +36,8 @@ router.get("/current", requireAuth, async (req, res) => {
     });
     return res.json({ Reviews: sequelized });
 });
-router.delete("/:reviewId", requireAuth, async (req, res) => {
-    const reviewId = Number(req.params["reviewId"]);
+router.delete('/:reviewId', requireAuth, async (req, res) => {
+    const reviewId = Number(req.params['reviewId']);
     if (isNaN(reviewId) || reviewId > 2 ** 31)
         res.status(404).json({ message: "Review couldn't be found" });
     const userId = req.user.id;
@@ -55,31 +55,31 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
                 });
             }
             return res.status(403).json({
-                message: "You are not authorized to delete this review",
+                message: 'You are not authorized to delete this review',
             });
         }
         await prisma.review.delete({
             where: { id: reviewId },
         });
         return res.status(200).json({
-            message: "Successfully deleted",
+            message: 'Successfully deleted',
         });
     }
     catch (error) {
         return res.status(500).json({
-            message: "Internal Server Error",
+            message: 'Internal Server Error',
         });
     }
 });
 const validateReviewImage = [
-    check("url").isString().withMessage("must pass a url string"),
+    check('url').isString().withMessage('must pass a url string'),
     handleValidationErrors,
 ];
-router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, res) => {
+router.post('/:reviewId/images', requireAuth, validateReviewImage, async (req, res) => {
     const user = req.user;
     let reviewId;
     try {
-        reviewId = BigInt(req.params["reviewId"]);
+        reviewId = BigInt(req.params['reviewId']);
         if (BigInt.asIntN(32, reviewId) !== reviewId) {
             throw Error();
         }
@@ -96,11 +96,11 @@ router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, r
         if (review.userId !== user.id) {
             return res
                 .status(403)
-                .json({ message: "You do not have permission to edit this review" });
+                .json({ message: 'You do not have permission to edit this review' });
         }
         if (review.images.length >= 10) {
             return res.status(403).json({
-                message: "Maximum number of images for this resource was reached",
+                message: 'Maximum number of images for this resource was reached',
             });
         }
         let img = await prisma.reviewImage.create({
@@ -116,22 +116,22 @@ router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, r
     }
 });
 const validateReviewEdit = [
-    check("review")
-        .exists({ values: "falsy" })
+    check('review')
+        .exists({ values: 'falsy' })
         .isString()
-        .withMessage("Review text is required"),
-    check("stars")
-        .exists({ values: "falsy" })
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists({ values: 'falsy' })
         .isInt({ min: 1, max: 5 })
-        .withMessage("Stars must be an integer from 1 to 5"),
+        .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors,
 ];
-router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
+router.put('/:reviewId', requireAuth, validateReviewEdit, async (req, res) => {
     const user = req.user;
     const { review, stars } = req.body;
     let reviewId;
     try {
-        reviewId = BigInt(req.params["reviewId"]);
+        reviewId = BigInt(req.params['reviewId']);
         if (BigInt.asIntN(32, reviewId) !== reviewId) {
             throw Error();
         }
@@ -154,7 +154,7 @@ router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
         if (await prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
             return res
                 .status(403)
-                .json({ message: "You do not have permission to edit this review" });
+                .json({ message: 'You do not have permission to edit this review' });
         }
         return res.status(404).json({ message: "Review couldn't be found" });
     }
@@ -166,3 +166,4 @@ router.get('/', async (req, res) => {
 router.post('/:spotId/reviews', async (req, res) => {
     // existing code
 });
+//# sourceMappingURL=reviews.js.map

@@ -1,36 +1,36 @@
-import { Router } from "express";
-import { handleValidationErrors } from "../../utils/validation.js";
-import bcrypt from "bcryptjs";
-import { check } from "express-validator";
-import { setTokenCookie } from "../../utils/auth.js";
-import { prisma } from "../../dbclient.js";
-import { PrismaClientKnownRequestError, } from "@prisma/client/runtime/library";
+import { Router } from 'express';
+import { handleValidationErrors } from '../../utils/validation.js';
+import bcrypt from 'bcryptjs';
+import { check } from 'express-validator';
+import { setTokenCookie } from '../../utils/auth.js';
+import { prisma } from '../../dbclient.js';
+import { PrismaClientKnownRequestError, } from '@prisma/client/runtime/library';
 const router = Router();
 const validateSignup = [
-    check("email")
+    check('email')
         .exists({ checkFalsy: true })
         .isLength({ max: 256 })
         .isEmail()
-        .withMessage("Please provide a valid email at most 256 chars."),
-    check("username")
+        .withMessage('Please provide a valid email at most 256 chars.'),
+    check('username')
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
-        .withMessage("Please provide a username with at least 4 characters."),
-    check("username")
+        .withMessage('Please provide a username with at least 4 characters.'),
+    check('username')
         .exists({ checkFalsy: true })
         .isLength({ max: 30 })
-        .withMessage("Please provide a username less than 30 characters."),
-    check("username").not().isEmail().withMessage("Username cannot be an email."),
-    check("password")
+        .withMessage('Please provide a username less than 30 characters.'),
+    check('username').not().isEmail().withMessage('Username cannot be an email.'),
+    check('password')
         .exists({ checkFalsy: true })
         .isLength({ min: 6 })
-        .withMessage("Password must be 6 characters or more."),
-    check("firstName")
+        .withMessage('Password must be 6 characters or more.'),
+    check('firstName')
         .exists({ checkFalsy: true })
-        .withMessage("firstName must be passed"),
-    check("lastName")
+        .withMessage('firstName must be passed'),
+    check('lastName')
         .exists({ checkFalsy: true })
-        .withMessage("lastName must be passed"),
+        .withMessage('lastName must be passed'),
     handleValidationErrors,
 ];
 router.post('/', validateSignup, async (req, res) => {
@@ -53,12 +53,12 @@ router.post('/', validateSignup, async (req, res) => {
     }
     catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
-            let fields = e.meta?.["target"];
+            let fields = e.meta?.['target'];
             if (!(fields instanceof Array)) {
-                throw Error("meta.target must be array");
+                throw Error('meta.target must be array');
             }
-            let err = new Error("User already exists");
-            err.message = "User already exists";
+            let err = new Error('User already exists');
+            err.message = 'User already exists';
             err.errors = {};
             for (const field of fields) {
                 err.errors[field] = `User with that ${field} already exists`;
@@ -71,3 +71,4 @@ router.post('/', validateSignup, async (req, res) => {
     }
 });
 export default router;
+//# sourceMappingURL=users.js.map

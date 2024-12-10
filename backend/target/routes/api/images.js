@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { requireAuth } from "../../utils/auth.js";
-import { prisma } from "../../dbclient.js";
+import { Router } from 'express';
+import { requireAuth } from '../../utils/auth.js';
+import { prisma } from '../../dbclient.js';
 const router = Router();
 // ! Delete spot by imageId
-router.delete("/spot-images/:imageId", requireAuth, async (req, res) => {
+router.delete('/spot-images/:imageId', requireAuth, async (req, res) => {
     try {
-        const imageId = Number(req.params["imageId"]);
+        const imageId = Number(req.params['imageId']);
         if (isNaN(imageId)) {
             return res.status(404).json({
                 message: "Spot Image couldn't be found",
@@ -20,7 +20,7 @@ router.delete("/spot-images/:imageId", requireAuth, async (req, res) => {
             if (image.spot.ownerId !== user.id) {
                 return res
                     .status(403)
-                    .json({ message: "You do not have permission to delete this" });
+                    .json({ message: 'You do not have permission to delete this' });
             }
             await prisma.spotImage.delete({
                 where: {
@@ -28,7 +28,7 @@ router.delete("/spot-images/:imageId", requireAuth, async (req, res) => {
                 },
             });
             return res.status(200).json({
-                message: "Successfully deleted",
+                message: 'Successfully deleted',
             });
         }
         return res.status(404).json({
@@ -37,12 +37,12 @@ router.delete("/spot-images/:imageId", requireAuth, async (req, res) => {
     }
     catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 // ! delete a review image by imageId
-router.delete("/review-images/:imageId", requireAuth, async (req, res) => {
-    const imageId = Number(req.params["imageId"]);
+router.delete('/review-images/:imageId', requireAuth, async (req, res) => {
+    const imageId = Number(req.params['imageId']);
     if (isNaN(imageId)) {
         return res.status(404).json({ message: "Review Image couldn't be found" });
     }
@@ -55,7 +55,7 @@ router.delete("/review-images/:imageId", requireAuth, async (req, res) => {
         if (image.review.userId !== userId) {
             return res
                 .status(403)
-                .json({ message: "You do not have permission to delete this image" });
+                .json({ message: 'You do not have permission to delete this image' });
         }
         await prisma.reviewImage.delete({ where: { id: image.id } });
         return res.status(200).json({ message: `Successfully deleted` });
@@ -65,3 +65,4 @@ router.delete("/review-images/:imageId", requireAuth, async (req, res) => {
     }
 });
 export default router;
+//# sourceMappingURL=images.js.map

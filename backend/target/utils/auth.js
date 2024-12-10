@@ -1,11 +1,11 @@
 // backend/utils/auth.js
-import jwt from "jsonwebtoken";
-import config from "../config/index.js";
-import { prisma } from "../dbclient.js";
+import jwt from 'jsonwebtoken';
+import config from '../config/index.js';
+import { prisma } from '../dbclient.js';
 const { jwtConfig } = config;
 const { secret: secretRaw, expiresIn: expiresInStr } = jwtConfig;
 const err = () => {
-    throw Error("no secret");
+    throw Error('no secret');
 };
 const expiresIn = parseInt(expiresInStr);
 const secret = secretRaw || err();
@@ -16,20 +16,20 @@ export function setTokenCookie(res, user) {
         username: user.username,
     };
     const token = jwt.sign({ data: safeUser }, secret, { expiresIn });
-    res.cookie("token", token, {
+    res.cookie('token', token, {
         maxAge: expiresIn * 1000,
         httpOnly: true,
         secure: config.isProduction,
-        sameSite: config.isProduction && "lax",
+        sameSite: config.isProduction && 'lax',
     });
     return token;
 }
 export function restoreUser(req, res, next) {
     let token = null;
-    if ("token" in req.cookies) {
-        token = req.cookies["token"];
+    if ('token' in req.cookies) {
+        token = req.cookies['token'];
     }
-    return jwt.verify(token ?? "", secret, {}, async (err, jwtPayload) => {
+    return jwt.verify(token ?? '', secret, {}, async (err, jwtPayload) => {
         if (err) {
             return next();
         }
@@ -38,20 +38,21 @@ export function restoreUser(req, res, next) {
             req.user = await prisma.user.findUnique({ where: { id: id } });
         }
         catch (e) {
-            res.clearCookie("token");
+            res.clearCookie('token');
             return next();
         }
         if (!req.user)
-            res.clearCookie("token");
+            res.clearCookie('token');
         return next();
     });
 }
 export function requireAuth(req, _res, next) {
     if (req.user)
         return next();
-    const err = new Error("Authentication required");
-    err.title = "Authentication required";
-    err.errors = { message: "Authentication required" };
+    const err = new Error('Authentication required');
+    err.title = 'Authentication required';
+    err.errors = { message: 'Authentication required' };
     err.status = 401;
     return next(err);
 }
+//# sourceMappingURL=auth.js.map

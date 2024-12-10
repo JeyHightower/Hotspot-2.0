@@ -18,7 +18,6 @@ import { generateRandomSpot } from '../../utils/generators.js';
 
 const router = Router();
 
-
 async function getSpot<T>(
   id: string | undefined,
   res: Response,
@@ -38,7 +37,7 @@ async function getSpot<T>(
   } else {
     return null;
   }
-};
+}
 
 function transformSpot(
   wholeSpot: Spot & {
@@ -69,7 +68,8 @@ function parseSpotId(spotId: string | undefined, res: Response): number | null {
     res.status(404).json({ message: "Spot couldn't be found" });
     return null;
   }
-} function formatDate(d: Date): string {
+}
+function formatDate(d: Date): string {
   return d.toISOString().split('T')[0]!;
 }
 
@@ -342,40 +342,46 @@ router.post(
         userId: user.id,
         spotId: spot.id,
         review: String(review),
-        stars: Number(stars)
+        stars: Number(stars),
       },
     });
 
     return res.status(201).json(rev);
-  },);
+  },
+);
 
-router.post('/generate-random', requireAuth, async (req: Request, res: Response) => {
-	const count = req.body.count || 1;
-	const spots = [];
-	
-	for (let i = 0; i < count; i++) {
-		const randomSpot = generateRandomSpot();
-		const spot = await prisma.spot.create({
-			data: {
-				...randomSpot,
-				ownerId: req.user!.id,
-				city: randomSpot.city || '',
-				state: randomSpot.state || '',
-				images: {
-					create: randomSpot.images
-						.filter((url): url is string => url !== undefined)
-						.map(url => ({
-							url,
-							preview: true
-						}))
-				}
-			}
-		});
-		spots.push(spot);
-	}
-	
-	res.json({ spots });
-});const validateNewSpotImage = [
+router.post(
+  '/generate-random',
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const count = req.body.count || 1;
+    const spots = [];
+
+    for (let i = 0; i < count; i++) {
+      const randomSpot = generateRandomSpot();
+      const spot = await prisma.spot.create({
+        data: {
+          ...randomSpot,
+          ownerId: req.user!.id,
+          city: randomSpot.city || '',
+          state: randomSpot.state || '',
+          images: {
+            create: randomSpot.images
+              .filter((url): url is string => url !== undefined)
+              .map((url) => ({
+                url,
+                preview: true,
+              })),
+          },
+        },
+      });
+      spots.push(spot);
+    }
+
+    res.json({ spots });
+  },
+);
+const validateNewSpotImage = [
   check('url').exists({ checkFalsy: true }).withMessage('URL is required'),
   check('preview')
     .exists({ checkFalsy: true })

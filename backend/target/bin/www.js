@@ -16,3 +16,4 @@ main()
     await prisma.$disconnect();
     process.exit(1);
 });
+//# sourceMappingURL=www.js.map
