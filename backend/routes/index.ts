@@ -27,6 +27,18 @@ if (isProduction) {
   });
 }
 
+if(!isProduction) {
+  router.get("/api/csrf/restore", (req: Request, res: Response) => {
+    const csrfToken = req.csrfToken();
+    res.cookie("XSRF-TOKEN", req.csrfToken());
+    res.status(200).json({
+      "XSRF-Token": req.csrfToken(),
+    })
+    return res.json({});
+  });
+
+}
+
 
 // Serve CSRF token for both development and production
 router.get("/api/csrf/restore", (req: Request, res: Response) => {
