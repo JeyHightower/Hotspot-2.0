@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cd backend && npm start",
     "build:backend": "cd backend && npm install && npm install -D && npx prisma generate && npx prisma migrate deploy && tsc",
-    "build:frontend": "cd frontend && npx vite build",
+    "build:frontend": "cd frontend && npx vite build --config vite.config.js",
     "build": "npm run build:backend && npm run build:frontend",
     "render-postbuild": "npm run build",
     "dev:backend": "npm install --prefix backend && npm start --prefix backend",
