@@ -10,7 +10,7 @@
   /* @extend .modal-base; // If using a preprocessor like Sass */
   /* or */
   /* class="modal-base create-spot-modal" // If using classes in HTML */
-}
+
 
 .create-spot-modal section {
   margin-bottom: 24px;
@@ -59,9 +59,7 @@
   margin-bottom: 2px;
 }
 
-.create-spot-modal {
-  @extend .modal-base;
-}
+
 
 .create-spot-modal section {
   margin-bottom: 24px;
