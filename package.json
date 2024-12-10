@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "cd backend && npm start",
-    "build": "cd backend && npm install && npm install -D && npx prisma generate && npx prisma migrate deploy && tsc && cd .. && cd frontend && npx vite build --watch && npm run build",
-    "render-postbuild": "npm run build --prefix frontend",
-    "dev:backend": "npm install --prefix backend start",
-    "dev:frontend": "npm install --prefix frontend start"
+    "build:backend": "cd backend && npm install && npm install -D && npx prisma generate && npx prisma migrate deploy && tsc",
+    "build:frontend": "cd frontend && npx vite build --config ../vite.config.js",
+    "build": "npm run build:backend && npm run build:frontend",
+    "render-postbuild": "npm run build",
+    "dev:backend": "npm install --prefix backend && npm start --prefix backend",
+    "dev:frontend": "npm install --prefix frontend && npm start --prefix frontend"
   },
   "keywords": [],
   "author": "",
