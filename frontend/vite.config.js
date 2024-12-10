@@ -1,11 +1,14 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-export default defineConfig({ mode } => {
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
-  plugins: [react()],
-  server: {
-    proxy: {
-      '/api': 'http://localhost:5005',
-    },
-  },
+// Export the Vite configuration
+export default defineConfig(({ mode }) => {
+  return {
+    plugins: [react()],
+    server: {
+      proxy: {
+        '/api': 'http://localhost:5005'
+      }
+    }
+  };
 });
