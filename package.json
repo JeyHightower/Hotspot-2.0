@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vite": "^6.0.3"
   }
 }
