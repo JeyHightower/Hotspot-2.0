@@ -2,11 +2,10 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  root: 'frontend',
+  root: 'frontend', // This should point to the directory containing index.html
   build: {
-    outDir: '../dist',
+    outDir: '../dist', // This is where the build output will go
   },
   plugins: [
     react(),
@@ -21,9 +20,3 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
-// To automatically open the app in the browser whenever the server starts,
-// uncomment the following lines:
-// server: {
-//   open: true
-// }
-Hotspot - 2.0 / frontend / index.html;
