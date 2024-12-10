@@ -1,11 +1,22 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2999;
+}
+
 .update-spot-modal {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 600px;
+  width: 360px;
   min-width: 280px;
   padding: 20px 15px 30px 15px;
+  margin-top: 60px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -15,6 +26,7 @@
   box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
   max-height: 80vh;
   overflow-y: auto;
+  z-index: 3000;
 }
 
 .update-spot-modal h1 {
@@ -32,21 +44,29 @@
 }
 
 .update-spot-modal form {
-  max-width: 520px;
+  max-width: 320px;
   width: 85%;
-  padding: 20px;
-  gap: 8px;
+  padding: 15px;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 15px;
 }
 
-.update-spot-modal input,
+.update-spot-modal label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #2d2d2d;
+  margin-bottom: 2px;
+}
+
+.update-spot-modal input[type='text'],
+.update-spot-modal input[type='number'],
 .update-spot-modal textarea {
   width: calc(100% - 24px);
-  padding: 10px;
-  margin-bottom: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
   font-size: 13px;
   border: 2px solid #f0f0f0;
   border-radius: 8px;
@@ -65,6 +85,7 @@
 
 .update-spot-modal button {
   width: 100%;
+  margin-top: 12px;
   padding: 12px;
   background: linear-gradient(90deg, #ff416c, #ff4b2b);
   color: white;
@@ -74,7 +95,6 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 15px;
 }
 
 .update-spot-modal button:hover {
@@ -92,7 +112,44 @@
 }
 
 .update-spot-modal .error {
-  color: red;
+  color: #ff416c;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.modal-update-spot {
+  /* Add your styles here */
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+}
+  /* Removed 'composes' property as it's not a standard CSS property */
+  /* You may want to include the styles from 'modal-base' directly here */
+  /* For example: */
+  /* width: 100%;
+     max-width: 500px;
+     padding: 20px;
+     background-color: white;
+     border-radius: 8px; */
+}
+
+.update-spot-form section {
+  margin-bottom: 24px;
+}
+
+.update-spot-form section h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.update-spot-form section p {
+  color: #666;
   font-size: 14px;
-  margin: 0 0 15px 0;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  margin-bottom: 16px;
 }

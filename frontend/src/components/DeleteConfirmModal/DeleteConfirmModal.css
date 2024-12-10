@@ -27,6 +27,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .delete-button,
@@ -43,14 +44,12 @@
 
 .delete-button {
   background: linear-gradient(90deg, #ff416c, #ff4b2b);
-  color: white;
 }
 
 .cancel-button {
-  background: #f0f0f0;
-  color: #666;
+  background: #f0f0f0 !important;
+  color: #666 !important;
 }
-
 .delete-button:hover,
 .cancel-button:hover {
   transform: translateY(-1px);

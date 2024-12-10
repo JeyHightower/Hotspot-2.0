@@ -1,4 +1,5 @@
 import { useModal } from '../Context/useModal';
+import '../styles/ModalBase.css';
 import './DeleteConfirmModal.css';
 
 const DeleteConfirmModal = ({ onDelete, type }) => {
@@ -10,7 +11,7 @@ const DeleteConfirmModal = ({ onDelete, type }) => {
     };
 
     return (
-        <div className="delete-confirm-modal">
+        <div className="modal-base delete-confirm-modal">
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to remove this {type}?</p>
             

@@ -39,7 +39,58 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 20px 0;
+  margin: 15px 0;
+}
+
+.star {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ddd;
+}
+
+
+.review-form-modal {
+  width: 400px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(255, 65, 108, 0.12);
+}
+
+.review-form-modal h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.review-form-modal textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  font-size: 14px;
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  resize: vertical;
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+}
+
+.review-form-modal textarea:focus {
+  border-color: #ff416c;
+  box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.1);
+  outline: none;
+}
+
+.stars-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 15px 0;
 }
 
 .star {
@@ -50,9 +101,8 @@
 }
 
 .star.filled {
-  color: #ff416c;
+  color: #FF416C;
 }
-
 .review-form-modal button {
   width: 100%;
   padding: 12px;
@@ -82,3 +132,4 @@
   margin: 8px 0;
   text-align: center;
 }
+

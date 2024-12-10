@@ -3,9 +3,16 @@ import { Link } from 'react-router-dom';
 import Header from '../Header-Logo/Header-Logo';
 import './Navigation.css';
 import ProfileButton from './ProfileButton';
+import { useModal } from '../Context/useModal';
+import CreateSpotModal from '../CreateSpotModal/CreateSpotModal';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
+  const { setModalContent } = useModal();
+
+  const openCreateSpotModal = () => {
+    setModalContent(<CreateSpotModal />);
+  };
 
   return (
     <nav>
@@ -17,9 +24,9 @@ function Navigation({ isLoaded }) {
             </li>
             <div className="nav-right">
               {sessionUser && (
-                <Link to="/spots/new" className="create-spot-button">
+                <button onClick={openCreateSpotModal} className="create-spot-button">
                   Create a New Spot
-                </Link>
+                </button>
               )}
               <div className="profile-button-container">
                 <ProfileButton user={sessionUser} />

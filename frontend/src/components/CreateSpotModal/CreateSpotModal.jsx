@@ -6,11 +6,9 @@ import { useModal } from '../Context/useModal';
 import './CreateSpotModal.css';
 
 const CreateSpotModal = () => {
-  const { closeModal } = useModal();
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { closeModal } = useModal();
   const [formData, setFormData] = useState({
     country: '',
     address: '',

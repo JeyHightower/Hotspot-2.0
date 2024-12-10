@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchSingleSpotThunk, updateSpotThunk } from '../../store/spots';
 import { useModal } from '../Context/useModal';
+import '../styles/ModalBase.css';
 import './UpdateSpotModal.css';
 
 const UpdateSpotModal = ({ spotId }) => {

@@ -1,10 +1,11 @@
 
 // Modal.jsx
 import ReactDOM from 'react-dom';
-import { useModal } from '../Context/useModal'; // Adjust the path as necessary
+import { useModal } from './useModal'; // Adjust the path as necessary
+import { BrowserRouter } from 'react-router-dom';
 import './Modal.css';
 
- const Modal = () => {
+const Modal = () => {
     const { modalRef, modalContent, closeModal } = useModal();
 
     if (!modalRef || !modalRef.current || !modalContent) return null;
@@ -12,7 +13,11 @@ import './Modal.css';
     return ReactDOM.createPortal(
         <div id="modal">
             <div id="modal-background" onClick={closeModal} />
-            <div id="modal-content">{modalContent}</div>
+            <div id="modal-content">
+                <BrowserRouter>
+                    {modalContent}
+                </BrowserRouter>
+            </div>
         </div>,
         modalRef.current
     );

@@ -1,10 +1,10 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import Layout from '../src/Layout';
-import SpotsIndex from './components/SpotsIndex/SpotsIndex';
-import SpotDetails from './components/SpotDetails/SpotDetails';
-import UpdateSpotModal from './components/UpdateSpotModal/UpdateSpotModal';
-import CreateSpotForm from './components/CreateSpotModal/CreateSpotModal';
+import CreateSpotModal from './components/CreateSpotModal/CreateSpotModal';
 import ManageSpots from './components/ManageSpots/ManageSpots';
+import SpotDetails from './components/SpotDetails/SpotDetails';
+import SpotsIndex from './components/SpotsIndex/SpotsIndex';
+import UpdateSpotModal from './components/UpdateSpotModal/UpdateSpotModal';
 
 const router = createBrowserRouter([
   {
@@ -12,23 +12,40 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <SpotsIndex />,
+        element: (
+          <>
+            <h1>Welcome!</h1>
+            <SpotsIndex />
+          </>
+        ),
       },
       {
-        path: '/spots/manage',
-        element: <ManageSpots />,
-      },
-      {
-        path: '/spots/:spotId',
-        element: <SpotDetails />,
-      },
-      {
-        path: '/spots/new',
-        element: <CreateSpotForm />,
-      },
-      {
-        path: '/spots/:spotId/edit',
-        element: <UpdateSpotModal />
+        path: 'spots',
+        element: <Outlet />,
+        children: [
+          {
+            path: ':spotId',
+            element: <Outlet />,
+            children: [
+              {
+                path: '',
+                element: <SpotDetails />,
+              },
+              {
+                path: 'edit',
+                element: <UpdateSpotModal />,
+              },
+            ],
+          },
+          {
+            path: 'new',
+            element: <CreateSpotModal />,
+          },
+          {
+            path: 'current',
+            element: <ManageSpots />,
+          },
+        ],
       },
     ],
   },

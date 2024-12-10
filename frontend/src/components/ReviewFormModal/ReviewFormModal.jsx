@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../Context/useModal';
 import { createReviewThunk } from '../../store/reviews';
+import '../styles/ModalBase.css';
 import './ReviewFormModal.css';
-
 const ReviewFormModal = ({ spotId, onReviewSubmit }) => {
     const dispatch = useDispatch();
     const { closeModal } = useModal();
