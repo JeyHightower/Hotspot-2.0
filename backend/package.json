@@ -25,7 +25,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "5.19.1",
+    "@prisma/client": "^6.0.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -38,8 +38,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "per-env": "^1.0.2",
-    "pg": "^8.13.0",
-    "prisma": "^5.19.1"
+    "pg": "^8.13.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -52,6 +51,7 @@
     "@types/node": "^22.5.5",
     "dotenv-cli": "^7.4.2",
     "nodemon": "^3.1.5",
+    "prisma": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }

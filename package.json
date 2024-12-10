@@ -4,14 +4,10 @@
   "description": "Hotspot-2.0 full stack application",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "start": "cd backend && npm start",
     "build:frontend": "cd frontend && npm install && npm run build",
     "build:backend": "cd backend && npm install && npx prisma generate && npm run build",
     "build": "npm run build:frontend && npm run build:backend",
-    "render-postbuild": "npm run build",
-    "dev:backend": "npm install --prefix backend && npm start --prefix backend",
-    "dev:frontend": "npm install --prefix frontend && npm start --prefix frontend"
+    "render-postbuild": "npm run build"
   },
   "keywords": [],
   "author": "",

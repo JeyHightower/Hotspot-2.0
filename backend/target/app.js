@@ -1,8 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import csurf from 'csurf';
 import express from 'express';
-import 'express-async-errors';
+import csurf from 'csurf';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import data from './config/index.js';
@@ -16,13 +15,14 @@ if (!isProduction) {
     app.use(cors());
 }
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
-app.use(csurf({
+const csrfProtection = csurf({
     cookie: {
         secure: isProduction,
-        sameSite: isProduction,
+        sameSite: isProduction ? 'strict' : 'lax',
         httpOnly: true,
-    },
-}));
+    }
+});
+app.use(csrfProtection);
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 import { prisma } from './dbclient.js';
 import routes from './routes/index.js';

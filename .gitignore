@@ -3,4 +3,6 @@ node_modules
 Build
 .DS_Store
 *.db
+dist/
+build/
 target
