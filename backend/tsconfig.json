@@ -11,10 +11,13 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "./routes/**/*",
-    "./app.ts",
-    "./dbclient.ts",
-    "./bin/**/*"
+    "routes/**/*",
+    "utils/**/*",
+    "config/**/*",
+    "prisma/**/*",
+    "bin/**/*",
+    "app.ts",
+    "dbclient.ts"
   ],
   "exclude": [
     "node_modules",
