@@ -1,37 +1,46 @@
 #!/bin/bash
 
+# Enable error tracking
 set -euo pipefail
 set -x
 
-# Root level Prisma install
+# Root level setup with logging
+echo "Starting build process..."
 npm install prisma @prisma/client
+echo "Root level dependencies installed"
 
-# Backend setup
+# Backend setup with detailed logging
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
+echo "Entered backend directory"
 
-# Clean and fresh install
-rm -rf node_modules package-lock.json
-rm -rf prisma/client
+# Clean installation
+rm -rf node_modules package-lock.json prisma/client
+echo "Cleaned previous installations"
 
-# Install dependencies
-npm install
-npm install typescript @types/express @types/node --save-dev
-npm install prisma @prisma/client
+# Install with verbose logging
+npm install --verbose
+npm install typescript @types/express @types/node --save-dev --verbose
+npm install prisma @prisma/client --verbose
 
-# Initialize Prisma and generate client
-npx prisma init
-npx prisma generate
+echo "All dependencies installed"
 
-# Compile TypeScript
-npx tsc
+# Prisma operations with logging
+echo "Generating Prisma client..."
+npx prisma generate --verbose
 
-# Database updates
+echo "Compiling TypeScript..."
+npx tsc --verbose
+
+echo "Updating database..."
 npx prisma db push --accept-data-loss
 cd ..
 
 # Frontend setup
-cd frontend || { echo "Failed to change directory to frontend"; exit 1; }
+cd frontend
+echo "Building frontend..."
 npm install
 npm install @vitejs/plugin-react --save-dev
 npm run build
 cd ..
+
+echo "Build process completed"
