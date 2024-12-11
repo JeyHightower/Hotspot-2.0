@@ -5,28 +5,30 @@ set -x
 
 cd backend
 
-# Clean start with npm cache reset
-rm -rf node_modules package-lock.json
-npm cache clean --force
+# Clean start
+rm -rf node_modules package-lock.json yarn.lock
+rm -rf prisma/client
 
-# Install dependencies in specific order
-npm install --production=false
-npm install typescript @types/express @types/node --save-dev
-npm install prisma --save-dev
-npm install @prisma/client
+# Install yarn
+npm install -g yarn
 
-# Create fresh Prisma client
-mkdir -p prisma/client
-npx prisma generate --schema=./prisma/schema.prisma
+# Install dependencies using yarn
+yarn install
+yarn add typescript @types/express @types/node --dev
+yarn add prisma --dev
+yarn add @prisma/client
 
-# Build and deploy
-npx tsc
-npx prisma db push --accept-data-loss
+# Generate Prisma client
+yarn prisma generate
+
+# Build project
+yarn tsc
+yarn prisma db push --accept-data-loss
 cd ..
 
 # Frontend setup
 cd frontend
-npm install
-npm install @vitejs/plugin-react --save-dev
-npm run build
+yarn install
+yarn add @vitejs/plugin-react --dev
+yarn build
 cd ..
