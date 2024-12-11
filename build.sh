@@ -5,12 +5,19 @@ set -x
 
 # Backend setup
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
+
+# Install all dependencies first
 npm install
 npm install -g typescript
-npm install @types/express @types/node --save-dev
-npm install @prisma/client prisma --save-dev
-tsc
+npm install @types/express @types/node typescript @prisma/client prisma --save-dev
+
+# Generate Prisma client
 npx prisma generate
+
+# Now compile TypeScript
+npx tsc
+
+# Database updates
 npx prisma db push --accept-data-loss
 cd ..
 
