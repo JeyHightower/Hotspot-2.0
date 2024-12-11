@@ -30,8 +30,8 @@ rm -rf node_modules package-lock.json yarn.lock
 # Install dependencies
 yarn install
 
-# Add build script to package.json
-node -e "const p=require('./package.json'); p.scripts=p.scripts||{}; p.scripts.build='vite build'; require('fs').writeFileSync('package.json',JSON.stringify(p,null,2))"
+# Add build script to package.json with full path
+node -e "const p=require('./package.json'); p.scripts=p.scripts||{}; p.scripts.build='node ./node_modules/vite/bin/vite.js build'; require('fs').writeFileSync('package.json',JSON.stringify(p,null,2))"
 
 # Install Vite and React dependencies
 yarn add vite@latest @vitejs/plugin-react@latest --dev
@@ -48,6 +48,6 @@ export default defineConfig({
 })
 EOF
 
-# Build using npm script
+# Build using npm script with full path
 yarn run build
 cd ..
