@@ -1,11 +1,8 @@
-import type {
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-} from 'express';
-import { RequestHandler, Router } from 'express';
+import { Router, RequestHandler } from 'express';
+import type { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { requireAuth } from '../../utils/auth.js';
-import { prisma } from '../../utils/db.js'; // Add .js extension
-import { validateNewSpot } from '../../utils/validation';
+import { prisma } from '../../dbclient.js';
+import { handleValidationErrors } from '../../utils/validation.js';
 
 const router = Router();
 
@@ -51,6 +48,14 @@ interface SpotRequest extends ExpressRequest {
   };
 }
 
+interface Review {
+  stars: number;
+}
+
+interface SpotImage {
+  url: string;
+}
+
 const getSpot = async (
   spotId: string,
   res: ExpressResponse,
@@ -74,169 +79,156 @@ const getSpot = async (
   await onSuccess(id);
 };
 
-router.get(
-  '/',
-  router.get(
-    '/',
+router.get('/', handleValidationErrors, (async (req: SpotRequest, res: ExpressResponse) => {
+  const {
+    page = '1',
+    size = '20',
+    minLat,
+    maxLat,
+    minLng,
+    maxLng,
+    minPrice,
+    maxPrice,
+  } = req.query;
 
-    async (req: SpotRequest, res: ExpressResponse): Promise<void> => {
-      const {
-        page = '1',
-        size = '20',
-        minLat,
-        maxLat,
-        minLng,
-        maxLng,
-        minPrice,
-        maxPrice,
-      } = req.query;
+  const pageNum = parseInt(page);
+  const sizeNum = parseInt(size);
 
-      const pageNum = parseInt(page as string);
-      const sizeNum = parseInt(size as string);
+  const where = {
+    ...(minLat && { lat: { gte: parseFloat(minLat) } }),
+    ...(maxLat && { lat: { lte: parseFloat(maxLat) } }),
+    ...(minLng && { lng: { gte: parseFloat(minLng) } }),
+    ...(maxLng && { lng: { lte: parseFloat(maxLng) } }),
+    ...(minPrice && { price: { gte: parseFloat(minPrice) } }),
+    ...(maxPrice && { price: { lte: parseFloat(maxPrice) } }),
+  };
 
-      const where = {
-        ...(minLat && { lat: { gte: parseFloat(minLat as string) } }),
-        ...(maxLat && { lat: { lte: parseFloat(maxLat as string) } }),
-        ...(minLng && { lng: { gte: parseFloat(minLng as string) } }),
-        ...(maxLng && { lng: { lte: parseFloat(maxLng as string) } }),
-        ...(minPrice && { price: { gte: parseFloat(minPrice as string) } }),
-        ...(maxPrice && { price: { lte: parseFloat(maxPrice as string) } }),
-      };
-
-      const spots = await prisma.spot.findMany({
-        where,
-        take: sizeNum,
-        skip: (pageNum - 1) * sizeNum,
-        include: {
-          SpotImages: {
-            where: { preview: true },
-            select: { url: true },
-          },
-          Reviews: {
-            select: { stars: true },
-          },
-        },
-      });
-
-      res.json({
-        Spots: spots.map((spot: any) => ({
-          ...spot,
-          previewImage: spot.SpotImages[0]?.url || null,
-          avgRating: spot.Reviews.length
-            ? spot.Reviews.reduce(
-                (sum: number, review: any) => sum + review.stars,
-                0,
-              ) / spot.Reviews.length
-            : null,
-        })),
-        page: pageNum,
-        size: sizeNum,
-      });
+  const spots = await prisma.spot.findMany({
+    where,
+    take: sizeNum,
+    skip: (pageNum - 1) * sizeNum,
+    include: {
+      images: {
+        where: { preview: true },
+        select: { url: true },
+      },
+      reviews: {
+        select: { stars: true },
+      },
     },
-  ),
-);
+  });
 
-import { ParsedQs } from 'qs';
-
-const getSpotHandler: RequestHandler<
-  Record<string, string>,
-  any,
-  any,
-  ParsedQs,
-  Record<string, any>
-> = async (req, res) => {
-  // Handler implementation
-};
+  res.json({
+    Spots: spots.map((spot) => ({
+      ...spot,
+      previewImage: spot.images[0]?.url || null,
+      avgRating: spot.reviews.length
+        ? spot.reviews.reduce((sum: number, review: Review) => sum + review.stars, 0) /
+          spot.reviews.length
+        : null,
+    })),
+    page: pageNum,
+    size: sizeNum,
+  });
+}) as RequestHandler);
 
 router.get(
   '/current',
   requireAuth,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
+  (async (req: SpotRequest, res: ExpressResponse) => {
     const spots = await prisma.spot.findMany({
       where: { ownerId: req.user!.id },
       include: {
-        SpotImages: {
+        images: {
           where: { preview: true },
           select: { url: true },
         },
-        Reviews: {
+        reviews: {
           select: { stars: true },
         },
       },
     });
 
     res.json({
-      Spots: spots.map((spot: any) => ({
+      Spots: spots.map((spot) => ({
         ...spot,
-        previewImage: spot.SpotImages[0]?.url || null,
-        avgRating: spot.Reviews.length
-          ? spot.Reviews.reduce(
-              (sum: number, review: any) => sum + review.stars,
-              0,
-            ) / spot.Reviews.length
+        previewImage: spot.images[0]?.url || null,
+        avgRating: spot.reviews.length
+          ? spot.reviews.reduce((sum: number, review: Review) => sum + review.stars, 0) /
+            spot.reviews.length
           : null,
       })),
     });
-  },
+  }) as RequestHandler
 );
 
-router.get(
-  '/:spotId',
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
-    await getSpot(req.params['spotId']!, res, async (id) => {
-      const spot = await prisma.spot.findUnique({
-        where: { id },
-        include: {
-          Owner: {
-            select: { id: true, firstName: true, lastName: true },
-          },
-          SpotImages: {
-            select: { id: true, url: true, preview: true },
-          },
-          Reviews: {
-            select: { stars: true },
-          },
+router.post('/', requireAuth, handleValidationErrors, (async (req: SpotRequest, res: ExpressResponse) => {
+  const spot = await prisma.spot.create({
+    data: {
+      ...req.body as Required<typeof req.body>,
+      ownerId: req.user!.id,
+    },
+  });
+  res.status(201).json(spot);
+}) as RequestHandler);
+
+router.get('/:spotId', (async (req: SpotRequest, res: ExpressResponse) => {
+  await getSpot(req.params.spotId!, res, async (id) => {
+    const spot = await prisma.spot.findUnique({
+      where: { id },
+      include: {
+        owner: {
+          select: { id: true, firstName: true, lastName: true },
         },
-      });
-
-      const numReviews = spot!.Reviews.length;
-      const avgStarRating = numReviews
-        ? spot!.Reviews.reduce(
-            (sum: number, review: any) => sum + review.stars,
-            0,
-          ) / numReviews
-        : null;
-
-      res.json({
-        ...spot,
-        numReviews,
-        avgStarRating,
-        SpotImages: spot!.SpotImages,
-        Owner: spot!.Owner,
-      });
-    });
-  },
-);
-
-router.post(
-  '/',
-  requireAuth,
-  validateNewSpot,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
-    const spot = await prisma.spot.create({
-      data: {
-        ...(req.body as Required<typeof req.body>),
-        ownerId: req.user!.id,
+        images: {
+          select: { id: true, url: true, preview: true },
+        },
+        reviews: {
+          select: { stars: true },
+        },
       },
     });
-    res.status(201).json(spot);
-  },
-);
 
-router.post(
-  '/:spotId/images',
-  requireAuth,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
+    const numReviews = spot!.reviews.length;
+    const avgStarRating = numReviews
+      ? spot!.reviews.reduce((sum: number, review: Review) => sum + review.stars, 0) / numReviews
+      : null;
+
+    res.json({
+      ...spot,
+      numReviews,
+      avgStarRating,
+      SpotImages: spot!.images,
+      Owner: spot!.owner,
+    });
+  });
+}) as RequestHandler);
+
+router.post('/:spotId/images', requireAuth, (async (req: SpotRequest, res: ExpressResponse) => {
+  await getSpot(req.params.spotId!, res, async (id) => {
+    const spot = await prisma.spot.findUnique({
+      where: { id },
+    });
+
+    if (spot!.ownerId !== req.user!.id) {
+      res.status(403).json({ message: 'Forbidden' });
+      return;
+    }
+
+    const image = await prisma.spotImage.create({
+      data: {
+        spotId: id,
+        url: req.body.url!,
+        preview: req.body.preview ?? false,
+      },
+    });
+
+    res.json({
+      id: image.id,
+      url: image.url,
+      preview: image.preview,
+    });
+  });}) as RequestHandler);  (async (req: SpotRequest, res: ExpressResponse) => {
     await getSpot(req.params['spotId']!, res, async (id) => {
       const spot = await prisma.spot.findUnique({
         where: { id },
@@ -251,7 +243,7 @@ router.post(
         data: {
           spotId: id,
           url: req.body.url!,
-          preview: req.body.preview,
+          preview: req.body.preview ?? false,
         },
       });
 
@@ -260,16 +252,15 @@ router.post(
         url: image.url,
         preview: image.preview,
       });
-    });
-  },
-);
+    });  }) as RequestHandler
+
 
 router.put(
   '/:spotId',
   requireAuth,
-  validateNewSpot,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
-    await getSpot(req.params['spotId']!, res, async (id) => {
+  handleValidationErrors,
+  (async (req: SpotRequest, res: ExpressResponse) => {
+    await getSpot(req.params.spotId!, res, async (id) => {
       const spot = await prisma.spot.findUnique({
         where: { id },
       });
@@ -286,14 +277,14 @@ router.put(
 
       res.json(updatedSpot);
     });
-  },
+  }) as RequestHandler
 );
 
 router.delete(
   '/:spotId',
   requireAuth,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
-    await getSpot(req.params['spotId']!, res, async (id) => {
+  (async (req: SpotRequest, res: ExpressResponse) => {
+    await getSpot(req.params.spotId!, res, async (id) => {
       const spot = await prisma.spot.findUnique({
         where: { id },
       });
@@ -309,13 +300,13 @@ router.delete(
 
       res.json({ message: 'Successfully deleted' });
     });
-  },
+  }) as RequestHandler
 );
 
 router.post(
   '/:spotId/bookings',
   requireAuth,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
+  (async (req: SpotRequest, res: ExpressResponse) => {
     const { startDate: sd, endDate: ed } = req.body;
     const startDate = new Date(sd!);
     const endDate = new Date(ed!);
@@ -330,11 +321,11 @@ router.post(
       return;
     }
 
-    await getSpot(req.params['spotId']!, res, async (spotId) => {
+    await getSpot(req.params.spotId!, res, async (spotId) => {
       const spot = await prisma.spot.findUnique({
         where: { id: spotId },
         include: {
-          Bookings: true,
+          bookings: true,
         },
       });
 
@@ -343,7 +334,7 @@ router.post(
         return;
       }
 
-      const conflictingBooking = spot!.Bookings.find((booking: any) => {
+      const conflictingBooking = spot!.bookings.find((booking: any) => {
         const bookingStart = new Date(booking.startDate);
         const bookingEnd = new Date(booking.endDate);
         return (
@@ -375,14 +366,14 @@ router.post(
 
       res.json(booking);
     });
-  },
+  }) as RequestHandler
 );
 
 router.get(
   '/:spotId/bookings',
   requireAuth,
-  async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
-    await getSpot(req.params['spotId']!, res, async (spotId) => {
+  (async (req: SpotRequest, res: ExpressResponse) => {
+    await getSpot(req.params.spotId!, res, async (spotId) => {
       const spot = await prisma.spot.findUnique({
         where: { id: spotId },
       });
@@ -390,7 +381,7 @@ router.get(
       const bookings = await prisma.booking.findMany({
         where: { spotId },
         include: {
-          User:
+          user:
             spot!.ownerId === req.user!.id
               ? {
                   select: { id: true, firstName: true, lastName: true },
@@ -401,7 +392,7 @@ router.get(
 
       res.json({ Bookings: bookings });
     });
-  },
+  }) as RequestHandler
 );
 
 export default router;
