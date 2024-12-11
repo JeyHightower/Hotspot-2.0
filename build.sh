@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# Enable error tracking
 set -euo pipefail
 set -x
 
-# Root level setup with logging
+# Root level setup
 echo "Starting build process..."
 npm install prisma @prisma/client
-echo "Root level dependencies installed"
 
-# Backend setup with detailed logging
+# Backend setup
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
 echo "Entered backend directory"
 
@@ -17,19 +15,19 @@ echo "Entered backend directory"
 rm -rf node_modules package-lock.json prisma/client
 echo "Cleaned previous installations"
 
-# Install with verbose logging
-npm install --verbose
-npm install typescript @types/express @types/node --save-dev --verbose
-npm install prisma @prisma/client --verbose
+# Install dependencies
+npm install
+npm install typescript @types/express @types/node --save-dev
+npm install prisma @prisma/client
 
 echo "All dependencies installed"
 
-# Prisma operations with logging
+# Prisma operations
 echo "Generating Prisma client..."
-npx prisma generate --verbose
+npx prisma generate
 
 echo "Compiling TypeScript..."
-npx tsc --verbose
+npx tsc
 
 echo "Updating database..."
 npx prisma db push --accept-data-loss
