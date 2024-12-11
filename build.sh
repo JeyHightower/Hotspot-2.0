@@ -3,42 +3,33 @@
 set -euo pipefail
 set -x
 
-# Root level setup
-echo "Starting build process..."
-npm install prisma @prisma/client
+cd backend
 
-# Backend setup
-cd backend || { echo "Failed to change directory to backend"; exit 1; }
-echo "Entered backend directory"
+# Clean start
+rm -rf node_modules package-lock.json
+rm -rf prisma/client
 
-# Clean installation
-rm -rf node_modules package-lock.json prisma/client
-echo "Cleaned previous installations"
-
-# Install dependencies
+# Install dependencies in specific order
 npm install
 npm install typescript @types/express @types/node --save-dev
-npm install prisma @prisma/client
+npm install prisma
+npm install @prisma/client
 
-echo "All dependencies installed"
+# Set explicit paths
+export PRISMA_SCHEMA_PATH="$PWD/prisma/schema.prisma"
+export NODE_PATH="$PWD/node_modules"
 
-# Prisma operations
-echo "Generating Prisma client..."
-npx prisma generate
+# Generate client with explicit schema path
+npx prisma generate --schema="$PRISMA_SCHEMA_PATH"
 
-echo "Compiling TypeScript..."
+# Continue with build
 npx tsc
-
-echo "Updating database..."
 npx prisma db push --accept-data-loss
 cd ..
 
-# Frontend setup
+# Frontend build
 cd frontend
-echo "Building frontend..."
 npm install
 npm install @vitejs/plugin-react --save-dev
 npm run build
 cd ..
-
-echo "Build process completed"
