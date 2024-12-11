@@ -1,4 +1,6 @@
 import { useModal } from '../Context/useModal';
+import '../styles/ModalBase.css';
+
 
 const OpenModalButton = ({
     modalComponent,

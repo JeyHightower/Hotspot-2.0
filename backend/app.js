@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -44,13 +35,13 @@ const dbclient_js_1 = require("./dbclient.js");
 Object.defineProperty(exports, "prisma", { enumerable: true, get: function () { return dbclient_js_1.prisma; } });
 const index_js_2 = __importDefault(require("./routes/index.js"));
 app.use(index_js_2.default);
-app.use((_req, _res, next) => __awaiter(void 0, void 0, void 0, function* () {
+app.use(async (_req, _res, next) => {
     const err = new Error('Requested resource could not be found.');
     err.title = 'Resource not found';
     err.errors = { message: "The requested resource couldn't be found" };
     err.status = 404;
     next(err);
-}));
+});
 // @ts-ignore
 app.use((err, _req, _res, next) => {
     if (err instanceof library_1.PrismaClientValidationError) {

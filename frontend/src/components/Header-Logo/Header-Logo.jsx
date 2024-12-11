@@ -6,9 +6,9 @@ const Header = () => {
         <header className="header">
             <Link to='/'>
                 <img 
-                    src="/src/assets/logo.svg" 
-                    alt="Hotspot 2.0 Logo"
-                    className="logo"
+                    src="/hotspot-logo.svg"
+                    alt="HotSpotS"
+                    className="header-logo"
                     width="150"
                     height="40"
                 />

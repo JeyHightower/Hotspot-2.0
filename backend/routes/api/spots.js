@@ -1,40 +1,31 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_js_1 = require("../../utils/auth.js");
 const dbclient_js_1 = require("../../dbclient.js");
 const validation_js_1 = require("../../utils/validation.js");
 const router = (0, express_1.Router)();
-const getSpot = (spotId, res, onSuccess) => __awaiter(void 0, void 0, void 0, function* () {
+const getSpot = async (spotId, res, onSuccess) => {
     const id = parseInt(spotId);
     if (isNaN(id)) {
         res.status(400).json({ message: 'Invalid spot id' });
         return;
     }
-    const spot = yield dbclient_js_1.prisma.spot.findUnique({
+    const spot = await dbclient_js_1.prisma.spot.findUnique({
         where: { id },
     });
     if (!spot) {
         res.status(404).json({ message: "Spot couldn't be found" });
         return;
     }
-    yield onSuccess(id);
-});
-router.get('/', validation_js_1.handleValidationErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    await onSuccess(id);
+};
+router.get('/', validation_js_1.handleValidationErrors, (async (req, res) => {
     const { page = '1', size = '20', minLat, maxLat, minLng, maxLng, minPrice, maxPrice, } = req.query;
     const pageNum = parseInt(page);
     const sizeNum = parseInt(size);
     const where = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, (minLat && { lat: { gte: parseFloat(minLat) } })), (maxLat && { lat: { lte: parseFloat(maxLat) } })), (minLng && { lng: { gte: parseFloat(minLng) } })), (maxLng && { lng: { lte: parseFloat(maxLng) } })), (minPrice && { price: { gte: parseFloat(minPrice) } })), (maxPrice && { price: { lte: parseFloat(maxPrice) } }));
-    const spots = yield dbclient_js_1.prisma.spot.findMany({
+    const spots = await dbclient_js_1.prisma.spot.findMany({
         where,
         take: sizeNum,
         skip: (pageNum - 1) * sizeNum,
@@ -59,9 +50,9 @@ router.get('/', validation_js_1.handleValidationErrors, ((req, res) => __awaiter
         page: pageNum,
         size: sizeNum,
     });
-})));
-router.get('/current', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const spots = yield dbclient_js_1.prisma.spot.findMany({
+}));
+router.get('/current', auth_js_1.requireAuth, (async (req, res) => {
+    const spots = await dbclient_js_1.prisma.spot.findMany({
         where: { ownerId: req.user.id },
         include: {
             images: {
@@ -82,16 +73,16 @@ router.get('/current', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, v
                     : null }));
         }),
     });
-})));
-router.post('/', auth_js_1.requireAuth, validation_js_1.handleValidationErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const spot = yield dbclient_js_1.prisma.spot.create({
+}));
+router.post('/', auth_js_1.requireAuth, validation_js_1.handleValidationErrors, (async (req, res) => {
+    const spot = await dbclient_js_1.prisma.spot.create({
         data: Object.assign(Object.assign({}, req.body), { ownerId: req.user.id }),
     });
     res.status(201).json(spot);
-})));
-router.get('/:spotId', ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield getSpot(req.params.spotId, res, (id) => __awaiter(void 0, void 0, void 0, function* () {
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
+}));
+router.get('/:spotId', (async (req, res) => {
+    await getSpot(req.params.spotId, res, async (id) => {
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
             where: { id },
             include: {
                 owner: {
@@ -111,88 +102,88 @@ router.get('/:spotId', ((req, res) => __awaiter(void 0, void 0, void 0, function
             : null;
         res.json(Object.assign(Object.assign({}, spot), { numReviews,
             avgStarRating, SpotImages: spot.images, Owner: spot.owner }));
-    }));
-})));
-router.post('/:spotId/images', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield getSpot(req.params.spotId, res, (id) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
-            where: { id },
-        });
-        if (spot.ownerId !== req.user.id) {
-            res.status(403).json({ message: 'Forbidden' });
-            return;
-        }
-        const image = yield dbclient_js_1.prisma.spotImage.create({
-            data: {
-                spotId: id,
-                url: req.body.url,
-                preview: (_a = req.body.preview) !== null && _a !== void 0 ? _a : false,
-            },
-        });
-        res.json({
-            id: image.id,
-            url: image.url,
-            preview: image.preview,
-        });
-    }));
-})));
-((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield getSpot(req.params['spotId'], res, (id) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
-            where: { id },
-        });
-        if (spot.ownerId !== req.user.id) {
-            res.status(403).json({ message: 'Forbidden' });
-            return;
-        }
-        const image = yield dbclient_js_1.prisma.spotImage.create({
-            data: {
-                spotId: id,
-                url: req.body.url,
-                preview: (_a = req.body.preview) !== null && _a !== void 0 ? _a : false,
-            },
-        });
-        res.json({
-            id: image.id,
-            url: image.url,
-            preview: image.preview,
-        });
-    }));
+    });
 }));
-router.put('/:spotId', auth_js_1.requireAuth, validation_js_1.handleValidationErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield getSpot(req.params.spotId, res, (id) => __awaiter(void 0, void 0, void 0, function* () {
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
+router.post('/:spotId/images', auth_js_1.requireAuth, (async (req, res) => {
+    await getSpot(req.params.spotId, res, async (id) => {
+        var _a;
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
             where: { id },
         });
         if (spot.ownerId !== req.user.id) {
             res.status(403).json({ message: 'Forbidden' });
             return;
         }
-        const updatedSpot = yield dbclient_js_1.prisma.spot.update({
+        const image = await dbclient_js_1.prisma.spotImage.create({
+            data: {
+                spotId: id,
+                url: req.body.url,
+                preview: (_a = req.body.preview) !== null && _a !== void 0 ? _a : false,
+            },
+        });
+        res.json({
+            id: image.id,
+            url: image.url,
+            preview: image.preview,
+        });
+    });
+}));
+(async (req, res) => {
+    await getSpot(req.params['spotId'], res, async (id) => {
+        var _a;
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
+            where: { id },
+        });
+        if (spot.ownerId !== req.user.id) {
+            res.status(403).json({ message: 'Forbidden' });
+            return;
+        }
+        const image = await dbclient_js_1.prisma.spotImage.create({
+            data: {
+                spotId: id,
+                url: req.body.url,
+                preview: (_a = req.body.preview) !== null && _a !== void 0 ? _a : false,
+            },
+        });
+        res.json({
+            id: image.id,
+            url: image.url,
+            preview: image.preview,
+        });
+    });
+});
+router.put('/:spotId', auth_js_1.requireAuth, validation_js_1.handleValidationErrors, (async (req, res) => {
+    await getSpot(req.params.spotId, res, async (id) => {
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
+            where: { id },
+        });
+        if (spot.ownerId !== req.user.id) {
+            res.status(403).json({ message: 'Forbidden' });
+            return;
+        }
+        const updatedSpot = await dbclient_js_1.prisma.spot.update({
             where: { id },
             data: req.body,
         });
         res.json(updatedSpot);
-    }));
-})));
-router.delete('/:spotId', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield getSpot(req.params.spotId, res, (id) => __awaiter(void 0, void 0, void 0, function* () {
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
+    });
+}));
+router.delete('/:spotId', auth_js_1.requireAuth, (async (req, res) => {
+    await getSpot(req.params.spotId, res, async (id) => {
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
             where: { id },
         });
         if (spot.ownerId !== req.user.id) {
             res.status(403).json({ message: 'Forbidden' });
             return;
         }
-        yield dbclient_js_1.prisma.spot.delete({
+        await dbclient_js_1.prisma.spot.delete({
             where: { id },
         });
         res.json({ message: 'Successfully deleted' });
-    }));
-})));
-router.post('/:spotId/bookings', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    });
+}));
+router.post('/:spotId/bookings', auth_js_1.requireAuth, (async (req, res) => {
     const { startDate: sd, endDate: ed } = req.body;
     const startDate = new Date(sd);
     const endDate = new Date(ed);
@@ -205,8 +196,8 @@ router.post('/:spotId/bookings', auth_js_1.requireAuth, ((req, res) => __awaiter
         });
         return;
     }
-    yield getSpot(req.params.spotId, res, (spotId) => __awaiter(void 0, void 0, void 0, function* () {
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
+    await getSpot(req.params.spotId, res, async (spotId) => {
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
             where: { id: spotId },
             include: {
                 bookings: true,
@@ -233,7 +224,7 @@ router.post('/:spotId/bookings', auth_js_1.requireAuth, ((req, res) => __awaiter
             });
             return;
         }
-        const booking = yield dbclient_js_1.prisma.booking.create({
+        const booking = await dbclient_js_1.prisma.booking.create({
             data: {
                 spotId,
                 userId: req.user.id,
@@ -242,14 +233,14 @@ router.post('/:spotId/bookings', auth_js_1.requireAuth, ((req, res) => __awaiter
             },
         });
         res.json(booking);
-    }));
-})));
-router.get('/:spotId/bookings', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield getSpot(req.params.spotId, res, (spotId) => __awaiter(void 0, void 0, void 0, function* () {
-        const spot = yield dbclient_js_1.prisma.spot.findUnique({
+    });
+}));
+router.get('/:spotId/bookings', auth_js_1.requireAuth, (async (req, res) => {
+    await getSpot(req.params.spotId, res, async (spotId) => {
+        const spot = await dbclient_js_1.prisma.spot.findUnique({
             where: { id: spotId },
         });
-        const bookings = yield dbclient_js_1.prisma.booking.findMany({
+        const bookings = await dbclient_js_1.prisma.booking.findMany({
             where: { spotId },
             include: {
                 user: spot.ownerId === req.user.id
@@ -260,6 +251,6 @@ router.get('/:spotId/bookings', auth_js_1.requireAuth, ((req, res) => __awaiter(
             },
         });
         res.json({ Bookings: bookings });
-    }));
-})));
+    });
+}));
 exports.default = router;

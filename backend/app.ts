@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
@@ -87,6 +89,12 @@ app.use((err, _req, res, _next) => {
   }
 
   res.json(resp);
+});
+
+const port = process.env.PORT || 5005;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 export { app, prisma };

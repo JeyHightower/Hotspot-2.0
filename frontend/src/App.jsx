@@ -1,5 +1,5 @@
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
-import Layout from '../src/Layout';
+import Layout from './Layout';
 import CreateSpotModal from './components/CreateSpotModal/CreateSpotModal';
 import ManageSpots from './components/ManageSpots/ManageSpots';
 import SpotDetails from './components/SpotDetails/SpotDetails';

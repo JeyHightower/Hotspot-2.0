@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
@@ -30,7 +21,7 @@ const validateReviewEdit = [
         .withMessage('Stars must be an integer from 1 to 5'),
     validation_js_1.handleValidationErrors,
 ];
-router.post('/:reviewId/images', auth_js_1.requireAuth, validateReviewImage, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/:reviewId/images', auth_js_1.requireAuth, validateReviewImage, (async (req, res) => {
     const user = req.user;
     let reviewId;
     try {
@@ -44,7 +35,7 @@ router.post('/:reviewId/images', auth_js_1.requireAuth, validateReviewImage, ((r
         return;
     }
     const { url } = req.body;
-    const review = yield dbclient_js_1.prisma.review.findFirst({
+    const review = await dbclient_js_1.prisma.review.findFirst({
         where: { id: Number(reviewId) },
         include: { images: true },
     });
@@ -59,7 +50,7 @@ router.post('/:reviewId/images', auth_js_1.requireAuth, validateReviewImage, ((r
             });
             return;
         }
-        const img = yield dbclient_js_1.prisma.reviewImage.create({
+        const img = await dbclient_js_1.prisma.reviewImage.create({
             data: {
                 reviewId: review.id,
                 url: url,
@@ -70,8 +61,8 @@ router.post('/:reviewId/images', auth_js_1.requireAuth, validateReviewImage, ((r
     else {
         res.status(404).json({ message: "Review couldn't be found" });
     }
-})));
-router.put('/:reviewId', auth_js_1.requireAuth, validateReviewEdit, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+}));
+router.put('/:reviewId', auth_js_1.requireAuth, validateReviewEdit, (async (req, res) => {
     const user = req.user;
     const { review, stars } = req.body;
     let reviewId;
@@ -86,7 +77,7 @@ router.put('/:reviewId', auth_js_1.requireAuth, validateReviewEdit, ((req, res) 
         return;
     }
     try {
-        const changed = yield dbclient_js_1.prisma.review.update({
+        const changed = await dbclient_js_1.prisma.review.update({
             data: {
                 review: review,
                 stars: stars,
@@ -97,22 +88,22 @@ router.put('/:reviewId', auth_js_1.requireAuth, validateReviewEdit, ((req, res) 
         res.json(changed);
     }
     catch (e) {
-        if (yield dbclient_js_1.prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
+        if (await dbclient_js_1.prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
             res.status(403).json({ message: 'You do not have permission to edit this review' });
         }
         else {
             res.status(404).json({ message: "Review couldn't be found" });
         }
     }
-})));
-router.get('/', ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const reviews = yield dbclient_js_1.prisma.review.findMany();
+}));
+router.get('/', (async (req, res) => {
+    const reviews = await dbclient_js_1.prisma.review.findMany();
     res.json({ Reviews: reviews });
-})));
-router.get('/current', auth_js_1.requireAuth, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const reviews = yield dbclient_js_1.prisma.review.findMany({
+}));
+router.get('/current', auth_js_1.requireAuth, (async (req, res) => {
+    const reviews = await dbclient_js_1.prisma.review.findMany({
         where: { userId: req.user.id },
     });
     res.json({ Reviews: reviews });
-})));
+}));
 exports.default = router;

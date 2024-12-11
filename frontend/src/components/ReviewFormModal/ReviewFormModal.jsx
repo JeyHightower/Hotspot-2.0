@@ -27,7 +27,7 @@ const ReviewFormModal = ({ spotId, onReviewSubmit }) => {
     const isSubmitDisabled = review.length < 10 || stars === 0;
 
     return (
-      <div className="review-form-modal">
+      <div className="modal-base review-form-modal">
         <h2>How was your stay?</h2>
         {errors.server && <p className="error">{errors.server}</p>}
       

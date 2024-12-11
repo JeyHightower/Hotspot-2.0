@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Header from '../Header-Logo/Header-Logo';
+import { useSelector } from 'react-redux';
 import './Navigation.css';
 import ProfileButton from './ProfileButton';
 import { useModal } from '../Context/useModal';

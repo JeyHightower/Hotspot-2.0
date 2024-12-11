@@ -1,32 +1,52 @@
-
-// Modal.jsx
+import { useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { useModal } from './useModal'; // Adjust the path as necessary
 import { BrowserRouter } from 'react-router-dom';
 import './Modal.css';
+import { ModalContext } from './ModalContext'; // Assuming you have a ModalContext defined
 
 const Modal = () => {
-    const { modalRef, modalContent, closeModal } = useModal();
+  const { modalRef, modalContent, closeModal } = useContext(ModalContext);
 
-    if (!modalRef || !modalRef.current || !modalContent) return null;
+  if (!modalRef || !modalRef.current || !modalContent) return null;
 
-    return ReactDOM.createPortal(
-        <div id="modal">
-            <div id="modal-background" onClick={closeModal} />
-            <div id="modal-content">
-                <BrowserRouter>
-                    {modalContent}
-                </BrowserRouter>
-            </div>
-        </div>,
-        modalRef.current
-    );
+  return ReactDOM.createPortal(
+    <div id="modal">
+      <div id="modal-background" onClick={closeModal} />
+      <div id="modal-content">
+        <BrowserRouter>{modalContent}</BrowserRouter>
+      </div>
+    </div>,
+    modalRef.current,
+  );
 };
 
 export default Modal;
 
+// import ReactDOM from 'react-dom';
+// import { useModal } from './useModal'; // Adjust the path as necessary
+// import { BrowserRouter } from 'react-router-dom';
+// import { createPortal } from 'react-dom';
+// import './Modal.css';
 
+// const Modal = ({ children }) => {
+//     const { modalRef, modalContent, closeModal } = useModal();
 
+//     if (!modalRef || !modalRef.current || !modalContent) return null;
+
+//     return ReactDOM.createPortal(
+//         <div id="modal">
+//             <div id="modal-background" onClick={closeModal} />
+//             <div id="modal-content">
+//                 <BrowserRouter>
+//                     {modalContent}
+//                 </BrowserRouter>
+//             </div>
+//         </div>,
+//         modalRef.current
+//     );
+// };
+
+// export default Modal;
 
 // import { useRef, createContext, useState, useContext } from 'react';
 // import ReactDOM from 'react-dom';

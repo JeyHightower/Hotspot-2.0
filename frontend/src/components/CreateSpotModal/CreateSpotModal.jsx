@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createSpotThunk } from '../../store/spots';
 import { useModal } from '../Context/useModal';
 import './CreateSpotModal.css';
+import '../styles/ModalBase.css';
 
 const CreateSpotModal = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const CreateSpotModal = () => {
   };
 
   return (
-    <div className="modal-overlay" onClick={closeModal}>
+    <div className="modal-base create-spot-modal" onClick={closeModal}>
       <div className="modal-create-spot" onClick={(e) => e.stopPropagation()}>
         <div className="create-spot-form">
           <h1>Create a New Spot</h1>

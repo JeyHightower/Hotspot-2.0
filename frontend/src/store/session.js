@@ -21,9 +21,8 @@ const removeSessionUser = () => {
 //!THUNK ACTIONS:
 export const loginThunk = (user) => async (dispatch) => {
   await restoreCSRF();
-
+  try {
   const { credential, password } = user;
-
   const response = await csrfFetch('/api/session', {
     method: 'POST',
     headers: {
@@ -35,43 +34,90 @@ export const loginThunk = (user) => async (dispatch) => {
     }),
   });
 
+  if (!response.ok) {
+    const text = await response.text();
+    console.error('response not ok:', text);
+    throw new error(`http error! status': ${response.status}`);
+  }
+
   const data = await response.json();
   dispatch(setSessionUser(data.user));
   return response;
+} catch (error) {
+  console.error('Login user error:', error);
+  throw error;
+}
 };
 
+
 export const restoreUserThunk = () => async (dispatch) => {
-  const response = await csrfFetch('/api/session');
-  const data = await response.json();
-  dispatch(setSessionUser(data.user));
-  return response;
+  try {
+    const response = await csrfFetch('/api/session');
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('response not ok:', text);
+      throw new error(`http error! status': ${response.status}`);
+    }
+    const data = await response.json();
+    dispatch(setSessionUser(data.user));
+    return response;
+  } catch (error) {
+    console.error('Restore user error:', error);
+    throw error;
+  }
 };
 
 export const signupThunk = (user) => async (dispatch) => {
-  const { username, firstName, lastName, email, password } = user;
-  const response = await csrfFetch('/api/users', {
-    method: 'POST',
-    body: JSON.stringify({
-      username,
-      firstName,
-      lastName,
-      email,
-      password,
-    }),
-  });
-  const data = await response.json();
-  dispatch(setSessionUser(data.user));
-  return response;
+  try {
+    const { username, firstName, lastName, email, password } = user;
+    const response = await csrfFetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('Response not ok:', text);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    dispatch(setSessionUser(data.user));
+    return response;
+  } catch (error) {
+    console.error('Signup user error:', error);
+    throw error; // Rethrow the error after logging it
+  }
 };
 
 export const logoutThunk = () => async (dispatch) => {
-  const response = await csrfFetch('/api/session', {
-    method: 'DELETE',
-  });
-  dispatch(removeSessionUser());
-  return response;
-};
+  try {
+    const response = await csrfFetch('/api/session', {
+      method: 'DELETE',
+    });
 
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('Response not ok:', text);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    dispatch(removeSessionUser());
+    return response;
+  } catch (error) {
+    console.error('Logout user error:', error);
+    throw error;
+  }
+};
 //!INITIAL STATE:
 const initialState = {
   user: null,

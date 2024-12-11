@@ -1,133 +1,70 @@
+/* TODO: Add sitewide styles */
 :root {
-  /* Color Palette */
-  --primary-gradient: linear-gradient(90deg, #FF416C, #FF4B2B);
-  --primary-color: #FF416C;
-  --secondary-color: #FF4B2B;
-  --background-gradient: linear-gradient(135deg, #fff5f5, #fff);
-  --text-primary: #2d2d2d;
-  --text-secondary: #666666;
-  --error-color: #ff4b2b;
-  --success-color: #34D399;
-  --border-color: #f0f0f0;
-  --shadow-color: rgba(255, 65, 108, 0.12);
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
   
-  /* Typography */
-  --font-family: 'Helvetica Neue', Arial, sans-serif;
-  --heading-large: 28px;
-  --heading-medium: 20px;
-  --text-regular: 16px;
-  --text-small: 13px;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
   
-  /* Spacing */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 15px;
+  a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: #535bf2;
+  }
   
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
-}
-
-body {
-  font-family: var(--font-family);
-  background: var(--background-gradient);
-  margin: 0;
-  padding: 0;
-  color: var(--text-primary);
-  line-height: 1.5;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-  font-weight: 600;
-}
-
-h1 {
-  font-size: var(--heading-large);
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-button {
-  background: var(--primary-gradient);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-md) var(--spacing-lg);
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform var(--transition-normal), 
-              box-shadow var(--transition-normal);
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px var(--shadow-color);
-}
-
-button:disabled {
-  background: var(--border-color);
-  cursor: not-allowed;
-  transform: none;
-}
-
-input, textarea {
-  width: 100%;
-  padding: var(--spacing-md);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-family);
-  transition: all var(--transition-fast);
-}
-
-input:focus, textarea:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--shadow-color);
-  outline: none;
-}
-
-.card {
-  background: white;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px var(--shadow-color);
-  padding: var(--spacing-lg);
-}
-
-.error {
-  color: var(--error-color);
-  font-size: var(--text-small);
-  margin-top: var(--spacing-xs);
-}
-
-.success {
-  color: var(--success-color);
-  font-size: var(--text-small);
-  margin-top: var(--spacing-xs);
-}
-
-/* Add to your existing button styles */
-.auth-button {
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.auth-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2);
-}
+  body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+  
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+  button:hover {
+    border-color: #646cff;
+  }
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    :root {
+      color: #213547;
+      background-color: #ffffff;
+    }
+    a:hover {
+      color: #747bff;
+    }
+    button {
+      background-color: #f9f9f9;
+    }
+  }
+  

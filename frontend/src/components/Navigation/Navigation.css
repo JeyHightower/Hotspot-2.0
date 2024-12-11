@@ -202,3 +202,8 @@ a:hover {
 .user-info-container {
   display: none; /* Remove this container's influence */
 }
+
+nav {
+  z-index: 1;
+  position: relative;
+}

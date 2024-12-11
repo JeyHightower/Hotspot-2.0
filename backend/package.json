@@ -1,57 +1,51 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
+  "main": "app.js",
+  "bin": {
+    "backend": "bin/www.js"
   },
-  "prisma": {
-    "seed": "node target/prisma/seed.js"
+  "directories": {
+    "test": "tests"
   },
   "scripts": {
-    "build-run": "tsc && per-env",
-    "build-run:development": "dotenv nodemon ./target/bin/www.js",
-    "build-run:production": "node ./target/bin/www.js",
-    "test": "dotenv python3 tests/run.py",
-    "start": "per-env",
-    "start:development": "dotenv nodemon ./target/bin/www.js",
-    "start:production": "node ./target/bin/www.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "nodemon app.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "csurf": "^1.11.0",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "express-async-errors": "^3.1.1",
-    "express-validator": "^7.2.0",
-    "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0",
-    "per-env": "^1.0.2",
-    "pg": "^8.13.0"
-  },
+  "description": "",
   "devDependencies": {
-    "@prisma/client": "^6.0.1",
+    "@prisma/client": "5.7.0",
     "@types/bcryptjs": "^2.4.6",
-    "@types/cookie-parser": "^1.4.7",
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/csurf": "^1.11.5",
-    "@types/express": "^5.0.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "5.0.0",
+    "@types/express-serve-static-core": "^5.0.2",
+    "@types/express-validator": "^2.20.33",
+    "@types/helmet": "^0.0.48",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.10.1",
-    "dotenv-cli": "^7.4.2",
-    "nodemon": "^3.1.5",
-    "prisma": "^6.0.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "@types/node": "22.10.1",
+    "nodemon": "^3.1.7",
+    "prisma": "5.7.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.2"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "csurf": "^1.10.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0"
   }
 }
