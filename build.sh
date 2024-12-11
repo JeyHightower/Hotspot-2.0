@@ -27,34 +27,24 @@ cd ..
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 
-# Create package.json with correct module setup
-echo '{
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "vite": "^4.5.0",
-    "@vitejs/plugin-react": "^4.0.0"
-  }
-}' > package.json
+# First install Vite and its plugin
+npm install --save-dev vite@4.5.0
+npm install --save-dev @vitejs/plugin-react@4.0.0
 
-# Install dependencies
-npm install
+# Then install other dependencies
+npm install react@18.2.0 react-dom@18.2.0
+npm install --save-dev @types/redux-logger
 
-# Create Vite config with CommonJS syntax
-cat > vite.config.cjs << 'EOF'
-const react = require('@vitejs/plugin-react')
+# Create Vite config after dependencies are installed
+cat > vite.config.js << 'EOF'
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-module.exports = {
+export default defineConfig({
   plugins: [react()]
-}
+})
 EOF
 
-# Build with explicit environment
+# Build with dependencies in place
 NODE_ENV=production npx vite build
 cd ..
