@@ -23,16 +23,18 @@ yarn exec tsc
 npx prisma db push --accept-data-loss
 cd ..
 
-# Frontend setup with explicit Vite installation
+# Frontend setup
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 
 # Install dependencies
 yarn install
 
+# Add build script to package.json
+node -e "const p=require('./package.json'); p.scripts=p.scripts||{}; p.scripts.build='vite build'; require('fs').writeFileSync('package.json',JSON.stringify(p,null,2))"
+
 # Install Vite and React dependencies
-yarn add vite@latest --dev
-yarn add @vitejs/plugin-react@latest --dev
+yarn add vite@latest @vitejs/plugin-react@latest --dev
 yarn add react react-dom
 yarn add @types/redux-logger
 
@@ -46,6 +48,6 @@ export default defineConfig({
 })
 EOF
 
-# Build using yarn
-yarn vite build
+# Build using npm script
+yarn run build
 cd ..
