@@ -4,12 +4,13 @@ set -euo pipefail
 set -x
 
 cd backend
-pnpm i
-pnpm add @prisma/client
-pnpm dlx prisma generate
+NODE_ENV=production pnpm i
+pnpm add prisma @prisma/client --save-prod
+pnpm exec prisma generate
 pnpm tsc
-pnpm dlx prisma db push --accept-data-loss
+pnpm exec prisma db push --accept-data-loss
 cd ..
+
 
 
 cd frontend
