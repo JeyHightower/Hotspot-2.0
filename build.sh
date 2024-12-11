@@ -9,25 +9,23 @@ cd backend
 rm -rf node_modules package-lock.json
 rm -rf prisma/client
 
-# Install dependencies in specific order
-npm install
-npm install typescript @types/express @types/node --save-dev
-npm install prisma
-npm install @prisma/client
+# Create a fresh package.json if needed
+npm init -y
 
-# Set explicit paths
-export PRISMA_SCHEMA_PATH="$PWD/prisma/schema.prisma"
-export NODE_PATH="$PWD/node_modules"
+# Install dependencies with exact versions
+npm install typescript@5.0.4 @types/express@4.17.17 @types/node@20.2.5 --save-dev
+npm install prisma@5.0.0
+npm install @prisma/client@5.0.0
 
-# Generate client with explicit schema path
-npx prisma generate --schema="$PRISMA_SCHEMA_PATH"
+# Generate Prisma artifacts
+npx prisma generate --schema=./prisma/schema.prisma
 
-# Continue with build
+# Build and deploy
 npx tsc
 npx prisma db push --accept-data-loss
 cd ..
 
-# Frontend build
+# Frontend
 cd frontend
 npm install
 npm install @vitejs/plugin-react --save-dev
