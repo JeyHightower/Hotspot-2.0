@@ -6,9 +6,9 @@ set -x
 # Backend setup
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
 npm install
-npm install typescript --save-dev
+npm install -g typescript
 npm install @prisma/client prisma --save-dev
-npx tsc
+tsc
 npx prisma generate
 npx prisma db push --accept-data-loss
 cd ..
