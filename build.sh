@@ -12,21 +12,22 @@ rm -rf prisma/client
 # Install yarn
 npm install -g yarn
 
-# Install dependencies with specific versions
+# Install dependencies with all necessary types
 yarn install
 yarn add typescript@5.7.2 @types/express@5.0.0 @types/node@22.10.1 --dev
 yarn add prisma@5.7.0 --dev
 yarn add @prisma/client@5.7.0
 yarn add --dev ts-node@10.9.2
+yarn add --dev @types/express-serve-static-core
 
-# Generate Prisma client with specific version
-NODE_ENV=development npx prisma@5.7.0 generate
+# Generate Prisma client
+NODE_ENV=development npx prisma generate
 
 # Run TypeScript compilation
 yarn exec tsc
 
 # Database updates
-npx prisma@5.7.0 db push --accept-data-loss
+npx prisma db push --accept-data-loss
 cd ..
 
 # Frontend setup
