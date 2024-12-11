@@ -43,6 +43,6 @@ export default defineConfig({
 })
 EOF
 
-# Build using global vite
-$(npm bin -g)/vite build
+# Build using absolute path to Vite
+/usr/local/bin/vite build
 cd ..
