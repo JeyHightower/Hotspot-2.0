@@ -3,7 +3,7 @@
 set -euo pipefail
 set -x
 
-# Navigate to backend and run commands
+# Backend setup
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
 npm install
 npm install typescript --save-dev
@@ -13,8 +13,10 @@ npx prisma generate
 npx prisma db push --accept-data-loss
 cd ..
 
-# Navigate to frontend and run commands
+# Frontend setup
 cd frontend || { echo "Failed to change directory to frontend"; exit 1; }
 npm install
+npm install @vitejs/plugin-react --save-dev
 npm run build
+cd ..
 cd ..
