@@ -5,10 +5,12 @@ set -x
 
 cd backend
 pnpm i
-npx prisma generate
+pnpm add @prisma/client
+pnpm dlx prisma generate
 pnpm tsc
-npx prisma db push --accept-data-loss
+pnpm dlx prisma db push --accept-data-loss
 cd ..
+
 
 cd frontend
   pnpm i
