@@ -5,30 +5,27 @@ set -x
 
 cd backend
 
-# Fresh start
+# Clean installation
 rm -rf node_modules package-lock.json
-rm -rf prisma/client
+npm cache clean --force
 
-# Global Prisma installation
+# Install dependencies in correct order
+npm install --legacy-peer-deps
 npm install -g prisma
-npm install -g @prisma/client
-
-# Local installation
-npm install
 npm install prisma --save-dev
 npm install @prisma/client
 
-# Generate fresh client
+# Generate Prisma client
 prisma generate
 
-# Build process
+# Build the project
 npx tsc
 prisma db push --accept-data-loss
 cd ..
 
 # Frontend setup
 cd frontend
-npm install
+npm install --legacy-peer-deps
 npm install @vitejs/plugin-react --save-dev
 npm run build
 cd ..
