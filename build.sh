@@ -3,24 +3,24 @@
 set -euo pipefail
 set -x
 
+# Root level Prisma install
+npm install prisma @prisma/client
+
 # Backend setup
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
 
-# Clean install
+# Clean and fresh install
 rm -rf node_modules package-lock.json
 rm -rf prisma/client
 
-# Install core dependencies first
+# Install dependencies
 npm install
 npm install typescript @types/express @types/node --save-dev
+npm install prisma @prisma/client
 
-# Install and setup Prisma specifically
-npm install prisma --save-dev
-npm install @prisma/client
-
-# Generate Prisma client with explicit path
-export PRISMA_SCHEMA_PATH="./prisma/schema.prisma"
-npx prisma generate --schema=./prisma/schema.prisma
+# Initialize Prisma and generate client
+npx prisma init
+npx prisma generate
 
 # Compile TypeScript
 npx tsc
