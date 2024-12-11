@@ -27,16 +27,10 @@ cd ..
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 
-# Install dependencies
-yarn install
-
-# Add build script to package.json with full path
-node -e "const p=require('./package.json'); p.scripts=p.scripts||{}; p.scripts.build='node ./node_modules/vite/bin/vite.js build'; require('fs').writeFileSync('package.json',JSON.stringify(p,null,2))"
-
-# Install Vite and React dependencies
-yarn add vite@latest @vitejs/plugin-react@latest --dev
-yarn add react react-dom
-yarn add @types/redux-logger
+# Install dependencies using npm
+npm install
+npm install vite @vitejs/plugin-react --save-dev
+npm install react react-dom @types/redux-logger
 
 # Create Vite config
 cat > vite.config.mjs << 'EOF'
@@ -48,6 +42,6 @@ export default defineConfig({
 })
 EOF
 
-# Build using npm script with full path
-yarn run build
+# Build using npm
+npm run build
 cd ..
