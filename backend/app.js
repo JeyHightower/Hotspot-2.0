@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.prisma = exports.app = void 0;
+require("dotenv/config");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
@@ -62,4 +63,8 @@ app.use((err, _req, res, _next) => {
         (resp.title = err.title || 'Server Error'), (resp.stack = err.stack);
     }
     res.json(resp);
+});
+const port = process.env.PORT || 5005;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
