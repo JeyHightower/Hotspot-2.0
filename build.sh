@@ -5,27 +5,27 @@ set -x
 
 cd backend
 
-# Clean start
-rm -rf node_modules package-lock.json
+# Fresh start
+rm -rf node_modules package-lock.json dist
 rm -rf prisma/client
 
-# Create a fresh package.json if needed
-npm init -y
+# Install core dependencies first
+npm install
 
-# Install dependencies with exact versions
-npm install typescript@5.0.4 @types/express@4.17.17 @types/node@20.2.5 --save-dev
-npm install prisma@5.0.0
-npm install @prisma/client@5.0.0
+# Install and initialize Prisma separately
+npm install prisma --save-dev
+npm install @prisma/client
 
-# Generate Prisma artifacts
+# Force Prisma to generate fresh client
+rm -rf node_modules/.prisma
 npx prisma generate --schema=./prisma/schema.prisma
 
-# Build and deploy
+# Complete the build
 npx tsc
 npx prisma db push --accept-data-loss
 cd ..
 
-# Frontend
+# Frontend setup
 cd frontend
 npm install
 npm install @vitejs/plugin-react --save-dev
