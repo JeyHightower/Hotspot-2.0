@@ -21,8 +21,10 @@ yarn add @prisma/client
 # Generate Prisma client
 yarn prisma generate
 
-# Build project
-yarn tsc
+# Build project using npx for TypeScript
+npx tsc
+
+# Database updates
 yarn prisma db push --accept-data-loss
 cd ..
 
