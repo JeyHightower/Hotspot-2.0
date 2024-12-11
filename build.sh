@@ -27,21 +27,21 @@ cd ..
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 
-# Create package.json if it doesn't exist
+# Create fresh package.json with explicit type
 echo '{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "dependencies": {},
-  "devDependencies": {}
+  "scripts": {
+    "build": "vite build"
+  }
 }' > package.json
 
-# Install dependencies in correct order
-npm install
-npm install --save-dev vite@latest
-npm install --save-dev @vitejs/plugin-react@latest
-npm install react react-dom
-npm install @types/redux-logger
+# Install all dependencies in one step
+npm install vite@4.5.0 @vitejs/plugin-react@4.0.0 react@18.2.0 react-dom@18.2.0 @types/redux-logger --save-dev
 
-# Create Vite config with proper ESM syntax
+# Create minimal Vite config
 cat > vite.config.js << 'EOF'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -51,6 +51,6 @@ export default defineConfig({
 })
 EOF
 
-# Build with explicit dependency path
-NODE_ENV=production npx vite build
+# Execute build with explicit versions
+npm run build
 cd ..
