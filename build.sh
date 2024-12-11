@@ -5,6 +5,7 @@ set -x
 
 cd backend
 NODE_ENV=production pnpm i
+pnpm add -D @types/cookie-parser @types/cors @types/express @types/csurf @types/express-serve-static-core @types/morgan @types/node @types/bcryptjs @types/jsonwebtoken
 pnpm add prisma @prisma/client --save-prod
 pnpm exec prisma generate
 pnpm tsc
