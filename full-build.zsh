@@ -3,18 +3,13 @@
 set -euo pipefail
 set -x
 
-# Install TypeScript and set up tsc script
-npm install typescript --save-dev
-npm pkg set scripts.tsc="tsc"
-
-# Install Prisma dependencies
-npm install @prisma/client prisma --save-dev
-
 # Navigate to backend and run commands
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
 npm install
+npm install typescript --save-dev
+npm install @prisma/client prisma --save-dev
+npx tsc
 npx prisma generate
-npm run tsc
 npx prisma db push --accept-data-loss
 cd ..
 
