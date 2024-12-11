@@ -3,22 +3,22 @@
 set -euo pipefail
 set -x
 
-# Install Prisma globally first
-npm install -g prisma
-
 # Backend setup
 cd backend || { echo "Failed to change directory to backend"; exit 1; }
 
-# Fresh install of dependencies
-rm -rf node_modules package-lock.json
-npm cache clean --force
-npm install
+# Install dependencies with specific paths
+npm init -y
+npm install prisma --save-dev
+npm install @prisma/client
 npm install -g typescript
 npm install @types/express @types/node typescript --save-dev
-npm install prisma @prisma/client
+
+# Set Prisma environment
+export PRISMA_SCHEMA_PATH="./prisma/schema.prisma"
+export NODE_PATH="./node_modules"
 
 # Generate Prisma client and compile TypeScript
-npx prisma generate
+npx prisma generate --schema="./prisma/schema.prisma"
 npx tsc
 
 # Database updates
