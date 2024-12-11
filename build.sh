@@ -27,14 +27,14 @@ cd ..
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 
-# Create package.json with correct build script
+# Create package.json with npx build script
 echo '{
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "./node_modules/.bin/vite build"
+    "build": "npx vite@4.5.0 build"
   }
 }' > package.json
 
@@ -51,6 +51,6 @@ export default defineConfig({
 })
 EOF
 
-# Build with exact path
+# Build using npx
 npm run build
 cd ..
