@@ -20,7 +20,9 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.formatDate = formatDate;
 const express_1 = require("express");
+const express_validator_1 = require("express-validator");
 const validation_js_1 = require("../../utils/validation.js");
 const auth_js_1 = require("../../utils/auth.js");
 const dbclient_js_1 = require("../../dbclient.js");
@@ -60,11 +62,11 @@ router.get('/current', auth_js_1.requireAuth, (req, res) => __awaiter(void 0, vo
     (0, response_js_1.sendResponse)(res, { Bookings: sequelized });
 }));
 const validateNewBooking = [
-    check('startDate')
+    (0, express_validator_1.check)('startDate')
         .exists({ checkFalsy: true })
         .isDate()
         .withMessage('startDate is required'),
-    check('endDate')
+    (0, express_validator_1.check)('endDate')
         .exists({ checkFalsy: true })
         .isDate()
         .withMessage('endDate is required'),
@@ -75,29 +77,31 @@ router.put('/:bookingId', auth_js_1.requireAuth, validateNewBooking, (req, res) 
     let bookingId = (0, validation_js_1.parseI32)(req.params['bookingId']);
     const { startDate, endDate } = req.body;
     if (!bookingId) {
-        return res.status(404).json({
+        res.status(404).json({
             message: "Booking couldn't be found",
         });
+        return;
     }
     const booking = yield dbclient_js_1.prisma.booking.findUnique({
         where: { id: bookingId },
         include: { spot: true },
     });
     if (!booking) {
-        return res.status(404).json({
+        res.status(404).json({
             message: "Booking couldn't be found",
         });
+        return;
     }
     if (booking.userId !== user.id) {
-        return res
-            .status(403)
-            .json({ message: 'You do not have permission to edit this booking' });
+        res.status(403).json({ message: 'You do not have permission to edit this booking' });
+        return;
     }
     if (startDate >= endDate) {
-        return res.status(400).json({
+        res.status(400).json({
             message: 'Bad Request',
             errors: { endDate: 'endDate cannot be on or before startDate' },
         });
+        return;
     }
     let overlap = yield dbclient_js_1.prisma.booking.findFirst({
         where: {
@@ -120,7 +124,8 @@ router.put('/:bookingId', auth_js_1.requireAuth, validateNewBooking, (req, res) 
         if (overlap.startDate <= endDate && endDate <= overlap.endDate) {
             err.errors.endDate = 'End date conflicts with an existing booking';
         }
-        return res.status(403).json(err);
+        res.status(403).json(err);
+        return;
     }
     const newBooking = yield dbclient_js_1.prisma.booking.update({
         where: { id: booking.id },
@@ -129,7 +134,7 @@ router.put('/:bookingId', auth_js_1.requireAuth, validateNewBooking, (req, res) 
             endDate,
         },
     });
-    return res.status(201).json(Object.assign(Object.assign({}, newBooking), { startDate: formatDate(newBooking.startDate), endDate: formatDate(newBooking.endDate) }));
+    res.status(201).json(Object.assign(Object.assign({}, newBooking), { startDate: formatDate(newBooking.startDate), endDate: formatDate(newBooking.endDate) }));
 }));
 router.delete('/:bookingId', auth_js_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookingId } = req.params;
