@@ -27,17 +27,16 @@ cd ..
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 
-# Install core dependencies first
+# Install dependencies
 yarn install
 
-# Install Vite and its plugins globally and locally
-npm install -g vite
-yarn add vite --dev
-yarn add @vitejs/plugin-react --dev
+# Install Vite and React dependencies
+yarn add vite@latest --dev
+yarn add @vitejs/plugin-react@latest --dev
 yarn add react react-dom
 yarn add @types/redux-logger
 
-# Create Vite config as ESM
+# Create Vite config
 cat > vite.config.mjs << 'EOF'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -47,6 +46,6 @@ export default defineConfig({
 })
 EOF
 
-# Build with explicit path
-./node_modules/.bin/vite build
+# Build using yarn
+yarn vite build
 cd ..
