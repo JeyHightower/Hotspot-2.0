@@ -23,11 +23,11 @@ yarn exec tsc
 npx prisma db push --accept-data-loss
 cd ..
 
-# Frontend setup with Vite
+# Frontend setup with complete Vite tooling
 cd frontend
 rm -rf node_modules package-lock.json yarn.lock
 yarn install
 yarn add vite @vitejs/plugin-react --dev
 yarn add @types/redux-logger
-yarn build
+npx vite build
 cd ..
