@@ -12,19 +12,15 @@ rm -rf prisma/client
 # Install yarn
 npm install -g yarn
 
-# Install dependencies using yarn
+# Install all dependencies including types
 yarn install
 yarn add typescript @types/express @types/node --dev
 yarn add prisma --dev
 yarn add @prisma/client
+yarn add --dev @types/express @types/node ts-node
 
 # Generate Prisma client
 yarn prisma generate
-
-# Add TypeScript compilation script to package.json
-yarn add --dev typescript
-yarn add --dev ts-node
-yarn add --dev @types/node
 
 # Run TypeScript compilation
 yarn exec tsc
