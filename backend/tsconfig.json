@@ -8,18 +8,7 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./",
-    "typeRoots": ["./node_modules/@types"],
-    "types": [
-      "node",
-      "express",
-      "cookie-parser",
-      "cors",
-      "csurf",
-      "morgan",
-      "bcryptjs",
-      "jsonwebtoken"
-    ]
+    "rootDir": "./"
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
