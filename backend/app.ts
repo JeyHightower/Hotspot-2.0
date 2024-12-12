@@ -71,7 +71,8 @@ app.use(async (_req, _res, next) => {
 app.use((err: any, _req: any, _res: any, next: any) => {
   if (err instanceof PrismaClientValidationError) {
     err.title = 'prisma validation error';
-    err.errors = err.message;
+
+    err.errors = { message: err.message };
   }
   next(err);
 });
