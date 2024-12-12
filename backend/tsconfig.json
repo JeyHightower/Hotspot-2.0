@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "strict": true,
-    "skipLibCheck": true,
-    "outDir": "./dist",
-    "rootDir": "./",
-    "typeRoots": ["node_modules/@types"]
-  },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@prisma/client"],
+    "types": ["@prisma/client"],
+    "include": ["**/*"],
+    "exclude": ["node_modules/**/*"]
+  }
 }
