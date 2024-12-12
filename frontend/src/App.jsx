@@ -13,10 +13,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: (
-          <>
-            <h1>Welcome!</h1>
+          <div className="welcome-container">
+            <h1 className="welcome-message">Where Sunshine and Adventure Meet: Find Your Perfect Stay in the World's Hottest Destinations!</h1>
             <SpotsIndex />
-          </>
+          </div>
         ),
       },
       {

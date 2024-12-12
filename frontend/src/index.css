@@ -67,4 +67,101 @@
       background-color: #f9f9f9;
     }
   }
-  
+.welcome-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.welcome-message {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  background: linear-gradient(90deg, #FF4E50, #F9D423);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 20px 0;
+  padding: 0 20px;
+  line-height: 1.4;
+  text-shadow: 0 2px 4px rgba(255, 65, 108, 0.1);
+}
+
+@media (max-width: 768px) {
+  .welcome-message {
+    font-size: 20px;
+  }
+}
+
+/* Navigation adjustments */
+nav {
+  height: 60px;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+}
+
+.nav-list {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive grid layout */
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 80px 20px 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Media queries for responsive columns */
+@media screen and (min-width: 1200px) {
+  .spots-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .spots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .spots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .spots-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Spot tile adjustments */
+.spot-tile {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.spot-image {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 8px;
+}
