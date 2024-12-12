@@ -24,8 +24,7 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
-
-      'react/prop-types': 'off',
+      'react/prop-types': 'off',  // Make sure this comes first
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
