@@ -4,5 +4,4 @@ Build
 .DS_Store
 *.db
 dist/
-build/
 target

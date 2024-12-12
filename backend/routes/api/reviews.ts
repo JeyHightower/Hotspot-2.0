@@ -1,66 +1,124 @@
-import { Router } from 'express';
-import type { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-import validator from 'express-validator';
+import { Request, Response, Router } from 'express';
+import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
-import { requireAuth } from '../../utils/auth.js';
+
 import { prisma } from '../../dbclient.js';
-import { RequestHandler }  from 'express';
+import { requireAuth } from '../../utils/auth.js';
 
 const router = Router();
 
-interface ReviewRequest extends ExpressRequest {
-  user?: {
-    id: number;
-    email: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    hashedPassword: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-  body: {
-    review?: string;
-    stars?: number;
-    url?: string;
-  };
-  params: {
-    reviewId?: string;
-    spotId?: string;
-  };
-}
+router.get('/current', requireAuth, async (req, res) => {
+  const user = req.user!;
+
+  const reviews = await prisma.review.findMany({
+    where: { userId: user.id },
+    include: {
+      spot: {
+        include: {
+          images: { where: { preview: true }, select: { url: true } },
+        },
+      },
+      images: { select: { url: true, id: true } },
+    },
+  });
+
+  const sequelized = reviews.map((r) => {
+    const { spot, images, ...rest } = r;
+
+    const {
+      images: spotImages,
+      lat,
+      lng,
+      price,
+      updatedAt: _u,
+      createdAt: _uu,
+      ...restSpot
+    } = spot;
+
+    const out = {
+      User: { id: user.id, firstName: user.firstName, lastName: user.lastName },
+      Spot: {
+        ...restSpot,
+        lat: Number(lat),
+        lng: Number(lng),
+        price: Number(price),
+        previewImage: spotImages[0]?.url ?? '',
+      },
+
+      ReviewImages: images,
+
+      ...rest,
+    };
+
+    return out;
+  });
+
+  return res.json({ Reviews: sequelized });
+});
+
+router.delete('/:reviewId', requireAuth, async (req, res) => {
+  const reviewId = Number(req.params['reviewId']);
+  if (isNaN(reviewId) || reviewId > 2 ** 31)
+    res.status(404).json({ message: "Review couldn't be found" });
+
+  const userId = req.user!.id;
+
+  try {
+    const review = await prisma.review.findUnique({
+      where: {
+        id: reviewId,
+        userId: userId,
+      },
+    });
+
+    if (!review) {
+      if (!(await prisma.review.findUnique({ where: { id: reviewId } }))) {
+        return res.status(404).json({
+          message: "Review couldn't be found",
+        });
+      }
+      return res.status(403).json({
+        message: 'You are not authorized to delete this review',
+      });
+    }
+
+    await prisma.review.delete({
+      where: { id: reviewId },
+    });
+    return res.status(200).json({
+      message: 'Successfully deleted',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal Server Error',
+    });
+  }
+});
 
 const validateReviewImage = [
-  validator.body('url').isString().withMessage('must pass a url string'),
+  check('url').isString().withMessage('must pass a url string'),
+
   handleValidationErrors,
-];const validateReviewEdit = [
-  validator.body('review')
-    .notEmpty()
-    .isString()
-    .withMessage('Review text is required'),
-  validator.body('stars')
-    .notEmpty()
-    .isInt({ min: 1, max: 5 })
-    .withMessage('Stars must be an integer from 1 to 5'),
-  handleValidationErrors,
-];router.post(
+];
+
+router.post(
   '/:reviewId/images',
   requireAuth,
   validateReviewImage,
-  (async (req: ReviewRequest, res: ExpressResponse) => {
+  async (req: Request, res: Response) => {
     const user = req.user!;
     let reviewId;
     try {
-      reviewId = BigInt(req.params.reviewId!);
+      reviewId = BigInt(req.params['reviewId']!);
+
       if (BigInt.asIntN(32, reviewId) !== reviewId) {
         throw Error();
       }
     } catch (e) {
-      res.status(404).json({ message: "Review couldn't be found" });
-      return;
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
-
     const { url } = req.body;
+
     const review = await prisma.review.findFirst({
       where: { id: Number(reviewId) },
       include: { images: true },
@@ -68,81 +126,85 @@ const validateReviewImage = [
 
     if (review) {
       if (review.userId !== user.id) {
-        res.status(403).json({ message: 'You do not have permission to edit this review' });
-        return;
+        return res
+          .status(403)
+          .json({ message: 'You do not have permission to edit this review' });
       }
 
       if (review.images.length >= 10) {
-        res.status(403).json({
+        return res.status(403).json({
           message: 'Maximum number of images for this resource was reached',
         });
-        return;
       }
 
-      const img = await prisma.reviewImage.create({
+      let img = await prisma.reviewImage.create({
         data: {
           reviewId: review.id,
-          url: url!,
+          url,
         },
       });
 
-      res.status(201).json({ id: img.id, url });
+      return res.status(201).json({ id: img.id, url });
     } else {
-      res.status(404).json({ message: "Review couldn't be found" });
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
-  }) as RequestHandler
+  },
 );
+
+const validateReviewEdit = [
+  check('review')
+    .exists({ values: 'falsy' })
+    .isString()
+    .withMessage('Review text is required'),
+  check('stars')
+    .exists({ values: 'falsy' })
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Stars must be an integer from 1 to 5'),
+
+  handleValidationErrors,
+];
 
 router.put(
   '/:reviewId',
   requireAuth,
   validateReviewEdit,
-  (async (req: ReviewRequest, res: ExpressResponse) => {
+  async (req: Request, res: Response) => {
     const user = req.user!;
-    const { review, stars } = req.body;
-    let reviewId;
 
+    const { review, stars } = req.body;
+
+    let reviewId;
     try {
-      reviewId = BigInt(req.params.reviewId!);
+      reviewId = BigInt(req.params['reviewId']!);
+
       if (BigInt.asIntN(32, reviewId) !== reviewId) {
         throw Error();
       }
     } catch (e) {
-      res.status(404).json({ message: "Review couldn't be found" });
-      return;
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
 
     try {
       const changed = await prisma.review.update({
         data: {
-          review: review!,
-          stars: stars!,
+          review,
+          stars,
           updatedAt: new Date(),
         },
         where: { id: Number(reviewId), userId: user.id },
       });
 
-      res.json(changed);
+      return res.status(200).json(changed);
     } catch (e) {
       if (await prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
-        res.status(403).json({ message: 'You do not have permission to edit this review' });
-      } else {
-        res.status(404).json({ message: "Review couldn't be found" });
+        return res
+          .status(403)
+          .json({ message: 'You do not have permission to edit this review' });
       }
+
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
-  }) as RequestHandler
+  },
 );
-
-router.get('/', (async (req: ReviewRequest, res: ExpressResponse) => {
-  const reviews = await prisma.review.findMany();
-  res.json({ Reviews: reviews });
-}) as RequestHandler);
-
-router.get('/current', requireAuth, (async (req: ReviewRequest, res: ExpressResponse) => {
-  const reviews = await prisma.review.findMany({
-    where: { userId: req.user!.id },
-  });
-  res.json({ Reviews: reviews });
-}) as RequestHandler);
 
 export default router;

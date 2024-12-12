@@ -1,21 +1,20 @@
-import type { Request, Response } from 'express';
-import { Router } from 'express';
-import  validator from 'express-validator';
-import { prisma } from '../../dbclient.js';
-import { requireAuth } from '../../utils/auth.js';
-import { sendResponse } from '../../utils/response.js';
+import { Request, Response, Router } from 'express';
+import { check } from 'express-validator';
 import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
 
-// ... rest of your code
 const router = Router();
 
-export function formatDate(d: Date): string {
+import { prisma } from '../../dbclient.js';
+import { requireAuth } from '../../utils/auth.js';
+
+function formatDate(d: Date): string {
   return d.toISOString().split('T')[0]!;
 }
 
-router.get('/current', requireAuth, async (req: Request, res: Response) => {
+router.get('/current', requireAuth, async (req, res) => {
   const user = req.user!;
-  const bookings = await prisma.booking.findMany({
+
+  let bookings = await prisma.booking.findMany({
     where: { userId: user.id },
     include: {
       spot: {
@@ -38,46 +37,49 @@ router.get('/current', requireAuth, async (req: Request, res: Response) => {
 
   const sequelized = bookings.map((b) => {
     const { spot, startDate, endDate, ...rest } = b;
+
     const { images, ...spotRest } = spot;
+
     return {
       Spot: {
         previewImage: images[0]?.url ?? '',
         ...spotRest,
       },
-      startDate: formatDate(startDate),
-      endDate: formatDate(endDate),
+      startDate: startDate.toDateString(),
+      endDate: endDate.toDateString(),
       ...rest,
     };
   });
 
-  sendResponse(res, { Bookings: sequelized });
+  return res.json({ Bookings: sequelized });
 });
 
-// Validation middleware
 const validateNewBooking = [
-  validator.body('startDate')
+  check('startDate')
     .exists({ checkFalsy: true })
-    .isISO8601()
+    .isDate()
     .withMessage('startDate is required'),
-  validator.body('endDate')
+  check('endDate')
     .exists({ checkFalsy: true })
-    .isISO8601()
+    .isDate()
     .withMessage('endDate is required'),
+
   handleValidationErrors,
-];router.put(
+];
+
+router.put(
   '/:bookingId',
   requireAuth,
   validateNewBooking,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     const user = req.user!;
-    const bookingId = parseI32(req.params.bookingId);
+    let bookingId = parseI32(req.params['bookingId']);
     const { startDate, endDate } = req.body;
 
     if (!bookingId) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Booking couldn't be found",
       });
-      return;
     }
 
     const booking = await prisma.booking.findUnique({
@@ -86,28 +88,25 @@ const validateNewBooking = [
     });
 
     if (!booking) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Booking couldn't be found",
       });
-      return;
     }
 
     if (booking.userId !== user.id) {
-      res
+      return res
         .status(403)
         .json({ message: 'You do not have permission to edit this booking' });
-      return;
     }
 
     if (startDate >= endDate) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Bad Request',
         errors: { endDate: 'endDate cannot be on or before startDate' },
       });
-      return;
     }
 
-    const overlap = await prisma.booking.findFirst({
+    let overlap = await prisma.booking.findFirst({
       where: {
         spotId: booking.spot.id,
         NOT: {
@@ -119,9 +118,12 @@ const validateNewBooking = [
     });
 
     if (overlap) {
-      const err = {
+      let err: {
+        message: string;
+        errors: { startDate?: string; endDate?: string };
+      } = {
         message: 'Sorry, this spot is already booked for the specified dates',
-        errors: {} as { startDate?: string; endDate?: string },
+        errors: {},
       };
 
       if (overlap.startDate <= startDate && startDate <= overlap.endDate) {
@@ -131,8 +133,7 @@ const validateNewBooking = [
         err.errors.endDate = 'End date conflicts with an existing booking';
       }
 
-      res.status(403).json(err);
-      return;
+      return res.status(403).json(err);
     }
 
     const newBooking = await prisma.booking.update({
@@ -142,58 +143,66 @@ const validateNewBooking = [
         endDate,
       },
     });
-
-    res.status(201).json({
+    return res.status(201).json({
       ...newBooking,
       startDate: formatDate(newBooking.startDate),
       endDate: formatDate(newBooking.endDate),
     });
   },
 );
-router.delete(
-  '/:bookingId',
-  requireAuth,
-  async (req: Request, res: Response): Promise<void> => {
+
+// delete booking by  bookingid
+
+router.delete('/:bookingId', requireAuth, async (req, res) => {
+  return async (req: Request, res: Response) => {
     const { bookingId } = req.params;
 
     if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
-      res.status(404);
-      sendResponse(res, { message: "Booking couldn't be found" });
-      return;
+      return res.status(404).json({ message: "Booking couldn't be found" });
     }
 
     const userId = req.user!.id;
 
     try {
       const booking = await prisma.booking.findUnique({
-        where: { id: Number(bookingId) },
+        where: {
+          id: Number(bookingId),
+        },
         include: {
-          spot: { select: { ownerId: true } },
+          spot: {
+            select: {
+              ownerId: true,
+            },
+          },
         },
       });
 
       if (!booking) {
-        res.status(404);
-        sendResponse(res, { message: "Booking couldn't be found" });
-        return;
+        if (
+          !(await prisma.booking.findUnique({
+            where: { id: Number(bookingId) },
+          }))
+        ) {
+          return res.status(404).json({ message: "Booking couldn't be found" });
+        }
+        return res
+          .status(403)
+          .json({ message: 'You are not authorized to delete this booking' });
       }
 
       if (booking.userId !== userId && booking.spot.ownerId !== userId) {
-        res.status(403);
-        sendResponse(res, {
-          message: 'You are not authorized to delete this booking',
-        });
-        return;
+        return res
+          .status(403)
+          .json({ message: 'You are not authorized to delete this booking' });
       }
 
       await prisma.booking.delete({ where: { id: Number(bookingId) } });
-      sendResponse(res, { message: 'Successfully deleted' });
+      return res.status(200).json({ message: 'successfully deleted' });
     } catch (error) {
       console.error(error);
-      res.status(500);
-      sendResponse(res, { message: 'Internal Server Error' });
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
-  },
-);
+  };
+});
 
 export default router;

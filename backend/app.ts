@@ -8,14 +8,15 @@ import { RequestHandler } from 'express-serve-static-core';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { prisma } from './dbclient.js';
+import { PrismaClientValidationError } from '@prisma/client/runtime/library';
+import routes from './routes/index.js';
 
 const { environment } = config;
 const isProduction = environment === 'production';
-
 const app = express();
+
 app.use(morgan('dev'));
 app.use(cookieParser());
-
 app.use(express.json());
 
 if (!isProduction) {
@@ -23,19 +24,15 @@ if (!isProduction) {
 }
 
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
-const csrfProtection = (csurf({
+const csrfProtection = csurf({
   cookie: {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     httpOnly: true,
-  }
-}) as unknown) as RequestHandler;
+  },
+}) as unknown as RequestHandler;
 
 app.use(csrfProtection as unknown as express.RequestHandler);
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
-
-
-import routes from './routes/index.js';
 
 app.use(routes);
 
@@ -89,11 +86,10 @@ app.use((err, _req, res, _next) => {
 
   res.json(resp);
 });
-
-const port = process.env.PORT || 5005;
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 export { app, prisma };
+
+// const port = process.env.PORT || 5005;
+
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
