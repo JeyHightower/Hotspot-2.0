@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "ESNext",
-    "sourceMap": true,
-    "outDir": "dist"
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifiers": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types"]
   }
 }
