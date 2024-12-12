@@ -1,37 +1,4 @@
 import Cookies from 'js-cookie';
-
-// export async function csrfFetch(url, options = {}) {
-//   console.group('CSRF Fetch Request');
-//   console.log(`Requesting: ${url}`);
-
-//   try {
-//     const response = await originalCsrfFetch(url, options);
-//     const contentType = response.headers.get('content-type');
-
-//     // Clone and check response content
-//     const clonedResponse = response.clone();
-//     const responseText = await clonedResponse.text();
-//     console.log('Response Type:', contentType);
-//     console.log('Response Text:', responseText.substring(0, 200));
-
-//     // Only try to parse JSON if content-type is application/json
-//     if (contentType && contentType.includes('application/json')) {
-//       return response;
-//     } else {
-//       throw new Error(`Expected JSON response but got ${contentType}`);
-//     }
-//   } catch (error) {
-//     console.error('Request Details:', {
-//       url,
-//       method: options.method || 'GET',
-//       headers: options.headers
-//     });
-//     throw error;
-//   } finally {
-//     console.groupEnd();
-//   }
-// }
-
 export async function csrfFetch(url, options = {}) {
   // set options.method to 'GET' if there is no method
   options.method = options.method || 'GET';
