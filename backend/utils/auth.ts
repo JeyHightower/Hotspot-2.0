@@ -3,13 +3,14 @@ import jwt from 'jsonwebtoken';
 import config from '../config/index.js';
 
 import { Response, Request, NextFunction, Express } from 'express';
+
 import { User } from '@prisma/client';
 import { prisma } from '../dbclient.js';
 
 declare global {
   namespace Express {
     export interface Request {
-      user?: User | null;
+      user?: user | null;
     }
   }
 }
@@ -23,7 +24,6 @@ const err = () => {
 
 const expiresIn = parseInt(expiresInStr!);
 const secret = secretRaw || err();
-
 export function setTokenCookie(
   res: Response,
   user: { id: number; email: string; username: string },
