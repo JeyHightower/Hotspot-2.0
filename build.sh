@@ -7,7 +7,7 @@ cd backend
 NODE_ENV=production pnpm i
 pnpm add -D @types/node
 pnpm exec prisma generate
-pnpx exec tsc
+pnpx tsc --version --package typescript
 pnpm exec prisma db push --accept-data-loss
 cd ..
 
