@@ -40,7 +40,7 @@ export function setTokenCookie(
     maxAge: expiresIn * 1000,
     httpOnly: true,
     secure: config.isProduction,
-    sameSite: config.isProduction && 'lax',
+    sameSite: config.isProduction ? 'lax' : 'none'
   });
 
   return token;
