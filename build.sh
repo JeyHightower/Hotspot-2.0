@@ -23,7 +23,7 @@ pnpm exec prisma generate || { echo "Error: failed to generate Prisma client cod
 
 # Compile TypeScript code
 echo "Compiling TypeScript code..."
-pnpm tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
+pnpm exec tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
 
 # Push Prisma schema to database
 echo "Pushing Prisma schema to database..."
