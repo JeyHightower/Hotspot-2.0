@@ -1,22 +1,21 @@
-import 'dotenv/config';
-import config from './config/index.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express from 'express';
 import csurf from 'csurf';
-import { RequestHandler } from 'express-serve-static-core';
+import express, { RequestHandler } from 'express';
+import 'express-async-errors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { prisma } from './dbclient.js';
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
-import routes from './routes/index.js';
 
-const { environment } = config;
+import data from './config/index.js';
+const { environment } = data;
+
 const isProduction = environment === 'production';
-const app = express();
 
+const app = express();
 app.use(morgan('dev'));
+
 app.use(cookieParser());
+
 app.use(express.json());
 
 if (!isProduction) {
@@ -24,15 +23,28 @@ if (!isProduction) {
 }
 
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
-const csrfProtection = csurf({
+
+const csrfOptions = {
   cookie: {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     httpOnly: true,
   },
-}) as unknown as RequestHandler;
+};
+const csrfProtection: RequestHandler = csurf({
+  cookie: {
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' as const : 'lax' as const,
+    httpOnly: true,
+  },
+}) as RequestHandler;
 
-app.use(csrfProtection as unknown as express.RequestHandler);
+app.use(csrfProtection);
+
+import { PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { prisma } from './dbclient.js';
+
+import routes from './routes/index.js';
 
 app.use(routes);
 
@@ -56,18 +68,15 @@ app.use(async (_req, _res, next) => {
   next(err);
 });
 
-// @ts-ignore
-app.use((err, _req, _res, next) => {
+app.use((err: any, _req: any, _res: any, next: any) => {
   if (err instanceof PrismaClientValidationError) {
     err.title = 'prisma validation error';
-    (err as any as { errors: string }).errors = err.message;
+    err.errors = err.message;
   }
-
   next(err);
 });
 
-// @ts-ignore
-app.use((err, _req, res, _next) => {
+app.use((err: any, _req: any, res: any, _next: any) => {
   res.status(err.status || 500);
   console.error(err);
   const resp: {
@@ -81,15 +90,11 @@ app.use((err, _req, res, _next) => {
   };
 
   if (!isProduction) {
-    (resp.title = err.title || 'Server Error'), (resp.stack = err.stack);
+    resp.title = err.title || 'Server Error';
+    resp.stack = err.stack;
   }
 
   res.json(resp);
 });
+
 export { app, prisma };
-
-// const port = process.env.PORT || 5005;
-
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
