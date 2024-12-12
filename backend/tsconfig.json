@@ -4,7 +4,7 @@
     "module": "Node16",
     "moduleResolution": "Node16",
     "incremental": true,
-    "outDir": "target",
+    "outDir": "./target",
     "sourceMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -27,7 +27,6 @@
     "typeRoots": [
       "./node_modules/@types",
       "./backend/node_modules/@types",
-      "./frontend/node_modules/@types"
     ]
   },
   "include": ["./routes/**/*", "./app.ts", "./dbclient.ts", "./bin/**/*"]
