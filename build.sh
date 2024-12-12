@@ -25,6 +25,10 @@ pnpm add typescript --save-dev || { echo "Error: failed to install TypeScript"; 
 echo "Generating Prisma client code..."
 pnpm exec prisma generate || { echo "Error: failed to generate Prisma client code"; exit 1; }
 
+# install node and express
+echo "Installing node and express..."
+pnpm add -D @types/node @types/express || { echo "Error: failed to install node and express"; exit 1; }
+
 # Compile TypeScript code
 echo "Compiling TypeScript code..."
 pnpm tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
