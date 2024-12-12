@@ -17,6 +17,10 @@ pnpm i || { echo "Error: failed to install backend dependencies"; exit 1; }
 echo "Adding @types/node as a dev dependency..."
 pnpm add -D @types/node || { echo "Error: failed to add @types/node"; exit 1; }
 
+# Install TypeScript
+echo "Installing TypeScript..."
+pnpm add typescript --save-dev || { echo "Error: failed to install TypeScript"; exit 1; }
+
 # Generate Prisma client code
 echo "Generating Prisma client code..."
 pnpm exec prisma generate || { echo "Error: failed to generate Prisma client code"; exit 1; }
