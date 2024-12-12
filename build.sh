@@ -3,69 +3,42 @@
 set -euo pipefail
 set -x
 
-cd backend
-NODE_ENV=production pnpm i
-pnpm add -D @types/node
-pnpm exec prisma generate
-pnpx tsc --version --package typescript
-pnpm exec prisma db push --accept-data-loss
-cd ..
+# Log the start of the script
+echo "Starting deployment script..."
 
-cd frontend
-pnpm i
-pnpm run build
-cd ..
+# Change into the backend directory
+cd backend || { echo "Error: backend directory not found"; exit 1; }
 
+# Install dependencies
+echo "Installing backend dependencies..."
+pnpm i || { echo "Error: failed to install backend dependencies"; exit 1; }
 
+# Add @types/node as a dev dependency
+echo "Adding @types/node as a dev dependency..."
+pnpm add -D @types/node || { echo "Error: failed to add @types/node"; exit 1; }
 
+# Generate Prisma client code
+echo "Generating Prisma client code..."
+pnpm exec prisma generate || { echo "Error: failed to generate Prisma client code"; exit 1; }
 
+# Compile TypeScript code
+echo "Compiling TypeScript code..."
+pnpm tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
 
+# Push Prisma schema to database
+echo "Pushing Prisma schema to database..."
+pnpm exec prisma db push --accept-data-loss || { echo "Error: failed to push Prisma schema"; exit 1; }
 
+# Change into the frontend directory
+cd ../frontend || { echo "Error: frontend directory not found"; exit 1; }
 
+# Install dependencies
+echo "Installing frontend dependencies..."
+pnpm i || { echo "Error: failed to install frontend dependencies"; exit 1; }
 
-# set -euo pipefail
-# set -x
+# Build frontend code
+echo "Building frontend code..."
+pnpm run build || { echo "Error: failed to build frontend code"; exit 1; }
 
-# cd backend
-
-# # Backend setup
-# rm -rf node_modules package-lock.json yarn.lock
-# rm -rf prisma/client
-
-# npm install -g yarn
-
-# yarn install
-# yarn add typescript@5.7.2 @types/express@5.0.0 @types/node@22.10.1 --dev
-# yarn add prisma@5.7.0 --dev
-# yarn add @prisma/client@5.7.0
-# yarn add --dev ts-node@10.9.2
-# yarn add --dev @types/express-serve-static-core
-
-# NODE_ENV=development npx prisma generate
-# yarn exec tsc
-# npx prisma db push --accept-data-loss
-# cd ..
-
-# # Frontend setup
-# cd frontend
-# rm -rf node_modules package-lock.json yarn.lock
-
-# # Install dependencies
-# npm install --save-dev vite@4.5.0
-# npm install --save-dev @vitejs/plugin-react@4.0.0
-# npm install react@18.2.0 react-dom@18.2.0
-# npm install --save-dev @types/redux-logger
-
-# # Create Vite config
-# cat > vite.config.js << 'EOF'
-# import { defineConfig } from 'vite'
-# import react from '@vitejs/plugin-react'
-
-# export default defineConfig({
-#   plugins: [react()]
-# })
-# EOF
-
-# # Build with explicit environment
-# NODE_ENV=production npx vite build
-# cd ..
+# Log the end of the script
+echo "Deployment script complete!"
