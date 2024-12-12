@@ -5,13 +5,11 @@ set -x
 
 cd backend
 NODE_ENV=production pnpm i
-pnpm add -D @types/node@latest @types/express-serve-static-core@latest
-pnpm add prisma @prisma/client --save-prod
+pnpm add -D @types/node
 pnpm exec prisma generate
 pnpm exec tsc
 pnpm exec prisma db push --accept-data-loss
 cd ..
-
 
 cd frontend
 pnpm i
