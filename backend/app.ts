@@ -31,13 +31,14 @@ const csrfOptions = {
     httpOnly: true,
   },
 };
-const csrfProtection: RequestHandler = csurf({
+const csrfProtection = csurf({
   cookie: {
     secure: isProduction,
     sameSite: isProduction ? 'strict' as const : 'lax' as const,
     httpOnly: true,
   },
-}) as RequestHandler;
+}) as unknown as RequestHandler;
+
 
 app.use(csrfProtection);
 
@@ -71,7 +72,6 @@ app.use(async (_req, _res, next) => {
 app.use((err: any, _req: any, _res: any, next: any) => {
   if (err instanceof PrismaClientValidationError) {
     err.title = 'prisma validation error';
-
     err.errors = { message: err.message };
   }
   next(err);
