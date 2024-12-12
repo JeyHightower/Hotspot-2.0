@@ -1,20 +1,19 @@
 import 'dotenv/config';
-
+import config from './config/index.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import csurf from 'csurf';
 import { RequestHandler } from 'express-serve-static-core';
-import helmet from 'helmet';import morgan from 'morgan';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import { prisma } from './dbclient.js';
 
-import data from './config/index.js';
-const { environment } = data;
-
+const { environment } = config;
 const isProduction = environment === 'production';
 
 const app = express();
 app.use(morgan('dev'));
-
 app.use(cookieParser());
 
 app.use(express.json());
@@ -34,7 +33,7 @@ const csrfProtection = (csurf({
 
 app.use(csrfProtection as unknown as express.RequestHandler);
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
-import { prisma } from './dbclient.js';
+
 
 import routes from './routes/index.js';
 

@@ -1,31 +1,19 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
-import type { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-import { check } from 'express-validator';
-import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
-import { setTokenCookie, restoreUser, requireAuth } from '../../utils/auth.js';
-import { bookingOverlap } from '../../utils/validation.js';
+import  validator from 'express-validator';
 import { prisma } from '../../dbclient.js';
-import { Booking } from '@prisma/client';
+import { requireAuth } from '../../utils/auth.js';
 import { sendResponse } from '../../utils/response.js';
+import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
 
-
+// ... rest of your code
 const router = Router();
 
-interface BookingRequest extends ExpressRequest {
-  user?: any;
-  body: {
-    startDate: string;
-    endDate: string;
-  };
-  params: {
-    bookingId?: string;
-  };
+export function formatDate(d: Date): string {
+  return d.toISOString().split('T')[0]!;
 }
 
-  export function formatDate(d: Date): string {
-    return d.toISOString().split('T')[0]!;
-  }
-router.get('/current', requireAuth, async (req, res) => {
+router.get('/current', requireAuth, async (req: Request, res: Response) => {
   const user = req.user!;
   const bookings = await prisma.booking.findMany({
     where: { userId: user.id },
@@ -56,8 +44,8 @@ router.get('/current', requireAuth, async (req, res) => {
         previewImage: images[0]?.url ?? '',
         ...spotRest,
       },
-      startDate: startDate.toDateString(),
-      endDate: endDate.toDateString(),
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
       ...rest,
     };
   });
@@ -65,24 +53,24 @@ router.get('/current', requireAuth, async (req, res) => {
   sendResponse(res, { Bookings: sequelized });
 });
 
+// Validation middleware
 const validateNewBooking = [
-  check('startDate')
+  validator.body('startDate')
     .exists({ checkFalsy: true })
-    .isDate()
+    .isISO8601()
     .withMessage('startDate is required'),
-  check('endDate')
+  validator.body('endDate')
     .exists({ checkFalsy: true })
-    .isDate()
+    .isISO8601()
     .withMessage('endDate is required'),
   handleValidationErrors,
-];
-router.put(
+];router.put(
   '/:bookingId',
   requireAuth,
   validateNewBooking,
   async (req: Request, res: Response): Promise<void> => {
     const user = req.user!;
-    let bookingId = parseI32(req.params['bookingId']);
+    const bookingId = parseI32(req.params.bookingId);
     const { startDate, endDate } = req.body;
 
     if (!bookingId) {
@@ -105,7 +93,9 @@ router.put(
     }
 
     if (booking.userId !== user.id) {
-      res.status(403).json({ message: 'You do not have permission to edit this booking' });
+      res
+        .status(403)
+        .json({ message: 'You do not have permission to edit this booking' });
       return;
     }
 
@@ -117,7 +107,7 @@ router.put(
       return;
     }
 
-    let overlap = await prisma.booking.findFirst({
+    const overlap = await prisma.booking.findFirst({
       where: {
         spotId: booking.spot.id,
         NOT: {
@@ -129,12 +119,9 @@ router.put(
     });
 
     if (overlap) {
-      let err: {
-        message: string;
-        errors: { startDate?: string; endDate?: string };
-      } = {
+      const err = {
         message: 'Sorry, this spot is already booked for the specified dates',
-        errors: {},
+        errors: {} as { startDate?: string; endDate?: string },
       };
 
       if (overlap.startDate <= startDate && startDate <= overlap.endDate) {
@@ -155,53 +142,58 @@ router.put(
         endDate,
       },
     });
+
     res.status(201).json({
       ...newBooking,
       startDate: formatDate(newBooking.startDate),
       endDate: formatDate(newBooking.endDate),
     });
-  },);
+  },
+);
+router.delete(
+  '/:bookingId',
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    const { bookingId } = req.params;
 
-import { Request, Response } from 'express';
-
-router.delete('/:bookingId', requireAuth, async (req: Request, res: Response): Promise<void> => {
-  const { bookingId } = req.params;
-
-  if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
-    res.status(404);
-    sendResponse(res, { message: "Booking couldn't be found" });
-    return;
-  }
-
-  const userId = req.user!.id;
-
-  try {
-    const booking = await prisma.booking.findUnique({
-      where: { id: Number(bookingId) },
-      include: {
-        spot: { select: { ownerId: true } },
-      },
-    });
-
-    if (!booking) {
+    if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
       res.status(404);
       sendResponse(res, { message: "Booking couldn't be found" });
       return;
     }
 
-    if (booking.userId !== userId && booking.spot.ownerId !== userId) {
-      res.status(403);
-      sendResponse(res, { message: 'You are not authorized to delete this booking' });
-      return;
-    }
+    const userId = req.user!.id;
 
-    await prisma.booking.delete({ where: { id: Number(bookingId) } });
-    sendResponse(res, { message: 'Successfully deleted' });
-  } catch (error) {
-    console.error(error);
-    res.status(500);
-    sendResponse(res, { message: 'Internal Server Error' });
-  }
-});
+    try {
+      const booking = await prisma.booking.findUnique({
+        where: { id: Number(bookingId) },
+        include: {
+          spot: { select: { ownerId: true } },
+        },
+      });
+
+      if (!booking) {
+        res.status(404);
+        sendResponse(res, { message: "Booking couldn't be found" });
+        return;
+      }
+
+      if (booking.userId !== userId && booking.spot.ownerId !== userId) {
+        res.status(403);
+        sendResponse(res, {
+          message: 'You are not authorized to delete this booking',
+        });
+        return;
+      }
+
+      await prisma.booking.delete({ where: { id: Number(bookingId) } });
+      sendResponse(res, { message: 'Successfully deleted' });
+    } catch (error) {
+      console.error(error);
+      res.status(500);
+      sendResponse(res, { message: 'Internal Server Error' });
+    }
+  },
+);
 
 export default router;

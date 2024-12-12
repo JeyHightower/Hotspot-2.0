@@ -1,51 +1,23 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "app.js",
-  "bin": {
-    "backend": "bin/www.js"
-  },
-  "directories": {
-    "test": "tests"
-  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "dev": "nodemon app.ts"
+    "start": "node --import tsx app.ts",
+    "dev": "tsx watch app.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/cors": "^2.8.17",
-    "@types/csurf": "^1.11.5",
-    "@types/dotenv": "^6.1.1",
-    "@types/express": "5.0.0",
-    "@types/express-serve-static-core": "^5.0.2",
-    "@types/express-validator": "^2.20.33",
-    "@types/helmet": "^0.0.48",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "22.10.1",
-    "nodemon": "^3.1.7",
-    "ts-node": "10.9.2",
-    "typescript": "5.7.2"
+    "tsx": "^4.19.2"
   },
   "dependencies": {
-    "@prisma/client": "5.7.0",
+    "@prisma/client": "^6.0.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csurf": "^1.10.0",
+    "csurf": "^1.11.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-validator": "^7.2.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0",
-    "prisma": "5.7.0"
+    "morgan": "^1.10.0"
   }
 }

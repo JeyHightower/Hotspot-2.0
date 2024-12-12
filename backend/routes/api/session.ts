@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { check } from 'express-validator';
+import validator from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 import bcrypt from 'bcryptjs';
 import { setTokenCookie, restoreUser } from '../../utils/auth.js';
@@ -9,11 +9,11 @@ import { sendResponse } from '../../utils/response.js';
 const router = Router();
 
 const validateLogin = [
-  check('credential')
+  validator.body('credential')
     .exists({ checkFalsy: true })
     .notEmpty()
     .withMessage('Please provide a valid email or username.'),
-  check('password')
+  validator.body('password')
     .exists({ checkFalsy: true })
     .withMessage('Please provide a password.'),
   handleValidationErrors,

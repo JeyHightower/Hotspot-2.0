@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import type { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-import { check } from 'express-validator';
+import validator from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 import { requireAuth } from '../../utils/auth.js';
 import { prisma } from '../../dbclient.js';
-import { RequestHandler } from 'express';
+import { RequestHandler }  from 'express';
 
 const router = Router();
 
@@ -31,23 +31,19 @@ interface ReviewRequest extends ExpressRequest {
 }
 
 const validateReviewImage = [
-  check('url').isString().withMessage('must pass a url string'),
+  validator.body('url').isString().withMessage('must pass a url string'),
   handleValidationErrors,
-];
-
-const validateReviewEdit = [
-  check('review')
-    .exists({ checkFalsy: true })
+];const validateReviewEdit = [
+  validator.body('review')
+    .notEmpty()
     .isString()
     .withMessage('Review text is required'),
-  check('stars')
-    .exists({ checkFalsy: true })
+  validator.body('stars')
+    .notEmpty()
     .isInt({ min: 1, max: 5 })
     .withMessage('Stars must be an integer from 1 to 5'),
   handleValidationErrors,
-];
-
-router.post(
+];router.post(
   '/:reviewId/images',
   requireAuth,
   validateReviewImage,

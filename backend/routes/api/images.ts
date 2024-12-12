@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check } from 'express-validator';
+import validator from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 import bcrypt from 'bcryptjs';
 import { setTokenCookie, restoreUser, requireAuth } from '../../utils/auth.js';
