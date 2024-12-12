@@ -12,6 +12,6 @@
     "typeRoots": ["./node_modules/@types", "./node_modules/@prisma/client"],
     "types": ["@prisma/client"]
   },
-  "include": ["**/*"],
-  "exclude": ["node_modules/**/*"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

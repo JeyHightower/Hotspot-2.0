@@ -10,7 +10,7 @@ import { prisma } from '../dbclient.js';
 declare global {
   namespace Express {
     export interface Request {
-      user?: user | null;
+      user?: User | null;
     }
   }
 }
