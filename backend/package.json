@@ -30,8 +30,7 @@
     "@types/node": "22.5.5",
     "dotenv-cli": "7.4.2",
     "nodemon": "3.1.5",
-    "ts-node": "10.9.2",
-    "typescript": "5.6.2"
+    "ts-node": "10.9.2"
   },
   "dependencies": {
     "@prisma/client": "5.19.1",
@@ -41,6 +40,7 @@
     "csurf": "^1.11.0",
     "dotenv": "^16.4.5",
     "express": "4.21.0",
+    "typescript": "5.6.2",
     "express-async-errors": "3.1.1",
     "express-validator": "7.2.0",
     "helmet": "^7.1.0",
