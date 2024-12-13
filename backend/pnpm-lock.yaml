@@ -11,12 +11,6 @@ importers:
       '@prisma/client':
         specifier: 5.19.1
         version: 5.19.1(prisma@5.19.1)
-      '@types/express':
-        specifier: 4.17.21
-        version: 4.17.21
-      '@types/node':
-        specifier: 22.5.5
-        version: 22.5.5
       bcryptjs:
         specifier: 2.4.3
         version: 2.4.3
@@ -72,12 +66,18 @@ importers:
       '@types/csurf':
         specifier: 1.11.5
         version: 1.11.5
+      '@types/express':
+        specifier: 4.17.21
+        version: 4.17.21
       '@types/jsonwebtoken':
         specifier: 9.0.7
         version: 9.0.7
       '@types/morgan':
         specifier: 1.9.9
         version: 1.9.9
+      '@types/node':
+        specifier: 22.5.5
+        version: 22.5.5
       dotenv-cli:
         specifier: 7.4.2
         version: 7.4.2
