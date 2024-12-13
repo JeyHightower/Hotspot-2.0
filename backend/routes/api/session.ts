@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router, RequestHandler } from 'express';
 import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 
@@ -8,7 +8,10 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../../dbclient.js';
 import { setTokenCookie } from '../../utils/auth.js';
 
-const validateLogin = [
+
+const asyncHandlerSession = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
+  return Promise.resolve(fn(req, res, next)).catch(next);
+};const validateLogin = [
   check('credential')
     .exists({ checkFalsy: true })
     .notEmpty()
@@ -22,7 +25,7 @@ const validateLogin = [
 router.post(
   '/',
   validateLogin,
-  async (req: Request, res: Response, next: NextFunction) => {
+  asyncHandlerSession(async (req: Request, res: Response) => {
     const { credential, password } = req.body;
 
     const user = await prisma.user.findFirst({
@@ -42,20 +45,26 @@ router.post(
       username: user.username,
     };
 
+
     setTokenCookie(res, safeUser);
+
+
+
+
+
 
     return res.json({
       user: { ...safeUser, firstName: user.firstName, lastName: user.lastName },
     });
-  },
+  })
 );
 
-router.delete('/', (_req, res) => {
+router.delete('/', asyncHandlerSession((_req: Request, res: Response) => {
   res.clearCookie('token');
   return res.json({ message: 'success' });
-});
+}));
 
-router.get('/', (req, res) => {
+router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const { user } = req;
   if (user) {
     const safeUser = {
@@ -69,6 +78,10 @@ router.get('/', (req, res) => {
       user: safeUser,
     });
   } else return res.json({ user: null });
-});
+}));
 
 export default router;
+function asyncHandler(arg0: (_req: Request, res: Response) => Promise<Response<any, Record<string, any>>>) {
+  throw new Error('Function not implemented.');
+}
+
