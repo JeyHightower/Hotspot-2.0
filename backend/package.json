@@ -1,24 +1,32 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
-  "type": "module",
-  "prisma": {
-    "seed": "node target/prisma/seed.js"
-  },
   "scripts": {
-    "build": "tsc --project ./tsconfig.son",
-    "build-run": "tsc && per-env",
-    "build-run:development": "dotenv nodemon ./target/bin/www.js",
-    "build-run:production": "node ./target/bin/www.js",
-    "test": "dotenv python3 tests/run.py",
-    "start": "per-env",
-    "start:development": "dotenv nodemon ./target/bin/www.js",
-    "start:production": "node ./target/bin/www.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c",
+  "dependencies": {
+    "@prisma/client": "5.19.1",
+    "bcryptjs": "2.4.3",
+    "cookie-parser": "1.4.6",
+    "cors": "2.8.5",
+    "csurf": "1.11.0",
+    "dotenv": "16.4.5",
+    "express": "4.21.0",
+    "express-async-errors": "3.1.1",
+    "express-validator": "7.2.0",
+    "helmet": "7.1.0",
+    "jsonwebtoken": "9.0.2",
+    "morgan": "1.10.0",
+    "per-env": "1.0.2",
+    "pg": "8.13.0",
+    "prisma": "5.19.1"
+  },
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
     "@types/cookie-parser": "1.4.7",
@@ -30,24 +38,7 @@
     "@types/node": "22.5.5",
     "dotenv-cli": "7.4.2",
     "nodemon": "3.1.5",
-    "ts-node": "10.9.2"
-  },
-  "dependencies": {
-    "@prisma/client": "5.19.1",
-    "bcryptjs": "2.4.3",
-    "cookie-parser": "1.4.6",
-    "cors": "2.8.5",
-    "csurf": "^1.11.0",
-    "dotenv": "^16.4.5",
-    "express": "4.21.0",
-    "typescript": "5.6.2",
-    "express-async-errors": "3.1.1",
-    "express-validator": "7.2.0",
-    "helmet": "^7.1.0",
-    "jsonwebtoken": "9.0.2",
-    "morgan": "^1.10.0",
-    "per-env": "1.0.2",
-    "pg": "8.13.0",
-    "prisma": "5.19.1"
+    "ts-node": "10.9.2",
+    "typescript": "5.6.2"
   }
 }

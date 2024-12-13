@@ -11,9 +11,12 @@ pnpm i || { echo "Error: failed to install backend dependencies"; exit 1; }
 # Generate Prisma client code
 echo "Generating Prisma client code..."
 pnpm exec prisma generate || { echo "Error: failed to generate Prisma client code"; exit 1; }
+# Initiate TypeScript(tsconfig) code
+echo "Initiating TypeScript code..."
+pnpm tsc --init || { echo "Error: failed to compile TypeScript code"; exit 1; }
 # Compile TypeScript code
 echo "Compiling TypeScript code..."
-pnpm tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
+pnpm exec tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
 # Push Prisma schema to database
 echo "Pushing Prisma schema to database..."
 pnpm exec prisma db push --accept-data-loss || { echo "Error: failed to push Prisma schema"; exit 1; }
