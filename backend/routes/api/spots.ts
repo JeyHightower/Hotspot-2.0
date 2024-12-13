@@ -1,14 +1,19 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { check, checkSchema, validationResult } from 'express-validator';
-import { RequestHandler } from 'express';
+import { Prisma, Spot } from '@prisma/client';
+import {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+  Router,
+} from 'express';
+import { check, checkSchema } from 'express-validator';
+import { prisma } from '../../dbclient.js';
+import { requireAuth } from '../../utils/auth.js';
 import {
   bookingOverlap,
   handleValidationErrors,
   parseI32,
 } from '../../utils/validation.js';
-import { Prisma, Spot } from '@prisma/client';
-import { prisma } from '../../dbclient.js';
-import { requireAuth } from '../../utils/auth.js';
 
 const asyncHandler =
   (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
@@ -422,11 +427,9 @@ router.post(
     if (!spot) return;
 
     if (spot.ownerId === req.user!.id) {
-      return res
-        .status(403)
-        .json({
-          message: 'You own this spot, and cannot make a booking for it',
-        });
+      return res.status(403).json({
+        message: 'You own this spot, and cannot make a booking for it',
+      });
     }
     const overlap = await bookingOverlap(spot.id, startDate, endDate);
     if (overlap) {
