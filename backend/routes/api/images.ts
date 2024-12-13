@@ -8,10 +8,9 @@ import {
   RequestHandler,
 } from 'express';
 
-const asyncHandler = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction=> {
+const asyncHandler = (fn: RequestHandler) => (req: req, res: res, next: next) => {
     return Promise.resolve(fn(req, res, next)).catch(next);
-  });
-
+  };
 const router = Router();
 
 // ! Delete spot by imageId
@@ -62,7 +61,7 @@ router.delete(
   },
 ); // ! delete a review image by imageId
 
-router.delete('/review-images/:imageId', requireAuth, async (req, res) => {
+router.delete('/review-images/:imageId', requireAuth, async (req: { params: { [x: string]: any; }; user: any; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): any; new(): any; }; }; }) => {
   const imageId = Number(req.params['imageId']);
 
   if (isNaN(imageId)) {

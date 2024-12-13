@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { check, checkSchema } from 'express-validator';
+import { check, checkSchema, validationResult } from 'express-validator';
 import { RequestHandler } from 'express';
 import {
   bookingOverlap,
@@ -77,7 +77,7 @@ function formatDate(d: Date): string {
   return d.toISOString().split('T')[0]!;
 }
 
-router.get('/current', requireAuth, asyncHandler(async (req, res) => {
+router.get('/current', requireAuth, asyncHandler(async (req: { user: any; }, res: { json: (arg0: { Spots: object[]; }) => void; }) => {
   const allSpots = await prisma.spot.findMany({
     where: { ownerId: req.user!.id },
     include: {
@@ -252,7 +252,9 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  }));router.get('/:spotId/bookings', requireAuth, asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  }));
+  
+  router.get('/:spotId/bookings', requireAuth, asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const user = req.user!;
 
   const spot = await getSpot(req.params['spotId'], res, (id) =>
@@ -421,33 +423,40 @@ router.post(
 
     res.status(201).json({ id: img.id, url, preview });
   }),
-const validateNewBooking = [  check('startDate')
+const validateNewBooking = [
+  check('startDate')
     .exists({ checkFalsy: true })
-    .isDate()
+    .isISO8601()
+    .toDate()
     .withMessage('startDate is required'),
   check('endDate')
     .exists({ checkFalsy: true })
-    .isDate()
+    .isISO8601()
+    .toDate()
     .withMessage('endDate is required'),
 
   handleValidationErrors,
 ];
 
-router.post('/:spotId/bookings', requireAuth, asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const { startDate: sd, endDate: ed } = req.body;
-  const startDate = new Date(sd);
-  const endDate = new Date(ed);
-
-  if (startDate >= endDate) {
+router.post(
+  '/:spotId/bookings',
+  requireAuth,
+  validateNewBooking,
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { startDate: sd, endDate: ed } = req.body;
+    const startDate = new Date(sd);
+    const endDate = new Date(ed);
+    // Function body goes here
+  })
+);
+  if (sd >= ed) {
     res.status(400).json({
       message: 'Bad Request',
       errors: { endDate: 'endDate cannot be on or before startDate' },
     });
     return;
   }
-
   const user = req.user!;
-
   const spot = await getSpot(req.params['spotId'], res, (id) =>
     prisma.spot.findUnique({ where: { id } }),
   );
@@ -494,12 +503,11 @@ router.post('/:spotId/bookings', requireAuth, asyncHandler(async (req: Request, 
     },
   });
 
-  res.status(201).json({
+  return res.status(201).json({
     ...booking,
     startDate: formatDate(booking.startDate),
     endDate: formatDate(booking.endDate),
-  });
-}));
+  });}));
 const getChecks = checkSchema(
   {
     page: { isInt: { options: { min: 1, max: 10 } }, optional: true },

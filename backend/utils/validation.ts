@@ -5,9 +5,7 @@ import { validationResult } from 'express-validator';
 import { prisma } from '../dbclient.js';
 
 export function handleValidationErrors(
-  req: Request,
-  res: Response,
-  next: NextFunction,
+req: Request, res: Response, next: NextFunction, Response: any, next: any, NextFunction: any,
 ) {
   const validationErrors = validationResult(req);
 

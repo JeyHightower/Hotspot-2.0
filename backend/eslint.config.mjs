@@ -10,12 +10,10 @@ module.exports = {
     'plugin:react/recommended', // Use recommended rules for React
     'plugin:@typescript-eslint/recommended', // Use recommended rules for TypeScript
   ],
-  "extends": 
+  "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    
-  ]
+    "plugin:@typescript-eslint/recommended"],
   parser: '@typescript-eslint/parser', // Specify the ESLint parser for TypeScript
   parserOptions: {
     ecmaFeatures: {
