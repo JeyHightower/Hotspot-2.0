@@ -1,12 +1,29 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import csurf from 'csurf';
-import express, { RequestHandler } from 'express';
+import express, { Response, Request, NextFunction, RequestHandler } from 'express';
 import 'express-async-errors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
 import data from './config/index.js';
+
+declare global {
+  namespace Express {
+    interface Request {
+      User?: any;
+    }
+  }
+}
+
+
+type AsyncHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<any> | any;
+
+
 const { environment } = data;
 
 const isProduction = environment === 'production';

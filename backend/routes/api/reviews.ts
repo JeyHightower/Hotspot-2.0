@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, NextFunction, RequestHandler } from 'express';
 import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 
@@ -7,7 +7,11 @@ import { requireAuth } from '../../utils/auth.js';
 
 const router = Router();
 
-router.get('/current', requireAuth, async (req, res) => {
+
+const asyncHandler = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
+  return Promise.resolve(fn(req, res, next)).catch(next);
+};
+router.get('/current', requireAuth, asyncHandler(async(req, res, next) => {
   const user = req.user!;
 
   const reviews = await prisma.review.findMany({
@@ -54,12 +58,13 @@ router.get('/current', requireAuth, async (req, res) => {
   });
 
   return res.json({ Reviews: sequelized });
-});
+}));
 
-router.delete('/:reviewId', requireAuth, async (req, res) => {
+router.delete('/:reviewId', requireAuth, asyncHandler(async(req, res, next) => {
   const reviewId = Number(req.params['reviewId']);
-  if (isNaN(reviewId) || reviewId > 2 ** 31)
-    res.status(404).json({ message: "Review couldn't be found" });
+  if (isNaN(reviewId) || reviewId > 2 ** 31) {
+    return res.status(404).json({ message: "Review couldn't be found" });
+  }
 
   const userId = req.user!.id;
 
@@ -93,8 +98,8 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
       message: 'Internal Server Error',
     });
   }
-});
-
+}))
+;
 const validateReviewImage = [
   check('url').isString().withMessage('must pass a url string'),
 
@@ -105,7 +110,7 @@ router.post(
   '/:reviewId/images',
   requireAuth,
   validateReviewImage,
-  async (req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const user = req.user!;
     let reviewId;
     try {
@@ -115,7 +120,8 @@ router.post(
         throw Error();
       }
     } catch (e) {
-      return res.status(404).json({ message: "Review couldn't be found" });
+      res.status(404).json({ message: "Review couldn't be found" });
+      return;
     }
     const { url } = req.body;
 
@@ -126,15 +132,17 @@ router.post(
 
     if (review) {
       if (review.userId !== user.id) {
-        return res
+        res
           .status(403)
           .json({ message: 'You do not have permission to edit this review' });
+        return;
       }
 
       if (review.images.length >= 10) {
-        return res.status(403).json({
+        res.status(403).json({
           message: 'Maximum number of images for this resource was reached',
         });
+        return;
       }
 
       let img = await prisma.reviewImage.create({
@@ -144,11 +152,11 @@ router.post(
         },
       });
 
-      return res.status(201).json({ id: img.id, url });
+      res.status(201).json({ id: img.id, url });
     } else {
-      return res.status(404).json({ message: "Review couldn't be found" });
+      res.status(404).json({ message: "Review couldn't be found" });
     }
-  },
+  })
 );
 
 const validateReviewEdit = [
@@ -168,7 +176,7 @@ router.put(
   '/:reviewId',
   requireAuth,
   validateReviewEdit,
-  async (req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user!;
 
     const { review, stars } = req.body;
@@ -181,7 +189,8 @@ router.put(
         throw Error();
       }
     } catch (e) {
-      return res.status(404).json({ message: "Review couldn't be found" });
+      res.status(404).json({ message: "Review couldn't be found" });
+      return;
     }
 
     try {
@@ -194,17 +203,17 @@ router.put(
         where: { id: Number(reviewId), userId: user.id },
       });
 
-      return res.status(200).json(changed);
+      res.status(200).json(changed);
     } catch (e) {
       if (await prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
-        return res
+        res
           .status(403)
           .json({ message: 'You do not have permission to edit this review' });
+      } else {
+        res.status(404).json({ message: "Review couldn't be found" });
       }
-
-      return res.status(404).json({ message: "Review couldn't be found" });
     }
-  },
-);
+  })
+));
 
 export default router;

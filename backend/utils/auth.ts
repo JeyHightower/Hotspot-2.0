@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/index.js';
 
-import { Response, Request, NextFunction, Express } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { User } from '@prisma/client';
 import { prisma } from '../dbclient.js';
@@ -40,7 +40,7 @@ export function setTokenCookie(
     maxAge: expiresIn * 1000,
     httpOnly: true,
     secure: config.isProduction,
-    sameSite: config.isProduction ? 'lax' : 'none'
+    sameSite: config.isProduction ? 'lax' : 'none',
   });
 
   return token;

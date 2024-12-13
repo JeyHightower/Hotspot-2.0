@@ -8,10 +8,11 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../../dbclient.js';
 import { setTokenCookie } from '../../utils/auth.js';
 
-
-const asyncHandlerSession = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
+const asyncHandler = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
   return Promise.resolve(fn(req, res, next)).catch(next);
-};const validateLogin = [
+};
+
+const validateLogin = [
   check('credential')
     .exists({ checkFalsy: true })
     .notEmpty()
@@ -25,7 +26,7 @@ const asyncHandlerSession = (fn: RequestHandler) => (req: Request, res: Response
 router.post(
   '/',
   validateLogin,
-  asyncHandlerSession(async (req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { credential, password } = req.body;
 
     const user = await prisma.user.findFirst({
@@ -45,21 +46,14 @@ router.post(
       username: user.username,
     };
 
-
-    setTokenCookie(res, safeUser);
-
-
-
-
-
+    await setTokenCookie(res, safeUser);
 
     return res.json({
       user: { ...safeUser, firstName: user.firstName, lastName: user.lastName },
     });
-  })
-);
+  }));
 
-router.delete('/', asyncHandlerSession((_req: Request, res: Response) => {
+router.delete('/', asyncHandler((_req: Request, res: Response) => {
   res.clearCookie('token');
   return res.json({ message: 'success' });
 }));
@@ -81,7 +75,3 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
 }));
 
 export default router;
-function asyncHandler(arg0: (_req: Request, res: Response) => Promise<Response<any, Record<string, any>>>) {
-  throw new Error('Function not implemented.');
-}
-

@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const data = {
     environment: process.env["NODE_ENV"] || "development",
     port: process.env["PORT"] || 5000,
@@ -11,4 +9,4 @@ const data = {
     isProduction: false,
 };
 data.isProduction = data.environment === "production";
-exports.default = data;
+export default data;
