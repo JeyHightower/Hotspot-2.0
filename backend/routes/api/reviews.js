@@ -169,5 +169,4 @@ router.put('/:reviewId', requireAuth, validateReviewEdit, asyncHandler(async (re
         }
     }
 }));
-;
 export default router;

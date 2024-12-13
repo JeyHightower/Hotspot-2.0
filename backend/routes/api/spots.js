@@ -6,14 +6,11 @@ import { requireAuth } from '../../utils/auth.js';
 const asyncHandler = (fn) => (req, res, next) => {
     return Promise.resolve(fn(req, res, next)).catch(next);
 };
-// At the top of your file, add this helper:
 const router = Router();
 function transformSpot(wholeSpot) {
     const { images, reviews, lat, lng, price, ...spot } = wholeSpot;
     return {
         ...spot,
-        // sequelize is wrong and they codified that in the API
-        // whoops!
         lat: Number(lat),
         lng: Number(lng),
         price: Number(price),
@@ -23,42 +20,24 @@ function transformSpot(wholeSpot) {
 }
 function parseSpotId(spotId, res) {
     const id = parseI32(spotId);
-    if (id !== null) {
+    if (id !== null)
         return id;
-    }
-    else {
-        res.status(404).json({ message: "Spot couldn't be found" });
-        return null;
-    }
+    res.status(404).json({ message: "Spot couldn't be found" });
+    return null;
 }
 async function getSpot(id, res, cb) {
     let spotId = parseSpotId(id, res);
-    if (spotId) {
-        let data = await cb(spotId);
-        if (data) {
-            return data;
-        }
-        res.status(404).json({ message: "Spot couldn't be found" });
+    if (!spotId)
         return null;
-    }
-    else {
-        return null;
-    }
+    let data = await cb(spotId);
+    if (data)
+        return data;
+    res.status(404).json({ message: "Spot couldn't be found" });
+    return null;
 }
 function formatDate(d) {
     return d.toISOString().split('T')[0];
 }
-router.get('/current', requireAuth, asyncHandler(async (req, res) => {
-    const allSpots = await prisma.spot.findMany({
-        where: { ownerId: req.user.id },
-        include: {
-            images: { where: { preview: true }, select: { url: true } },
-            reviews: { select: { stars: true } },
-        },
-    });
-    const modspots = allSpots.map(transformSpot);
-    res.json({ Spots: modspots });
-}));
 const validateNewSpot = [
     check('address')
         .exists({ checkFalsy: true })
@@ -89,156 +68,11 @@ const validateNewSpot = [
         .withMessage('Price per day is required'),
     handleValidationErrors,
 ];
-router.get('/:spotId', asyncHandler(async (req, res, next) => {
-    try {
-        const spot = await getSpot(req.params.spotId, res, (spotId) => prisma.spot.findFirst({
-            where: { id: spotId },
-            include: {
-                images: { select: { id: true, url: true, preview: true } },
-                reviews: { select: { stars: true } },
-                owner: {
-                    select: { id: true, firstName: true, lastName: true },
-                },
-            },
-        }));
-        if (!spot) {
-            return;
-        }
-        const { reviews, images, owner, lat, lng, price, ...rest } = spot;
-        const ret = {
-            ...rest,
-            lat: Number(lat),
-            lng: Number(lng),
-            price: Number(price),
-            numReviews: reviews.length,
-            avgStarRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
-            SpotImages: images,
-            Owner: owner,
-        };
-        res.json(ret);
-    }
-    catch (error) {
-        next(error);
-    }
-}));
-router.put('/:spotId', requireAuth, validateNewSpot, asyncHandler(async (req, res, next) => {
-    try {
-        let user = req.user;
-        const { address, city, state, country, lat, lng, name, description, price, } = req.body;
-        const spot = await getSpot(req.params['spotId'], res, (id) => prisma.spot.findUnique({ where: { id } }));
-        if (!spot) {
-            return;
-        }
-        if (spot.ownerId !== user.id) {
-            res
-                .status(403)
-                .json({ message: 'You do not have permission to edit this spot' });
-            return;
-        }
-        let updated = await prisma.spot.update({
-            where: { id: spot.id },
-            data: {
-                address,
-                city,
-                state,
-                country,
-                lat,
-                lng,
-                name,
-                description,
-                price,
-                updatedAt: new Date(),
-            },
-        });
-        res.status(200).json({ ...updated, lat, lng, price });
-    }
-    catch (error) {
-        next(error);
-    }
-}));
-router.delete('/:spotId', requireAuth, asyncHandler(async (req, res, next) => {
-    try {
-        let user = req.user;
-        const spot = await getSpot(req.params['spotId'], res, (spotId) => prisma.spot.findFirst({
-            where: { id: spotId },
-            select: { id: true, ownerId: true },
-        }));
-        if (!spot) {
-            return;
-        }
-        if (spot.ownerId !== user.id) {
-            res.status(403).json({
-                message: 'You do not have permission to delete this spot',
-            });
-            return;
-        }
-        await prisma.spot.delete({ where: { id: spot.id } });
-        res.status(200).json({ message: 'Successfully deleted' });
-    }
-    catch (error) {
-        next(error);
-    }
-}));
-router.get('/:spotId/bookings', requireAuth, asyncHandler(async (req, res, next) => {
-    const user = req.user;
-    const spot = await getSpot(req.params['spotId'], res, (id) => prisma.spot.findUnique({ where: { id } }));
-    if (!spot) {
-        return;
-    }
-    if (spot.ownerId == user.id) {
-        const bookings = await prisma.booking.findMany({
-            where: {
-                spotId: spot.id,
-            },
-            select: {
-                user: { select: { id: true, firstName: true, lastName: true } },
-                id: true,
-                spotId: true,
-                startDate: true,
-                endDate: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-        });
-        const sequelized = bookings.map((b) => {
-            const { user, ...rest } = b;
-            return {
-                User: user,
-                ...rest,
-            };
-        });
-        res.json({ Bookings: sequelized });
-    }
-    else {
-        const bookings = await prisma.booking.findMany({
-            where: { spotId: spot.id, userId: user.id },
-            select: { startDate: true, endDate: true, spotId: true },
-        });
-        res.json({ Bookings: bookings });
-    }
-}));
-router.get('/:spotId/reviews', asyncHandler(async (req, res, next) => {
-    const spot = await getSpot(req.params.spotId, res, (id) => prisma.spot.findUnique({ where: { id } }));
-    if (!spot) {
-        return;
-    }
-    const reviews = await prisma.review.findMany({
-        where: { spotId: spot.id },
-        include: {
-            user: { select: { id: true, firstName: true, lastName: true } },
-            images: { select: { id: true, url: true } },
-        },
-    });
-    const out = reviews.map((r) => {
-        const { user, images, ...rest } = r;
-        return {
-            User: user,
-            ReviewImages: images,
-            ...rest,
-        };
-    });
-    res.json({ Reviews: out });
-}));
+const validateNewSpotImage = [
+    check('url').exists({ checkFalsy: true }).withMessage('URL is required'),
+    check('preview').exists().isBoolean().withMessage('Preview flag is required'),
+    handleValidationErrors,
+];
 const validateNewReview = [
     check('review')
         .exists({ checkFalsy: true })
@@ -247,104 +81,249 @@ const validateNewReview = [
     check('stars').exists({ checkFalsy: true }).isInt({ min: 1, max: 5 }),
     handleValidationErrors,
 ];
-router.post('/:spotId/reviews', requireAuth, validateNewReview, async (Request, Response) => {
-    const user = Request.user;
-    const { review, stars } = Request.user.body;
-    const spot = await getSpot(Request.params['spotId'], Response, (spotId) => prisma.spot.findFirst({
-        where: { id: spotId },
-        include: { reviews: { where: { userId: user.id } } },
-    }));
-    if (!spot) {
-        return;
-    }
-    if (spot.reviews.length) {
-        return Response.status(500).json({
-            message: 'User already has a review for this spot',
-        });
-    }
-    const rev = await prisma.review.create({
-        data: {
-            userId: user.id,
-            spotId: spot.id,
-            review: String(review),
-            stars: Number(stars),
-        },
-    });
-    return Response.status(201).json(rev);
-});
-const validateNewSpotImage = [
-    check('url').exists({ checkFalsy: true }).withMessage('URL is required'),
-    check('preview').exists().isBoolean().withMessage('Preview flag is required'),
+const validateNewBooking = [
+    check('startDate')
+        .exists({ checkFalsy: true })
+        .isISO8601()
+        .toDate()
+        .withMessage('startDate is required'),
+    check('endDate')
+        .exists({ checkFalsy: true })
+        .isISO8601()
+        .toDate()
+        .withMessage('endDate is required'),
     handleValidationErrors,
 ];
-router.post('/:spotId/images', requireAuth, validateNewSpotImage, asyncHandler(async (req, res, next) => {
-    const user = req.user;
-    const { url, preview } = req.body;
-    let spot = await getSpot(req.params['spotId'], res, (spotId) => prisma.spot.findFirst({ where: { id: spotId } }));
-    if (!spot) {
+router.get('/current', requireAuth, asyncHandler(async (req, res) => {
+    const allSpots = await prisma.spot.findMany({
+        where: { ownerId: req.user.id },
+        include: {
+            images: { where: { preview: true }, select: { url: true } },
+            reviews: { select: { stars: true } },
+        },
+    });
+    res.json({ Spots: allSpots.map(transformSpot) });
+}));
+router.get('/:spotId', asyncHandler(async (req, res, next) => {
+    const spot = await getSpot(req.params.spotId, res, (spotId) => prisma.spot.findFirst({
+        where: { id: spotId },
+        include: {
+            images: { select: { id: true, url: true, preview: true } },
+            reviews: { select: { stars: true } },
+            owner: { select: { id: true, firstName: true, lastName: true } },
+        },
+    }));
+    if (!spot)
         return;
+    const { reviews, images, owner, lat, lng, price, ...rest } = spot;
+    res.json({
+        ...rest,
+        lat: Number(lat),
+        lng: Number(lng),
+        price: Number(price),
+        numReviews: reviews.length,
+        avgStarRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
+        SpotImages: images,
+        Owner: owner,
+    });
+}));
+router.post('/', requireAuth, validateNewSpot, asyncHandler(async (req, res) => {
+    const { address, city, state, country, lat, lng, name, description, price, } = req.body;
+    const spot = await prisma.spot.create({
+        data: {
+            ownerId: req.user.id,
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price,
+        },
+    });
+    res.status(201).json({ ...spot, lat, lng, price });
+}));
+router.put('/:spotId', requireAuth, validateNewSpot, asyncHandler(async (req, res) => {
+    const spot = await getSpot(req.params.spotId, res, (id) => prisma.spot.findUnique({ where: { id } }));
+    if (!spot)
+        return;
+    if (spot.ownerId !== req.user.id) {
+        return res
+            .status(403)
+            .json({ message: 'You do not have permission to edit this spot' });
     }
-    if (spot.ownerId !== user.id) {
-        res
+    const { address, city, state, country, lat, lng, name, description, price, } = req.body;
+    const updated = await prisma.spot.update({
+        where: { id: spot.id },
+        data: {
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price,
+            updatedAt: new Date(),
+        },
+    });
+    res.json({ ...updated, lat, lng, price });
+}));
+router.delete('/:spotId', requireAuth, asyncHandler(async (req, res) => {
+    const spot = await getSpot(req.params.spotId, res, (id) => prisma.spot.findFirst({
+        where: { id },
+        select: { id: true, ownerId: true },
+    }));
+    if (!spot)
+        return;
+    if (spot.ownerId !== req.user.id) {
+        return res
+            .status(403)
+            .json({ message: 'You do not have permission to delete this spot' });
+    }
+    await prisma.spot.delete({ where: { id: spot.id } });
+    res.json({ message: 'Successfully deleted' });
+}));
+router.get('/:spotId/reviews', asyncHandler(async (req, res) => {
+    const spot = await getSpot(req.params.spotId, res, (id) => prisma.spot.findUnique({ where: { id } }));
+    if (!spot)
+        return;
+    const reviews = await prisma.review.findMany({
+        where: { spotId: spot.id },
+        include: {
+            user: { select: { id: true, firstName: true, lastName: true } },
+            images: { select: { id: true, url: true } },
+        },
+    });
+    res.json({
+        Reviews: reviews.map(({ user, images, ...rest }) => ({
+            ...rest,
+            User: user,
+            ReviewImages: images,
+        })),
+    });
+}));
+router.post('/:spotId/reviews', requireAuth, validateNewReview, asyncHandler(async (req, res) => {
+    const spot = await getSpot(req.params.spotId, res, (spotId) => prisma.spot.findFirst({
+        where: { id: spotId },
+        include: { reviews: { where: { userId: req.user.id } } },
+    }));
+    if (!spot)
+        return;
+    if (spot.reviews.length) {
+        return res
+            .status(500)
+            .json({ message: 'User already has a review for this spot' });
+    }
+    const review = await prisma.review.create({
+        data: {
+            userId: req.user.id,
+            spotId: spot.id,
+            review: req.body.review,
+            stars: req.body.stars,
+        },
+    });
+    res.status(201).json(review);
+}));
+router.get('/:spotId/bookings', requireAuth, asyncHandler(async (req, res) => {
+    const spot = await getSpot(req.params.spotId, res, (id) => prisma.spot.findUnique({ where: { id } }));
+    if (!spot)
+        return;
+    if (spot.ownerId === req.user.id) {
+        const bookings = await prisma.booking.findMany({
+            where: { spotId: spot.id },
+            include: {
+                user: { select: { id: true, firstName: true, lastName: true } },
+            },
+            select: {
+                id: true,
+                spotId: true,
+                userId: true,
+                startDate: true,
+                endDate: true,
+                createdAt: true,
+                updatedAt: true,
+                user: true,
+            },
+        });
+        res.json({
+            Bookings: bookings.map(({ user, ...booking }) => ({
+                ...booking,
+                User: user,
+                startDate: formatDate(booking.startDate),
+                endDate: formatDate(booking.endDate),
+            })),
+        });
+    }
+    else {
+        const bookings = await prisma.booking.findMany({
+            where: { spotId: spot.id },
+            select: { spotId: true, startDate: true, endDate: true },
+        });
+        res.json({
+            Bookings: bookings.map((booking) => ({
+                ...booking,
+                startDate: formatDate(booking.startDate),
+                endDate: formatDate(booking.endDate),
+            })),
+        });
+    }
+}));
+router.post('/:spotId/images', requireAuth, validateNewSpotImage, asyncHandler(async (req, res) => {
+    const spot = await getSpot(req.params.spotId, res, (spotId) => prisma.spot.findFirst({ where: { id: spotId } }));
+    if (!spot)
+        return;
+    if (spot.ownerId !== req.user.id) {
+        return res
             .status(403)
             .json({ message: 'You do not have permission to modify this spot' });
-        return;
     }
+    const { url, preview } = req.body;
     const img = await prisma.spotImage.create({
         data: { url, preview, spotId: spot.id },
     });
     res.status(201).json({ id: img.id, url, preview });
 }));
-const validateNewBooking = [check('startDate')
-        .exists({ checkFalsy: true })
-        .isDate()
-        .withMessage('startDate is required'),
-    check('endDate')
-        .exists({ checkFalsy: true })
-        .isDate()
-        .withMessage('endDate is required'),
-    handleValidationErrors,
-];
-router.post('/:spotId/bookings', requireAuth, asyncHandler(async (req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, validateNewBooking, asyncHandler(async (req, res) => {
     const { startDate: sd, endDate: ed } = req.body;
     const startDate = new Date(sd);
     const endDate = new Date(ed);
     if (startDate >= endDate) {
-        res.status(400).json({
+        return res.status(400).json({
             message: 'Bad Request',
             errors: { endDate: 'endDate cannot be on or before startDate' },
         });
-        return;
     }
-    const user = req.user;
-    const spot = await getSpot(req.params['spotId'], res, (id) => prisma.spot.findUnique({ where: { id } }));
-    if (!spot) {
+    const spot = await getSpot(req.params.spotId, res, (id) => prisma.spot.findUnique({ where: { id } }));
+    if (!spot)
         return;
-    }
-    if (spot.ownerId == user.id) {
-        res.status(403).json({
+    if (spot.ownerId === req.user.id) {
+        return res
+            .status(403)
+            .json({
             message: 'You own this spot, and cannot make a booking for it',
         });
-        return;
     }
-    let overlap = await bookingOverlap(spot.id, startDate, endDate);
+    const overlap = await bookingOverlap(spot.id, startDate, endDate);
     if (overlap) {
-        let err = {
-            message: 'Sorry, this spot is already booked for the specified dates',
-            errors: {},
-        };
+        const errors = {};
         if (overlap.startDate <= startDate && startDate <= overlap.endDate) {
-            err.errors.startDate = 'Start date conflicts with an existing booking';
+            errors.startDate = 'Start date conflicts with an existing booking';
         }
         if (overlap.startDate <= endDate && endDate <= overlap.endDate) {
-            err.errors.endDate = 'End date conflicts with an existing booking';
+            errors.endDate = 'End date conflicts with an existing booking';
         }
-        res.status(403).json(err);
-        return;
+        return res.status(403).json({
+            message: 'Sorry, this spot is already booked for the specified dates',
+            errors,
+        });
     }
-    let booking = await prisma.booking.create({
+    const booking = await prisma.booking.create({
         data: {
-            userId: user.id,
+            userId: req.user.id,
             spotId: spot.id,
             startDate,
             endDate,
@@ -366,37 +345,31 @@ const getChecks = checkSchema({
     minPrice: { isFloat: { options: { min: 0 } }, optional: true },
     maxPrice: { isFloat: { options: { min: 0 } }, optional: true },
 }, ['query']);
-router.get('/', getChecks, handleValidationErrors, async (req, res) => {
+router.get('/', getChecks, handleValidationErrors, asyncHandler(async (req, res) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
     const where = {};
-    let parsedSize = 20;
-    if (size !== undefined) {
-        parsedSize = Number(size);
+    const parsedSize = Number(size) || 20;
+    const parsedPage = Number(page) || 1;
+    if (minLat || maxLat) {
+        where.lat = {};
+        if (minLat)
+            where.lat.gte = Number(minLat);
+        if (maxLat)
+            where.lat.lte = Number(maxLat);
     }
-    let parsedPage = 1;
-    if (page !== undefined) {
-        parsedPage = Number(page);
+    if (minLng || maxLng) {
+        where.lng = {};
+        if (minLng)
+            where.lng.gte = Number(minLng);
+        if (maxLng)
+            where.lng.lte = Number(maxLng);
     }
-    where.lat = {};
-    if (minLat !== undefined) {
-        where.lat.gte = Number(minLat);
-    }
-    if (maxLat !== undefined) {
-        where.lat.lte = Number(maxLat);
-    }
-    where.lng = {};
-    if (minLng !== undefined) {
-        where.lng.gte = Number(minLng);
-    }
-    if (maxLng !== undefined) {
-        where.lng.lte = Number(maxLng);
-    }
-    where.price = {};
-    if (minPrice !== undefined) {
-        where.price.gte = Number(minPrice);
-    }
-    if (maxPrice !== undefined) {
-        where.price.lte = Number(maxPrice);
+    if (minPrice || maxPrice) {
+        where.price = {};
+        if (minPrice)
+            where.price.gte = Number(minPrice);
+        if (maxPrice)
+            where.price.lte = Number(maxPrice);
     }
     const allSpots = await prisma.spot.findMany({
         include: {
@@ -408,26 +381,10 @@ router.get('/', getChecks, handleValidationErrors, async (req, res) => {
         skip: parsedSize * (parsedPage - 1),
         take: parsedSize,
     });
-    const modspots = allSpots.map(transformSpot);
-    res.json({ Spots: modspots, page: parsedPage, size: parsedSize });
-});
-router.post('/', requireAuth, validateNewSpot, async (req, res) => {
-    let user = req.user;
-    const { address, city, state, country, lat, lng, name, description, price, } = req.body;
-    const spot = await prisma.spot.create({
-        data: {
-            ownerId: user.id,
-            address,
-            city,
-            state,
-            country,
-            lat,
-            lng,
-            name,
-            description,
-            price,
-        },
+    res.json({
+        Spots: allSpots.map(transformSpot),
+        page: parsedPage,
+        size: parsedSize,
     });
-    res.status(201).json({ ...spot, lat, lng, price });
-});
+}));
 export default router;
