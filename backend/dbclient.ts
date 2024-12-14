@@ -4,7 +4,7 @@ const userValidate = Prisma.defineExtension({
   name: 'userValidate',
   query: {
     user: {
-      create({ args, query }) {
+      create({ args, query }: { args: Prisma.UserCreateArgs; query: any }) {
         if (args.data.username.length < 4) {
           throw Error('username length less than 4');
         } else if (args.data.email.length < 3) {
@@ -14,8 +14,7 @@ const userValidate = Prisma.defineExtension({
         }
 
         return query(args);
-      },
-    },
+      },    },
   },
 });
 

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router, RequestHandler } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 
@@ -7,10 +7,6 @@ const router = Router();
 import bcrypt from 'bcryptjs';
 import { prisma } from '../../dbclient.js';
 import { setTokenCookie } from '../../utils/auth.js';
-
-const asyncHandler = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
-  return Promise.resolve(fn(req, res, next)).catch(next);
-};
 
 const validateLogin = [
   check('credential')
@@ -26,7 +22,7 @@ const validateLogin = [
 router.post(
   '/',
   validateLogin,
-  asyncHandler(async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { credential, password } = req.body;
 
     const user = await prisma.user.findFirst({
@@ -46,19 +42,20 @@ router.post(
       username: user.username,
     };
 
-    await setTokenCookie(res, safeUser);
+    setTokenCookie(res, safeUser);
 
     return res.json({
       user: { ...safeUser, firstName: user.firstName, lastName: user.lastName },
     });
-  }));
+  },
+);
 
-router.delete('/', asyncHandler((_req: Request, res: Response) => {
+router.delete('/', (_req, res) => {
   res.clearCookie('token');
   return res.json({ message: 'success' });
-}));
+});
 
-router.get('/', asyncHandler(async (req: Request, res: Response) => {
+router.get('/', (req, res) => {
   const { user } = req;
   if (user) {
     const safeUser = {
@@ -72,6 +69,6 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
       user: safeUser,
     });
   } else return res.json({ user: null });
-}));
+});
 
 export default router;

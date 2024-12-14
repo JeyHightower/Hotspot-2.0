@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { NextFunction, Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express.js';
 import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 

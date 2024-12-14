@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express.js';
 
 import { Booking } from '@prisma/client';
 import { validationResult } from 'express-validator';

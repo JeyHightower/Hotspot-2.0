@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
@@ -40,6 +39,12 @@
     "@typescript-eslint/parser": "latest",
     "eslint": "latest",
     "eslint-plugin-react": "latest"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
   },
   "packageManager": "pnpm@9.15.0"
 }
