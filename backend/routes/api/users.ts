@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { NextFunction, Request, Response, Router } from 'express.js';
+import { NextFunction, Request, Response, Router } from 'express';
 import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 
@@ -40,7 +40,8 @@ const validateSignup = [
 router.post(
   '/',
   validateSignup,
-  async (req: Request, res: Response, next: NextFunction) => {
+
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { email, password, username, firstName, lastName } = req.body;
     const hashedPassword = await bcrypt.hash(password, 2);
 
@@ -53,46 +54,26 @@ router.post(
         id: user.id,
         email: user.email,
         username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        hashedPassword: user.hashedPassword,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       };
 
-      setTokenCookie(res, safeUser);
-
-      res.status(201);
-
-      return res.json({
-        user: { ...safeUser, firstName, lastName },
-      });
+      await setTokenCookie(res, safeUser);
+      res.json({ user: safeUser });
     } catch (e) {
-      if (e instanceof PrismaClientKnownRequestError) {
-        let fields = e.meta?.['target'];
-
-        if (!(fields instanceof Array)) {
-          throw Error('meta.target must be array');
-        }
-
-        let err = new Error('User already exists');
-        err.message = 'User already exists';
-        err.errors = {};
-
-        const emailCh = (await prisma.user.count({ where: { email } })) === 1;
-        const usernameCh =
-          (await prisma.user.count({ where: { username } })) === 1;
-
-        for (const { field, flag } of [
-          { field: 'email', flag: emailCh },
-          { field: 'username', flag: usernameCh },
-        ]) {
-          if (flag) {
-            err.errors[field] = `User with that ${field} already exists`;
-          }
-        }
-
-        return next(err);
-      } else {
-        throw e;
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+        res.status(500).json({
+          message: 'User already exists',
+          errors: { email: 'User with that email already exists' },
+        });
+        return;
       }
+      next(e);
     }
-  },
-);
+  }
+  );
 
-export default router;
+  export default router;

@@ -22,7 +22,7 @@ const validateLogin = [
 router.post(
   '/',
   validateLogin,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { credential, password } = req.body;
 
     const user = await prisma.user.findFirst({
@@ -33,7 +33,8 @@ router.post(
 
     if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
       res.status(401);
-      return res.json({ message: 'Invalid credentials' });
+      res.json({ message: 'Invalid credentials' });
+      return;
     }
 
     const safeUser = {
@@ -44,18 +45,18 @@ router.post(
 
     setTokenCookie(res, safeUser);
 
-    return res.json({
+    res.json({
       user: { ...safeUser, firstName: user.firstName, lastName: user.lastName },
     });
   },
 );
 
-router.delete('/', (_req, res) => {
+router.delete('/', (_req: Request, res: Response): void => {
   res.clearCookie('token');
-  return res.json({ message: 'success' });
+  res.json({ message: 'success' });
 });
 
-router.get('/', (req, res) => {
+router.get('/', (req: Request, res: Response): void => {
   const { user } = req;
   if (user) {
     const safeUser = {
@@ -65,10 +66,12 @@ router.get('/', (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
     };
-    return res.json({
+    res.json({
       user: safeUser,
     });
-  } else return res.json({ user: null });
+  } else {
+    res.json({ user: null });
+  }
 });
 
 export default router;

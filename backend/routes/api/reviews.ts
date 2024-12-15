@@ -14,7 +14,7 @@ import { resourceLimits } from "node:worker_threads";
 
 const router = Router();
 
-router.get("/current", requireAuth, async (req, res) => {
+router.get("/current", requireAuth, async (req: Request, res: Response): Promise<void> => {
 	const user = req.user!;
 
 	const reviews = await prisma.review.findMany({
@@ -60,13 +60,15 @@ router.get("/current", requireAuth, async (req, res) => {
 		return out;
 	});
 
-	return res.json({ Reviews: sequelized });
+	res.json({ Reviews: sequelized });
 });
 
-router.delete("/:reviewId", requireAuth, async (req, res) => {
+router.delete("/:reviewId", requireAuth, async (req: Request, res: Response): Promise<void> => {
 	const reviewId = Number(req.params["reviewId"]);
-	if (isNaN(reviewId) || reviewId > 2 ** 31)
+	if (isNaN(reviewId) || reviewId > 2 ** 31) {
 		res.status(404).json({ message: "Review couldn't be found" });
+		return;
+	}
 
 	const userId = req.user!.id;
 
@@ -80,23 +82,25 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
 
 		if (!review) {
 			if (!(await prisma.review.findUnique({ where: { id: reviewId } }))) {
-				return res.status(404).json({
+				res.status(404).json({
 					message: "Review couldn't be found",
 				});
+				return;
 			}
-			return res.status(403).json({
+			res.status(403).json({
 				message: "You are not authorized to delete this review",
 			});
+			return;
 		}
 
 		await prisma.review.delete({
 			where: { id: reviewId },
 		});
-		return res.status(200).json({
+		res.status(200).json({
 			message: "Successfully deleted",
 		});
 	} catch (error) {
-		return res.status(500).json({
+		res.status(500).json({
 			message: "Internal Server Error",
 		});
 	}
@@ -112,7 +116,7 @@ router.post(
 	"/:reviewId/images",
 	requireAuth,
 	validateReviewImage,
-	async (req: Request, res: Response) => {
+	async (req: Request, res: Response): Promise<void> => {
 		const user = req.user!;
 		let reviewId;
 		try {
@@ -122,7 +126,8 @@ router.post(
 				throw Error();
 			}
 		} catch (e) {
-			return res.status(404).json({ message: "Review couldn't be found" });
+			res.status(404).json({ message: "Review couldn't be found" });
+			return;
 		}
 		const { url } = req.body;
 
@@ -133,15 +138,15 @@ router.post(
 
 		if (review) {
 			if (review.userId !== user.id) {
-				return res
-					.status(403)
-					.json({ message: "You do not have permission to edit this review" });
+				res.status(403).json({ message: "You do not have permission to edit this review" });
+				return;
 			}
 
 			if (review.images.length >= 10) {
-				return res.status(403).json({
+				res.status(403).json({
 					message: "Maximum number of images for this resource was reached",
 				});
+				return;
 			}
 
 			let img = await prisma.reviewImage.create({
@@ -151,9 +156,9 @@ router.post(
 				},
 			});
 
-			return res.status(201).json({ id: img.id, url });
+			res.status(201).json({ id: img.id, url });
 		} else {
-			return res.status(404).json({ message: "Review couldn't be found" });
+			res.status(404).json({ message: "Review couldn't be found" });
 		}
 	},
 );
@@ -175,7 +180,7 @@ router.put(
 	"/:reviewId",
 	requireAuth,
 	validateReviewEdit,
-	async (req: Request, res: Response) => {
+	async (req: Request, res: Response): Promise<void> => {
 		const user = req.user!;
 
 		const { review, stars } = req.body;
@@ -188,7 +193,8 @@ router.put(
 				throw Error();
 			}
 		} catch (e) {
-			return res.status(404).json({ message: "Review couldn't be found" });
+			res.status(404).json({ message: "Review couldn't be found" });
+			return;
 		}
 
 		try {
@@ -201,15 +207,14 @@ router.put(
 				where: { id: Number(reviewId), userId: user.id },
 			});
 
-			return res.status(200).json(changed);
+			res.status(200).json(changed);
 		} catch (e) {
 			if (await prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
-				return res
-					.status(403)
-					.json({ message: "You do not have permission to edit this review" });
+				res.status(403).json({ message: "You do not have permission to edit this review" });
+				return;
 			}
 
-			return res.status(404).json({ message: "Review couldn't be found" });
+			res.status(404).json({ message: "Review couldn't be found" });
 		}
 	},
 );
