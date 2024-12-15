@@ -8,15 +8,11 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
-# Install dependencies as regular dependencies (not dev dependencies)
+# Install TypeScript and types as regular dependencies
 pnpm add @types/node @types/express typescript
 
 # Force pnpm to rebuild the package
 pnpm rebuild
-
-
-# Install all required TypeScript dependencies and type definitions
-pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken
 
 # Create an enhanced tsconfig.json with all necessary configurations
 echo '{
@@ -31,7 +27,6 @@ echo '{
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "express"],
     "moduleResolution": "node"
   },
   "include": [
