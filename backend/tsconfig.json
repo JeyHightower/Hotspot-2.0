@@ -14,7 +14,9 @@
   "include": [
     "routes/**/*",
     "utils/**/*",
-    "config/**/*"
+    "config/**/*",
+    "bin/**/*",
+    "app.ts",
   ],
   "exclude": ["node_modules"]
 }
