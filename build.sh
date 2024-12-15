@@ -16,7 +16,7 @@ echo "Initiating TypeScript code..."
 pnpm tsc --init || { echo "Error: failed to compile TypeScript code"; exit 1; }
 # Compile TypeScript code
 echo "Compiling TypeScript code..."
-pnpm exec tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
+pnpm exec tsc -p ./backend/tsconfig.json || { echo "Error: failed to compile TypeScript code"; exit 1; }
 # Push Prisma schema to database
 echo "Pushing Prisma schema to database..."
 pnpm exec prisma db push --accept-data-loss || { echo "Error: failed to push Prisma schema"; exit 1; }
