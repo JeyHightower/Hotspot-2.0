@@ -8,13 +8,13 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
-# Local installation of TypeScript and types
+# Install TypeScript and all type definitions as regular dependencies
 pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
 
-# Force rebuild all packages
+# Force pnpm to rebuild all packages
 pnpm rebuild
 
-# Create enhanced tsconfig.json
+# Create tsconfig.json with complete configuration
 echo '{
   "compilerOptions": {
     "target": "es2020",
@@ -48,12 +48,6 @@ echo "Compiling TypeScript code..."
 pnpm exec tsc
 
 # Frontend setup and build
-cd ../frontend || { echo "Error: frontend directory not found"; exit 1; }
-
-echo "Installing frontend dependencies..."
+cd ../frontend
 pnpm i
-
-echo "Building frontend code..."
 pnpm run build
-
-echo "Deployment script complete!"
