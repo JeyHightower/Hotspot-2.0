@@ -8,6 +8,32 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend || { echo "Error: backend directory not found"; exit 1; }
 
+# Install TypeScript and types as regular dependencies (not dev dependencies)
+pnpm add typescript @types/node @types/express
+
+# Ensure tsconfig.json has the correct paths
+echo '{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": [
+    "routes/**/*",
+    "utils/**/*",
+    "config/**/*"
+  ],
+  "exclude": ["node_modules"]
+}' > tsconfig.json
+
+
 # Single consolidated dependency installation including types
 echo "Installing backend dependencies and type definitions..."
 pnpm i
