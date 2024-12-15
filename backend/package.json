@@ -11,16 +11,16 @@
   "dependencies": {
     "@prisma/client": "5.19.1",
     "async": "",
-    "bcryptjs": "2.4.3",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "csurf": "1.11.0",
     "dotenv": "16.4.5",
-    "express": "4.21.0",
+    "express": "^4.21.2",
     "express-async-errors": "3.1.1",
     "express-validator": "7.2.0",
     "helmet": "7.1.0",
-    "jsonwebtoken": "9.0.2",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "1.10.0",
     "per-env": "1.0.2",
     "pg": "8.13.0",
@@ -29,17 +29,20 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/cors": "^2.8.17",
-    "@types/csurf": "^1.11.5",
+    "@types/cookie-parser": "1.4.7",
+    "@types/cors": "2.8.17",
+    "@types/csurf": "1.11.5",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/morgan": "^1.9.9",
+    "@types/morgan": "1.9.9",
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
+    "dotenv-cli": "7.4.2",
     "eslint": "latest",
-    "eslint-plugin-react": "latest"
+    "eslint-plugin-react": "latest",
+    "nodemon": "3.1.5",
+    "ts-node": "10.9.2"
   },
   "type": "module",
   "exports": {
@@ -47,5 +50,5 @@
       "import": "./dist/index.js"
     }
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "yarn@1.22.0"
 }

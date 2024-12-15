@@ -4,15 +4,17 @@ set -euo pipefail
 set -x
 
 echo "Starting deployment script..."
-
-# Backend setup and build
-cd backend
+# Add license fields to package.json files
+echo '{"name": "root", "license": "MIT"}' > package.json
+cd backend && echo '{"name": "backend", "license": "MIT"}' > package.json
+cd ../frontend && echo '{"name": "frontend", "license": "MIT"}' > package.json
+cd ../backend
 
 # Install TypeScript and all type definitions as regular dependencies
-pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
+yarn add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
 
-# Force pnpm to rebuild all packages
-pnpm rebuild
+# Force yarn to rebuild all packages
+yarn install --force
 
 # Create tsconfig.json with complete configuration
 echo '{
@@ -40,14 +42,14 @@ echo '{
 
 # Database operations
 echo "Executing Prisma operations..."
-pnpm exec prisma generate
-pnpm exec prisma db push --accept-data-loss
+yarn prisma generate
+yarn prisma db push --accept-data-loss
 
 # TypeScript compilation
 echo "Compiling TypeScript code..."
-pnpm exec tsc
+yarn tsc
 
 # Frontend setup and build
 cd ../frontend
-pnpm i
-pnpm run build
+yarn install
+yarn build
