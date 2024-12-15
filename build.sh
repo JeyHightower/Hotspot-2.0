@@ -1,14 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-set -x
-
-echo "Starting deployment script..."
-
-# Backend setup and build
-cd backend
-
-#!/bin/bash
 
 set -euo pipefail
 set -x
