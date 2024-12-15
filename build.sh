@@ -8,11 +8,11 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
-# Local installation of TypeScript and types
-pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
+# First install core dependencies
+pnpm i
 
-# Force rebuild all packages
-pnpm rebuild
+# Then explicitly install TypeScript and type definitions
+pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
 
 # Create enhanced tsconfig.json
 echo '{
@@ -27,7 +27,6 @@ echo '{
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "express"],
     "moduleResolution": "node"
   },
   "include": [
