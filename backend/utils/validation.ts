@@ -5,23 +5,27 @@ import { validationResult } from 'express-validator';
 import { prisma } from '../dbclient.js';
 
 export function handleValidationErrors(
-req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) {
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
-    const errors = {};
+    const errors: { [key: string]: string } = {};
 
     validationErrors
       .array()
-      //@ts-ignore
-      .forEach((error) => (errors[error.path] = error.msg));
+      .forEach((error) => {
+        if ('path' in error && 'msg' in error) {
+          errors[error.path as string] = error.msg as string;
+        }
+      });
 
-    const err = Error('Bad Request');
+    const err = new Error('Bad Request') as Error & { errors?: typeof errors; status?: number };
     err.errors = errors;
     err.status = 400;
-    err.title = 'Bad Request';
-    next(err);
+    return next(err);
   }
   next();
 }
