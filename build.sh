@@ -3,35 +3,32 @@
 set -euo pipefail
 set -x
 
-# Log the start of the script
 echo "Starting deployment script..."
 
-# Change into the backend directory
+# Backend setup and build
 cd backend || { echo "Error: backend directory not found"; exit 1; }
 
-# Install dependencies
-echo "Installing backend dependencies..."
-pnpm i || { echo "Error: failed to install backend dependencies"; exit 1; }
+# Single consolidated dependency installation including types
+echo "Installing backend dependencies and type definitions..."
+pnpm i
+pnpm add -D typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken
 
-# Group Prisma operations together
+# Database operations
 echo "Executing Prisma operations..."
-pnpm exec prisma generate || { echo "Error: failed to generate Prisma client code"; exit 1; }
-pnpm exec prisma db push --accept-data-loss || { echo "Error: failed to push Prisma schema"; exit 1; }
+pnpm exec prisma generate
+pnpm exec prisma db push --accept-data-loss
 
-# Compile TypeScript code
+# TypeScript compilation
 echo "Compiling TypeScript code..."
-pnpm exec tsc || { echo "Error: failed to compile TypeScript code"; exit 1; }
+pnpm exec tsc
 
-# Change into the frontend directory
+# Frontend setup and build
 cd ../frontend || { echo "Error: frontend directory not found"; exit 1; }
 
-# Install dependencies
 echo "Installing frontend dependencies..."
-pnpm i || { echo "Error: failed to install frontend dependencies"; exit 1; }
+pnpm i
 
-# Build frontend code
 echo "Building frontend code..."
-pnpm run build || { echo "Error: failed to build frontend code"; exit 1; }
+pnpm run build
 
-# Log the end of the script
 echo "Deployment script complete!"
