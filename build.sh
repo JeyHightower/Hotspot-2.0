@@ -8,8 +8,7 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
-# Global installation of TypeScript and types
-pnpm add -g typescript @types/node @types/express
+# Local installation of TypeScript and types
 pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
 
 # Force rebuild all packages
