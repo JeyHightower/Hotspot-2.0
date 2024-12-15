@@ -12,9 +12,10 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
     const imageId = Number(req.params['imageId']);
 
     if (isNaN(imageId)) {
-      return res.status(404).json({
+      res.status(404).json({
         message: "Spot Image couldn't be found",
       });
+      return;
     }
 
     const user = req.user!;
@@ -24,60 +25,62 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
       select: { spot: { select: { ownerId: true } } },
     });
 
-    if (image) {
-      if (image.spot.ownerId !== user.id) {
-        return res
-          .status(403)
-          .json({ message: 'You do not have permission to delete this' });
-      }
-
-      await prisma.spotImage.delete({
-        where: {
-          id: imageId,
-        },
+    if (!image) {
+      res.status(404).json({
+        message: "Spot Image couldn't be found",
       });
-
-      return res.status(200).json({
-        message: 'Successfully deleted',
-      });
+      return;
     }
 
-    return res.status(404).json({
-      message: "Spot Image couldn't be found",
+    if (image.spot.ownerId !== user.id) {
+      res.status(403).json({ message: 'You do not have permission to delete this' });
+      return;
+    }
+
+    await prisma.spotImage.delete({
+      where: {
+        id: imageId,
+      },
+    });
+
+    res.status(200).json({
+      message: 'Successfully deleted',
     });
   } catch (error) {
     next(error);
   }
-});
-// ! delete a review image by imageId
+});// ! delete a review image by imageId
 
-router.delete('/review-images/:imageId', requireAuth, async (req, res) => {
-  const imageId = Number(req.params['imageId']);
+router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => {
+  try {
+    const imageId = Number(req.params['imageId']);
 
-  if (isNaN(imageId)) {
-    return res.status(404).json({ message: "Review Image couldn't be found" });
-  }
+    if (isNaN(imageId)) {
+      res.status(404).json({ message: "Review Image couldn't be found" });
+      return;
+    }
 
-  const userId = req.user!.id;
+    const userId = req.user!.id;
 
-  const image = await prisma.reviewImage.findUnique({
-    where: { id: imageId },
-    include: { review: { select: { userId: true } } },
-  });
+    const image = await prisma.reviewImage.findUnique({
+      where: { id: imageId },
+      include: { review: { select: { userId: true } } },
+    });
 
-  if (image) {
+    if (!image) {
+      res.status(404).json({ message: "Review Image couldn't be found" });
+      return;
+    }
+
     if (image.review.userId !== userId) {
-      return res
-        .status(403)
-        .json({ message: 'You do not have permission to delete this image' });
+      res.status(403).json({ message: 'You do not have permission to delete this image' });
+      return;
     }
 
     await prisma.reviewImage.delete({ where: { id: image.id } });
 
-    return res.status(200).json({ message: `Successfully deleted` });
-  } else {
-    return res.status(404).json({ message: "Review Image couldn't be found" });
+    res.status(200).json({ message: 'Successfully deleted' });
+  } catch (error) {
+    next(error);
   }
-});
-
-export default router;
+});export default router;

@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/index.js';
 
-import { NextFunction, Request, Response } from 'express.js';
+import { NextFunction, Request, Response } from 'express';
 
 import { User } from '@prisma/client';
 import { prisma } from '../dbclient.js';

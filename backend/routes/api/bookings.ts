@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, NextFunction } from 'express';
 import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
 
 const router = Router();
@@ -80,16 +80,17 @@ const validateNewBooking = [
 router.put(
   '/:bookingId',
   requireAuth,
-  ...validateNewBooking,
-  async (req: Request, res: Response) => {
+  validateNewBooking,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const user = req.user!;
     let bookingId = parseI32(req.params['bookingId']);
     const { startDate, endDate } = req.body;
 
     if (!bookingId) {
-      return res.status(404).json({
+      res.status(404).json({
         message: "Booking couldn't be found",
       });
+      return;
     }
 
     const booking = await prisma.booking.findUnique({
@@ -98,22 +99,23 @@ router.put(
     });
 
     if (!booking) {
-      return res.status(404).json({
+      res.status(404).json({
         message: "Booking couldn't be found",
       });
+      return;
     }
 
     if (booking.userId !== user.id) {
-      return res
-        .status(403)
-        .json({ message: 'You do not have permission to edit this booking' });
+      res.status(403).json({ message: 'You do not have permission to edit this booking' });
+      return;
     }
 
     if (startDate >= endDate) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Bad Request',
         errors: { endDate: 'endDate cannot be on or before startDate' },
       });
+      return;
     }
 
     let overlap = await prisma.booking.findFirst({
@@ -143,7 +145,8 @@ router.put(
         err.errors.endDate = 'End date conflicts with an existing booking';
       }
 
-      return res.status(403).json(err);
+      res.status(403).json(err);
+      return;
     }
 
     const newBooking = await prisma.booking.update({
@@ -153,18 +156,19 @@ router.put(
         endDate,
       },
     });
-    return res.status(201).json({
+    res.status(201).json({
       ...newBooking,
       startDate: formatDate(newBooking.startDate),
       endDate: formatDate(newBooking.endDate),
     });
-  }
-);// delete booking by  bookingId
-router.delete('/:bookingId', requireAuth, async (req: Request, res: Response) => {
+  });
+// delete booking by bookingId
+router.delete('/:bookingId', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   const { bookingId } = req.params;
 
   if (isNaN(Number(bookingId)) || Number(bookingId) > 2 ** 31) {
-    return res.status(404).json({ message: "Booking couldn't be found" });
+    res.status(404).json({ message: "Booking couldn't be found" });
+    return;
   }
 
   const userId = req.user!.id;
@@ -189,25 +193,22 @@ router.delete('/:bookingId', requireAuth, async (req: Request, res: Response) =>
           where: { id: Number(bookingId) },
         }))
       ) {
-        return res.status(404).json({ message: "Booking couldn't be found" });
+        res.status(404).json({ message: "Booking couldn't be found" });
+        return;
       }
-      return res
-        .status(403)
-        .json({ message: 'You are not authorized to delete this booking' });
+      res.status(403).json({ message: 'You are not authorized to delete this booking' });
+      return;
     }
 
     if (booking.userId !== userId && booking.spot.ownerId !== userId) {
-      return res
-        .status(403)
-        .json({ message: 'You are not authorized to delete this booking' });
+      res.status(403).json({ message: 'You are not authorized to delete this booking' });
+      return;
     }
 
     await prisma.booking.delete({ where: { id: Number(bookingId) } });
-    return res.status(200).json({ message: 'successfully deleted' });
+    res.status(200).json({ message: 'successfully deleted' });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-});
-
-export default router;
+});export default router;

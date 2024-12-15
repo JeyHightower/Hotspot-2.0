@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from 'express.js';
+import { NextFunction, Request, Response } from 'express';
 
 import { Booking } from '@prisma/client';
 import { validationResult } from 'express-validator';
 import { prisma } from '../dbclient.js';
 
 export function handleValidationErrors(
-req: Request, res: Response, next: NextFunction, Response: any, next: any, NextFunction: any,
+req: Request, res: Response, next: NextFunction
 ) {
   const validationErrors = validationResult(req);
 
