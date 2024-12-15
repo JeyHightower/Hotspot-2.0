@@ -8,6 +8,36 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
+# Install TypeScript and types as regular dependencies (not dev dependencies)
+pnpm add @types/node @types/express typescript
+
+# Force pnpm to rebuild the package
+pnpm rebuild
+
+# Create an enhanced tsconfig.json with all necessary configurations
+echo '{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "lib": ["es2020", "dom"],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./node_modules/@types"],
+    "moduleResolution": "node"
+  },
+  "include": [
+    "routes/**/*",
+    "utils/**/*",
+    "config/**/*"
+  ],
+  "exclude": ["node_modules"]
+}' > tsconfig.json
+
+
 # Install TypeScript and all type definitions as regular dependencies
 pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
 
