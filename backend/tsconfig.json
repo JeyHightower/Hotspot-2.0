@@ -12,13 +12,13 @@
     "types": ["node", "express"]
   },
   "include": [
-    "node_modules/express",
-    "node_modules/@types",
-    "routes/**/*",
-    "utils/**/*",
-    "config/**/*",
-    "bin/**/*",
-    "app.ts",
+    "./node_modules/express",
+    "./node_modules/@types",
+    "./routes/**/*",
+    "./utils/**/*",
+    "./config/**/*",
+    "./bin/**/*",
+    "./app.ts",
   ],
   "exclude": ["node_modules"]
 }
