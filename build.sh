@@ -11,7 +11,7 @@ cd ../frontend && echo '{"name": "frontend", "license": "MIT"}' > package.json
 cd ../backend
 
 # Install TypeScript and all type definitions as regular dependencies
-yarn add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
+yarn add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken prisma node
 
 # Force yarn to rebuild all packages
 yarn install --force
