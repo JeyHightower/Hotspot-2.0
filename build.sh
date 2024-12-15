@@ -8,13 +8,14 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
-# Install TypeScript and all type definitions as regular dependencies
+# Global installation of TypeScript and types
+pnpm add -g typescript @types/node @types/express
 pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken express bcryptjs jsonwebtoken
 
-# Force pnpm to rebuild all packages
+# Force rebuild all packages
 pnpm rebuild
 
-# Create tsconfig.json with complete configuration
+# Create enhanced tsconfig.json
 echo '{
   "compilerOptions": {
     "target": "es2020",
