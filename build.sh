@@ -8,6 +8,13 @@ echo "Starting deployment script..."
 # Backend setup and build
 cd backend
 
+# Install dependencies as regular dependencies (not dev dependencies)
+pnpm add @types/node @types/express typescript
+
+# Force pnpm to rebuild the package
+pnpm rebuild
+
+
 # Install all required TypeScript dependencies and type definitions
 pnpm add typescript @types/node @types/express @types/bcryptjs @types/jsonwebtoken
 
