@@ -1,5 +1,5 @@
-import { Request, Response, Router, NextFunction } from 'express';
-import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
+
+import { Request, Response, Router, NextFunction } from 'express';import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
 
 const router = Router();
 
@@ -63,7 +63,7 @@ router.get('/current', requireAuth, async (req: Request, res: Response) => {
 });
 
 import { check } from 'express-validator';
-
+import { handleValidationErrors } from '../../utils/validation';
 const validateNewBooking = [
   check('startDate')
     .exists({ checkFalsy: true })

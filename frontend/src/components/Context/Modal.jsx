@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import './Modal.css';
 import { ModalContext } from './ModalContext'; // Assuming you have a ModalContext defined
 
@@ -13,7 +13,7 @@ const Modal = () => {
     <div id="modal">
       <div id="modal-background" onClick={closeModal} />
       <div id="modal-content">
-        <BrowserRouter>{modalContent}</BrowserRouter>
+        <Router>{modalContent}</Router>
       </div>
     </div>,
     modalRef.current,
