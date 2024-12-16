@@ -3,7 +3,7 @@
     "target": "es2020",
     "module": "commonjs",
     "lib": ["es2020", "dom"],
-    "outDir": "./dist",
+    "outDir": "./target",
     "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
@@ -16,7 +16,11 @@
   "include": [
     "routes/**/*",
     "utils/**/*",
-    "config/**/*"
+    "config/**/*",
+    "app.ts",
+    "./bin/**/*",
+    "./dbclients.ts",
+    "prisma/seed.ts"
   ],
   "exclude": ["node_modules"]
 }
