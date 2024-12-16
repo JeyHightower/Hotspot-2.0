@@ -1,9 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
-
-import { Booking } from '@prisma/client';
-import { validationResult } from 'express-validator';
+import { Request, Response, NextFunction } from 'express';
+import { PrismaClient } from '@prisma/client';
+import { validationResult, ValidationError } from 'express-validator';
 import { prisma } from '../dbclient.js';
 
+
+
+const prisma = new PrismaClient();
 export function handleValidationErrors(
   req: Request,
   res: Response,
@@ -16,7 +18,7 @@ export function handleValidationErrors(
 
     validationErrors
       .array()
-      .forEach((error) => {
+      .forEach((error: ValidationError) => {
         if ('path' in error && 'msg' in error) {
           errors[error.path as string] = error.msg as string;
         }
@@ -29,6 +31,8 @@ export function handleValidationErrors(
   }
   next();
 }
+
+import { Booking } from '@prisma/client';
 
 export function bookingOverlap(
   spot: number,

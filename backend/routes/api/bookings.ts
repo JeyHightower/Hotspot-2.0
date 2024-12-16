@@ -1,6 +1,6 @@
-
-import { Request, Response, Router, NextFunction } from 'express';import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
-
+import { Request, Response, Router, NextFunction } from 'express';
+import { handleValidationErrors, parseI32 } from '../../utils/validation.js';
+import { check, validationResult } from 'express-validator';
 const router = Router();
 
 import { prisma } from '../../dbclient.js';
@@ -62,8 +62,6 @@ router.get('/current', requireAuth, async (req: Request, res: Response) => {
   res.json({ Bookings: sequelized });
 });
 
-import { check } from 'express-validator';
-import { handleValidationErrors } from '../../utils/validation';
 const validateNewBooking = [
   check('startDate')
     .exists({ checkFalsy: true })
@@ -162,7 +160,7 @@ router.put(
       endDate: formatDate(newBooking.endDate),
     });
   });
-// delete booking by bookingId
+
 router.delete('/:bookingId', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   const { bookingId } = req.params;
 
@@ -211,4 +209,6 @@ router.delete('/:bookingId', requireAuth, async (req: Request, res: Response, ne
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-});export default router;
+});
+
+export default router;

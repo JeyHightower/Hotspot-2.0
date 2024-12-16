@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 
 const router = Router();
 
@@ -7,7 +7,7 @@ import { requireAuth } from '../../utils/auth.js';
 
 // ! Delete spot by imageId
 
-router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
+router.delete('/spot-images/:imageId', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const imageId = Number(req.params['imageId']);
 
@@ -49,9 +49,11 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});// ! delete a review image by imageId
+});
 
-router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => {
+// ! delete a review image by imageId
+
+router.delete('/review-images/:imageId', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const imageId = Number(req.params['imageId']);
 
@@ -83,4 +85,6 @@ router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => 
   } catch (error) {
     next(error);
   }
-});export default router;
+});
+
+export default router;
