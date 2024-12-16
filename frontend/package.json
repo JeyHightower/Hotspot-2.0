@@ -3,5 +3,8 @@
   "license": "MIT",
   "scripts": {
     "build": "vite build"
+  },
+  "dependencies": {
+    "react-router-dom": "^6.28.0"
   }
 }
