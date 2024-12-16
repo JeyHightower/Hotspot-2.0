@@ -18,11 +18,21 @@ import {
 import { PrismaClient } from "@prisma/client/edge";const router = Router();
 function transformSpot(
 	wholeSpot: {
-		reviews: { stars: number }[];
-		images: { url: string }[];
+		id: number;
+		ownerId: number;
+		address: string;
+		city: string;
+		state: string;
+		country: string;
+		name: string;
+		description: string;
+		price: string | number;
 		lat: string | number;
 		lng: string | number;
-		price: string | number;
+		createdAt: Date;
+		updatedAt: Date;
+		reviews: { stars: number }[];
+		images: { url: string }[];
 		[key: string]: any;
 	},
 ): object {
@@ -36,8 +46,8 @@ function transformSpot(
 		previewImage: images[0]?.url ?? "",
 		avgRating: reviews.reduce((acc: number, item: { stars: number }) => acc + item.stars, 0) / reviews.length,
 	};
-}
-function parseSpotId(spotId: string | undefined, res: Response): number | null {
+
+}function parseSpotId(spotId: string | undefined, res: Response): number | null {
 	const id = parseI32(spotId);
 
 	if (id !== null) {
