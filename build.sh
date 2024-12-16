@@ -66,4 +66,4 @@ yarn tsc
 cd ../frontend
 yarn add vite @vitejs/plugin-react react react-dom react-redux @reduxjs/toolkit
 yarn install
-yarn build
+yarn run build
