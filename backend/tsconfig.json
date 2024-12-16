@@ -3,7 +3,7 @@
     "target": "es2020",
     "module": "commonjs",
     "lib": ["es2020", "dom"],
-    "outDir": "./target",
+    "outDir": "../target",
     "rootDir": ".",
     "strict": false,
     "noImplicitAny": false,
