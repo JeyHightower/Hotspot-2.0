@@ -7,10 +7,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types"],
+    "types": [ "node", "express"]
   },
-  "typeRoots": ["./node_modules/@types"],
-   "types": ["node", "express"],
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", ".bin/wwww.ts", ".config/index.t", "prisma/seed.ts", "routes/**/*.ts","types/models.ts", "utils/**/*.ts", "./app.ts", "./dbclient.ts" ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }
