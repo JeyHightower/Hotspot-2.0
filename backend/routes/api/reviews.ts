@@ -4,12 +4,12 @@ import bcrypt from "bcryptjs";
 import { check } from "express-validator";
 
 import { setTokenCookie, requireAuth } from "../../utils/auth.js";
-import { prisma } from "../../dbclient.js";
-import {
+import { prisma as prismaClient } from "../../dbclient.js";import {
 	PrismaClientKnownRequestError,
 	PrismaClientValidationError,
 } from "@prisma/client/runtime/library";
-import { Spot } from "@prisma/client";
+import { PrismaClient } from "@prisma/client/edge";
+const prisma = new PrismaClient();
 import { resourceLimits } from "node:worker_threads";
 
 const router = Router();
