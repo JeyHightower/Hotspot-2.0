@@ -66,4 +66,4 @@ yarn tsc
 cd ../frontend
 yarn add vite @vitejs/plugin-react react react-dom    # Add React dependencies
 yarn install
-yarn buildyarn build
+yarn build
