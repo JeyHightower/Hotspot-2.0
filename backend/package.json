@@ -1,36 +1,21 @@
 {
-  "name": "backend",
-  "packageManager": "yarn@4.5.3",
+  "name": "hotspot-backend",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@prisma/client": "^6.0.1",
-    "bcryptjs": "^2.4.3",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "csurf": "^1.11.0",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "express-async-errors": "^3.1.1",
-    "express-validator": "^7.2.0",
-    "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0",
-    "per-env": "^1.0.2",
-    "pg": "^8.13.1",
-    "prisma": "^6.0.1"
-  },
-  "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/cors": "^2.8.17",
-    "@types/csurf": "^1.11.5",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.2",
-    "@types/pg": "^8",
-    "dotenv-cli": "^7.4.4",
-    "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "node": "^23.4.0",
+    "prisma": "^6.0.1",
     "typescript": "^5.7.2"
   }
 }

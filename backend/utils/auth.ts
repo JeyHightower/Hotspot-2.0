@@ -4,9 +4,9 @@ import config from '../config/index.js';
 
 import { NextFunction, Request, Response } from 'express';
 
-import { PrismaClient } from '@prisma/client/edge';
-const prisma = new PrismaClient();
-type User = NonNullable<Awaited<ReturnType<typeof prisma.user.findUnique>>>;
+import { prisma } from '../dbclient.js';
+
+type User = NonNullable<Awaited<ReturnType<typeof prismaClient.user.findUnique>>>;
 import { prisma as prismaClient } from '../dbclient.js';
 declare global {
   namespace Express {
