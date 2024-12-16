@@ -28,17 +28,6 @@ function transformSpot(
 }
 
 
-  return {
-    ...spot,
-    // sequelize is wrong and they codified that in the API
-    // whoops!
-    lat: Number(lat),
-    lng: Number(lng),
-    price: Number(price),
-    previewImage: images[0]?.url ?? '',
-    avgRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
-  };
-}
 
 function parseSpotId(spotId: string | undefined, res: Response): number | null {
   const id = parseI32(spotId);
