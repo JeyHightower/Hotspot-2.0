@@ -57,18 +57,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "@prisma/client@npm:6.0.1"
-  peerDependencies:
-    prisma: "*"
-  peerDependenciesMeta:
-    prisma:
-      optional: true
-  checksum: 10c0/7c40dc6bd04dab8fa6ef6bb743b396c6e8e56d4e848e884f2a5d7816cff6b339acf24c15f39d6480d6ac7e3ccb7e0723feb7d4672fe30fee7cce2c174e121d7b
-  languageName: node
-  linkType: hard
-
 "@prisma/debug@npm:6.0.1":
   version: 6.0.1
   resolution: "@prisma/debug@npm:6.0.1"
@@ -809,7 +797,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "hotspot-backend@workspace:."
   dependencies:
-    "@prisma/client": "npm:^6.0.1"
     "@types/bcryptjs": "npm:^2.4.6"
     "@types/express": "npm:^5.0.0"
     "@types/jsonwebtoken": "npm:^9.0.7"
