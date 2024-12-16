@@ -7,7 +7,7 @@ export default defineConfig({
       external: ['react-router-dom', 'js-cookie', 'react-icons/fa', '@reduxjs/toolkit',
         'react-redux',
         'redux',
-        'redux-thunk', 'reselect']
+        'redux-thunk', 'reselect', 'react-icons/fa6']
     }
   },
   plugins: [react()],
