@@ -5,9 +5,22 @@ set -x
 
 echo "Starting deployment script..."
 # Add license fields to package.json files
-echo '{"name": "root", "license": "MIT"}' > package.json
-cd backend && echo '{"name": "backend", "license": "MIT"}' > package.json
-cd ../frontend && echo '{"name": "frontend", "license": "MIT"}' > package.json
+echo '{"name": "hotspot-root", "license": "MIT"}' > package.json
+cd backend && echo '{
+  "name": "hotspot-backend",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  }
+}' > package.json
+cd ../frontend && echo '{
+  "name": "hotspot-frontend",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build"
+  }
+}' > package.json
+
 cd ../backend
 
 # Install TypeScript and all type definitions as regular dependencies
