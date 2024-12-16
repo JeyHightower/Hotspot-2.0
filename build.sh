@@ -43,13 +43,13 @@ echo '{
     "target": "es2020",
     "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": [],
   "exclude": ["node_modules"]
 }' > tsconfig.json
 
