@@ -4,9 +4,10 @@ import config from '../config/index.js';
 
 import { NextFunction, Request, Response } from 'express';
 
-import { User } from '@prisma/client';
-import { prisma } from '../dbclient.js';
-
+import { PrismaClient } from '@prisma/client/edge';
+const prisma = new PrismaClient();
+type User = NonNullable<Awaited<ReturnType<typeof prisma.user.findUnique>>>;
+import { prisma as prismaClient } from '../dbclient.js';
 declare global {
   namespace Express {
     export interface Request {

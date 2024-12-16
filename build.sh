@@ -6,8 +6,20 @@ set -x
 echo "Starting deployment script..."
 # Add license fields to package.json files
 echo '{"name": "hotspot-root", "license": "MIT"}' > package.json
-cd backend && echo '{"name": "hotspot-backend", "license": "MIT"}' > package.json
-cd ../frontend && echo '{"name": "hotspot-frontend", "license": "MIT", "scripts": {"build": "vite build"}}' > package.json
+cd backend && echo '{
+  "name": "hotspot-backend",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  }
+}' > package.json
+cd ../frontend && echo '{
+  "name": "hotspot-frontend",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build"
+  }
+}' > package.json
 
 cd ../backend
 
@@ -52,6 +64,6 @@ yarn tsc
 
 # Frontend setup and build
 cd ../frontend
-yarn add -D vite @vitejs/plugin-react
+yarn add vite @vitejs/plugin-react react react-dom react-redux @reduxjs/toolkit
 yarn install
 yarn run build

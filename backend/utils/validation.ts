@@ -1,9 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
-
-import { Booking } from '@prisma/client';
-import { validationResult } from 'express-validator';
+import { Request, Response, NextFunction } from 'express';
+// import { PrismaClient } from '@prisma/client';
+import { validationResult, ValidationError } from 'express-validator';
 import { prisma } from '../dbclient.js';
 
+
+
+// Remove the redundant declaration of prisma
+// const prisma = new PrismaClient();
 export function handleValidationErrors(
   req: Request,
   res: Response,
@@ -16,7 +19,7 @@ export function handleValidationErrors(
 
     validationErrors
       .array()
-      .forEach((error) => {
+      .forEach((error: ValidationError) => {
         if ('path' in error && 'msg' in error) {
           errors[error.path as string] = error.msg as string;
         }
@@ -29,6 +32,11 @@ export function handleValidationErrors(
   }
   next();
 }
+
+// import { PrismaClient } from '@prisma/client/edge';
+// const prisma = new PrismaClient();
+type Booking = Awaited<ReturnType<typeof prisma.booking.findFirst>>;
+
 
 export function bookingOverlap(
   spot: number,
@@ -43,7 +51,6 @@ export function bookingOverlap(
     },
   });
 }
-
 export function parseI32(v: string | undefined): number | null {
   try {
     const val = BigInt(v!);

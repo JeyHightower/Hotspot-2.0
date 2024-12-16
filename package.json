@@ -1,13 +1,5 @@
 {
-	"dependencies": {
-		"eslint": "8.56.0",
-		"eslint-plugin-react": "^7.37.2"
-	},
-	"packageManager": "yarn@1.22.0",
-	"devDependencies": {
-		"@eslint/js": "^9.17.0",
-		"@typescript-eslint/eslint-plugin": "^8.18.0",
-		"@typescript-eslint/parser": "^8.18.0",
-		"prisma": "^6.0.1"
-	}
+  "name": "hotspot-root",
+  "license": "MIT",
+  "packageManager": "yarn@4.5.3+sha512.3003a14012e2987072d244c720506549c1aab73ee728208f1b2580a9fd67b92d61ba6b08fe93f6dce68fd771e3af1e59a0afa28dd242dd0940d73b95fedd4e90"
 }
