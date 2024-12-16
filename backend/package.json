@@ -4,9 +4,6 @@
   "scripts": {
     "build": "tsc"
   },
-  "engines": {
-    "node": "^18.0.0"
-  },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
