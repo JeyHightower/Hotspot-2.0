@@ -3,7 +3,7 @@ const data = {
 	port: process.env["PORT"] || 5000,
 	dbFile: process.env["DB_FILE"],
 	jwtConfig: {
-		secret: process.env["JWT_SECRET"],
+		secret: process.env["HelloWorld"],
 		expiresIn: process.env["JWT_EXPIRES_IN"],
 	},
 	isProduction: false,

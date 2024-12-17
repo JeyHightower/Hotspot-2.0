@@ -7,7 +7,7 @@
     "credentials": true
   },
   "security": {
-    "jwtSecret": "your_jwt_secret",
+    "jwtSecret": "HelloWorld",
     "bcryptRounds": 10
   }
 }
