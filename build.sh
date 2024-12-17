@@ -18,7 +18,7 @@ yarn build
 cd ../frontend
 
 # Install and build frontend
-yarn install --frozen-lockfile
+yarn install 
 yarn build
 
 cd ..
