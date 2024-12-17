@@ -4,18 +4,18 @@ dotenv.config();
 import config from "../config/index.js";
 const { port } = config;
 
-import { app, prisma } from "../app.js";
+import { app, prisma } from "../utils/app.js";
 
 async function main() {
-    app.listen(port, () => console.log("listening on port", port, "..."));
+  app.listen(port, () => console.log("listening on port", port, "..."));
 }
 
 main()
-    .then(async () => {
-        await prisma.$disconnect();
-    })
-    .catch(async (e) => {
-        console.error(e);
-        await prisma.$disconnect();
-        process.exit(1);
-    }); 
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

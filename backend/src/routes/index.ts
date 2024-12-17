@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import api from './api';
+import api from './api.js';
 const router = express.Router();
 
 router.use('/api', api);
