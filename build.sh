@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+corepack enable
+yarn set version 4.5.3
+
 echo "Starting deployment script..."
 
 cd backend
@@ -18,7 +21,7 @@ yarn build
 cd ../frontend
 
 # Install and build frontend
-yarn install 
+yarn install
 yarn build
 
 cd ..
