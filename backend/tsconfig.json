@@ -2,16 +2,20 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
-    "outDir": "../target",
+    "outDir": "./dist",
     "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types"],
-    "types": [ "node", "express"]
+    "types": ["node", "express"]
   },
-  "include": ["**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "app.ts",
+    "routes/**/*.ts",
+    "dbclients.ts",
+    "prisma/seeds.ts"
+  ],
   "exclude": ["node_modules"]
 }
