@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  engineType = ["binary", "library"]
+  engineType = "library"
 }
 
 
