@@ -4,9 +4,11 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = []
+  provider      = "prisma-client-js"
+  engineType    = "library"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
+
 
 model User {
   id             Int       @id @default(autoincrement())
