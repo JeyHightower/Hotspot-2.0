@@ -1,28 +1,26 @@
 generator client {
-  provider      = "prisma-client-js"
-  engineType    = "library"
+  provider   = "prisma-client-js"
+  engineType = "library"
 }
-
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id             Int        @id @default(autoincrement())
-  username       String     @unique
-  email          String     @unique
+  id             Int       @id @default(autoincrement())
+  username       String    @unique
+  email          String    @unique
   hashedPassword String
   firstName      String
   lastName       String
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  spots          Spot[]     // User's spots
-  reviews        Review[]   // User's reviews
-  bookings       Booking[]  // User's bookings
-  sessions       Session[]  // User's sessions
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  spots          Spot[] // User's spots
+  reviews        Review[] // User's reviews
+  bookings       Booking[] // User's bookings
+  sessions       Session[] // User's sessions
 }
 
 model Spot {

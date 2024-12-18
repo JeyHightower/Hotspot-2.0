@@ -111,13 +111,22 @@ router.get(
     const allSpots = await prisma.spot.findMany({
       where: { ownerId: req.user!.id },
       include: {
-        images: { where: { preview: true }, select: { url: true } },
+        images: { 
+          where: { preview: true }, 
+          select: { url: true } 
+        },
         reviews: { select: { stars: true } },
       },
     });
 
-    const modspots = allSpots.map((spot: SpotWithRelations) => transformSpot(spot));
-    res.json({ Spots: modspots });
+    const modspots = allSpots.map((spot: SpotWithRelations) => ({
+      ...transformSpot(spot),
+      previewImage: spot.images[0]?.url || ""
+    }));
+
+    res.json({ 
+      Spots: modspots
+    });
   }
 );
 

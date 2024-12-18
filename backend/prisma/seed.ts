@@ -2,9 +2,9 @@ import { prisma } from "../src/dbclient.js";
 import bcrypt from "bcryptjs";
 
 async function main() {
-  // Create demo user
+  // Create demo user with upsert
   await prisma.user.upsert({
-    where: { email: "demo@user.io" },
+    where: { username: "Demo-lition" },
     update: {},
     create: {
       email: "demo@user.io",
@@ -15,24 +15,31 @@ async function main() {
     },
   });
 
-  await prisma.user.createMany({
-    data: [
-      {
-        email: "user1@user.io",
-        username: "FakeUser1",
-        firstName: "Jane",
-        lastName: "Doe",
-        hashedPassword: bcrypt.hashSync("password1"),
-      },
-      {
-        email: "user2@user.io",
-        username: "FakeUser2",
-        firstName: "among",
-        lastName: "Us",
-        hashedPassword: bcrypt.hashSync("password2"),
-      },
-    ],
-  });
+  // Create other users with upsert
+  const otherUsers = [
+    {
+      email: "user1@user.io",
+      username: "FakeUser1",
+      firstName: "Jane",
+      lastName: "Doe",
+      hashedPassword: bcrypt.hashSync("password1"),
+    },
+    {
+      email: "user2@user.io",
+      username: "FakeUser2",
+      firstName: "among",
+      lastName: "Us",
+      hashedPassword: bcrypt.hashSync("password2"),
+    }
+  ];
+
+  for (const userData of otherUsers) {
+    await prisma.user.upsert({
+      where: { username: userData.username },
+      update: {},
+      create: userData
+    });
+  }
 
   let evil = await prisma.user.create({
     data: {
@@ -56,8 +63,16 @@ async function main() {
       name: "Uncle Johns Riverside Cabin",
       description:
         "Come fishing with us and ride the waves at our beachfront resort*",
-      price: 400.0,
+      price: 400.0
     },
+  });
+
+  await prisma.spotImage.create({
+    data: {
+      spotId: evilSpot.id,
+      url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
+      preview: true
+    }
   });
 
   await prisma.review.create({
@@ -272,7 +287,6 @@ async function main() {
     });
   }
 }
-
 main()
   .then(async () => {
     await prisma.$disconnect();
