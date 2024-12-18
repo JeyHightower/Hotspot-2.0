@@ -6,10 +6,9 @@ import {
   parseI32,
 } from "../../utils/validation.js";
 
-import { PrismaClient } from "@prisma/client";
 import { prisma } from "../../dbclient.js";
 import { requireAuth } from "../../utils/auth.js";
-import { Decimal } from '@prisma/client/runtime/library';
+import { Decimal } from "@prisma/client/runtime/library";
 
 interface SpotType {
   id: number;
@@ -18,11 +17,11 @@ interface SpotType {
   city: string;
   state: string;
   country: string;
-  lat: number | string;
-  lng: number | string;
+  lat: number | string | Decimal;
+  lng: number | string | Decimal;
   name: string;
   description: string;
-  price: number | string;
+  price: number | string | Decimal;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,7 +29,7 @@ interface SpotType {
 interface SpotWithRelations extends SpotType {
   reviews: Array<{ stars: number }>;
   images: Array<{ url: string }>;
-  owner: {
+  owner?: {
     id: number;
     firstName: string;
     lastName: string;
@@ -117,7 +116,7 @@ router.get(
       },
     });
 
-    const modspots = allSpots.map((spot) => transformSpot(spot));
+    const modspots = allSpots.map((spot: SpotWithRelations) => transformSpot(spot));
     res.json({ Spots: modspots });
   }
 );
@@ -318,7 +317,16 @@ router.get(
         }
       });
 
-      const formattedBookings = bookings.map(booking => ({
+      const formattedBookings = bookings.map((booking: { 
+        user: { id: number; firstName: string; lastName: string };
+        id: number;
+        spotId: number;
+        userId: number;
+        startDate: Date;
+        endDate: Date;
+        createdAt: Date;
+        updatedAt: Date;
+      }) => ({
         User: booking.user,
         id: booking.id,
         spotId: booking.spotId,
@@ -343,7 +351,7 @@ router.get(
         }
       });
 
-      const formattedBookings = bookings.map(booking => ({
+      const formattedBookings = bookings.map((booking: { spotId: number; startDate: Date; endDate: Date }) => ({
         spotId: booking.spotId,
         startDate: formatDate(booking.startDate),
         endDate: formatDate(booking.endDate)

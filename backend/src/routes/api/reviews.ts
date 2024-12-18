@@ -1,8 +1,9 @@
 import { Request, Response, Router } from "express";
 import { check } from "express-validator";
-import { handleValidationErrors } from "../../utils/validation.js";
 import { prisma } from "../../dbclient.js";
 import { requireAuth } from "../../utils/auth.js";
+import { handleValidationErrors } from "../../utils/validation.js";
+import { Decimal } from '@prisma/client/runtime/library';
 
 const router = Router();
 
@@ -24,39 +25,34 @@ router.get(
       },
     });
 
-    const sequelized = reviews.map((r) => {
-      const { spot, images, ...rest } = r;
+    interface ReviewType {
+      spot: {
+        images: Array<{ url: string }>;
+        lat: number | string | Decimal;
+        lng: number | string | Decimal;
+        price: number | string | Decimal;
+        updatedAt: Date;
+        createdAt: Date;
+        [key: string]: any;
+      };
+      images: Array<{ url: string; id: number }>;
+      [key: string]: any;
+    }
 
-      const {
-        images: spotImages,
-        lat,
-        lng,
-        price,
-        updatedAt: _u,
-        createdAt: _uu,
-        ...restSpot
-      } = spot;
-
-      const out = {
-        User: {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        },
-        Spot: {
-          ...restSpot,
-          lat: Number(lat),
-          lng: Number(lng),
-          price: Number(price),
-          previewImage: spotImages[0]?.url ?? "",
-        },
-
-        ReviewImages: images,
-
-        ...rest,
+    const sequelized = reviews.map((r: ReviewType) => {
+      const spot = {
+        ...r.spot,
+        lat: typeof r.spot.lat === 'object' ? Number(r.spot.lat.toString()) : Number(r.spot.lat),
+        lng: typeof r.spot.lng === 'object' ? Number(r.spot.lng.toString()) : Number(r.spot.lng),
+        price: typeof r.spot.price === 'object' ? Number(r.spot.price.toString()) : Number(r.spot.price),
+        previewImage: r.spot.images?.[0]?.url ?? ""
       };
 
-      return out;
+      return {
+        User: { id: r.userId, firstName: r.user.firstName, lastName: r.user.lastName },
+        Spot: spot,
+        ReviewImages: r.images.map(img => ({ id: img.id, url: img.url }))
+      };
     });
 
     res.json({ Reviews: sequelized });

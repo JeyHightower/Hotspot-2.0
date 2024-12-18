@@ -3,6 +3,7 @@ import cors from "cors";
 import csurf from "csurf";
 import express, { RequestHandler } from "express";
 import "express-async-errors";
+import helmet from 'helmet';
 import morgan from "morgan";
 
 import data from "../config/index.js";
@@ -22,31 +23,31 @@ app.use(express.json());
 if (!isProduction) {
   app.use(
     cors({
-      origin: "http://localhost:5000",
-      credentials: true,
+      origin: isProduction ? 'https://your-production-url.com' : 'http://localhost:5000',
+      credentials: true
     })
   );
 }
-import helmet from 'helmet';
+
+// Import helmet at the top of the file with other imports
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 // 3. CSRF Protection
-const csrfProtection = csurf({
+app.use(csurf({
   cookie: {
     secure: isProduction,
-    sameSite: isProduction ? "strict" : "lax",
-    httpOnly: true,
-  },
-}) as unknown as RequestHandler;
+    sameSite: isProduction ? 'strict' : 'lax',
+    httpOnly: true
+  }
+}) as unknown as RequestHandler);
 
 // 4. Routes
 app.use((req, res, next) => {
-  if (req.path === "/api/csrf/restore") {
-    return next();
-  }
-  return csrfProtection(req, res, next);
+  const token = req.csrfToken();
+  res.cookie('XSRF-TOKEN', token);
+  next();
 });
 
 app.get("/api/csrf/restore", (req, res) => {

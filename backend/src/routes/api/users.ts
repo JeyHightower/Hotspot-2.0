@@ -3,7 +3,6 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { check } from 'express-validator';
 import { handleValidationErrors } from '../../utils/validation.js';
 
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { prisma } from '../../dbclient.js';
 import { setTokenCookie } from '../../utils/auth.js';
 
@@ -64,14 +63,12 @@ router.post(
       await setTokenCookie(res, safeUser);
       res.json({ user: safeUser });
     } catch (e: unknown) {
-      if (e instanceof PrismaClientKnownRequestError) {
-        if (e.code === 'P2002') {
-          res.status(500).json({
-            message: 'User already exists',
-            errors: { email: 'User with that email already exists' },
-          });
-          return;
-        }
+      if ((e as any).code === 'P2002') {
+        res.status(500).json({
+          message: 'User already exists',
+          errors: { email: 'User with that email already exists' },
+        });
+        return;
       }
       if (e instanceof Error) {
         next(e);

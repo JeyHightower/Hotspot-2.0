@@ -1,3 +1,5 @@
+import { Decimal } from '@prisma/client/runtime';
+
 export interface Spot {
   id: number
   ownerId: number
@@ -17,8 +19,6 @@ export interface Spot {
   updatedAt: Date
 }
 
-
-
 interface SpotWithRelations extends Omit<SpotType, 'lat' | 'lng' | 'price'> {
   reviews: Array<{ stars: number }>;
   images: Array<{ url: string }>;
@@ -27,16 +27,10 @@ interface SpotWithRelations extends Omit<SpotType, 'lat' | 'lng' | 'price'> {
     firstName: string;
     lastName: string;
   };
-  lat: Decimal | number;
-  lng: Decimal | number;
-  price: Decimal | number;
+  lat: number;
+  lng: number;
+  price: number;
 }
-
-
-
-
-
-
 
 export interface Review {
   id: number

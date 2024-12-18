@@ -20,33 +20,32 @@ const removeSessionUser = () => {
 
 //!THUNK ACTIONS:
 export const loginThunk = (user) => async (dispatch) => {
-  await restoreCSRF();
   try {
-  const { credential, password } = user;
-  const response = await csrfFetch('/api/session', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      credential,
-      password,
-    }),
-  });
+    await restoreCSRF();
+    const { credential, password } = user;
+    const response = await csrfFetch('/api/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        credential,
+        password,
+      }),
+    });
 
-  if (!response.ok) {
-    const text = await response.text();
-    console.error('response not ok:', text);
-    throw new error(`http error! status': ${response.status}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `Login failed with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    dispatch(setSessionUser(data.user));
+    return response;
+  } catch (error) {
+    console.error('Login user error:', error);
+    throw new Error(error.message || 'Failed to log in. Please check your credentials.');
   }
-
-  const data = await response.json();
-  dispatch(setSessionUser(data.user));
-  return response;
-} catch (error) {
-  console.error('Login user error:', error);
-  throw error;
-}
 };
 
 
@@ -54,9 +53,8 @@ export const restoreUserThunk = () => async (dispatch) => {
   try {
     const response = await csrfFetch('/api/session');
     if (!response.ok) {
-      const text = await response.text();
-      console.error('response not ok:', text);
-      throw new error(`http error! status': ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
     dispatch(setSessionUser(data.user));
