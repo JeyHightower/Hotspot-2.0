@@ -15,7 +15,7 @@ echo "Starting production build..."
 cd backend
 yarn install
 yarn prisma generate
-yarn build
+npx build
 
 # Frontend build
 cd ../frontend
