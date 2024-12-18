@@ -3,21 +3,28 @@
 set -euo pipefail
 
 # Enable corepack and set yarn version
+#!/bin/bash
+
+set -euo pipefail
+
+# Set Node version to LTS
+export NODE_VERSION=18.17.0
+
 corepack enable
 yarn set version 4.5.3
 
-echo "Starting optimized deployment..."
+echo "Starting production build..."
 
 # Backend build
 cd backend
-yarn install --immutable --immutable-cache
+DISABLE_WATCHING=true yarn install --frozen-lockfile
 yarn prisma generate
 yarn build
 
-# Frontend build with production optimization
+# Frontend build
 cd ../frontend
-yarn install --immutable --immutable-cache
-NODE_ENV=production yarn build
+DISABLE_WATCHING=true yarn install --frozen-lockfile
+VITE_DISABLE_WATCHER=true yarn build
 
 cd ..
 
