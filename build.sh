@@ -1,16 +1,14 @@
-NODE_VERSION=18.18.0
-
 #!/bin/bash
 
 set -euo pipefail
 
-# Set Node version and enable Corepack globally
+# Set Node version for Prisma compatibility
 export NODE_VERSION=18.18.0
 export NODE_ENV=production
 
-# Enable Corepack with sudo for system-wide access
-sudo corepack enable
-sudo corepack prepare yarn@4.5.3 --activate
+# Initialize Yarn properly
+corepack enable
+yarn set version 4.5.3
 
 echo "Starting production build..."
 
@@ -26,8 +24,6 @@ yarn install
 yarn build
 
 cd ..
-
-
 
 
 # set -euo pipefail
