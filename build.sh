@@ -13,17 +13,16 @@ echo "Starting production build..."
 
 # Backend build with optimizations
 cd backend
-CI=true yarn install --frozen-lockfile --production=false
+yarn install --immutable --immutable-cache
 yarn prisma generate
 yarn build
 
 # Frontend build with optimizations
 cd ../frontend
-CI=true yarn install --frozen-lockfile --production=false
-VITE_DISABLE_WATCHERS=true yarn build --mode production
+yarn install --immutable --immutable-cache
+VITE_DISABLE_WATCHERS=true yarn build
 
 cd ..
-
 
 #
 
