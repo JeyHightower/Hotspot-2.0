@@ -6,25 +6,28 @@ set -euo pipefail
 export NODE_VERSION=18.17.0
 export NODE_ENV=production
 
+# Enable corepack and set yarn version
 corepack enable
 yarn set version 4.5.3
 
+# Clear yarn cache and rebuild
+yarn cache clean --all
+
 echo "Starting production build..."
 
-# Backend build with optimizations
+# Backend build
 cd backend
-yarn install --immutable --immutable-cache
+yarn install --no-immutable
 yarn prisma generate
 yarn build
 
-# Frontend build with optimizations
+# Frontend build
 cd ../frontend
-yarn install --immutable --immutable-cache
-VITE_DISABLE_WATCHERS=true yarn build
+yarn install --no-immutable
+yarn build
 
 cd ..
 
-#
 
 
 
