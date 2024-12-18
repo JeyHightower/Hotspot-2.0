@@ -35,10 +35,18 @@ const deleteSpot = (spotId) => ({
 
 //!THUNK ACTIONS:
 export const fetchAllSpotsThunk = () => async (dispatch) => {
-  const response = await csrfFetch('/api/spots');
-  const spots = await response.json();
-  dispatch(getAllSpots(spots));
-  return spots;
+  try {
+    const response = await csrfFetch('/api/spots');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const spots = await response.json();
+    dispatch(getAllSpots(spots));
+    return spots;
+  } catch (error) {
+    console.error('Error fetching spots:', error);
+    return null;
+  }
 };
 
 export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {

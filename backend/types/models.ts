@@ -17,6 +17,27 @@ export interface Spot {
   updatedAt: Date
 }
 
+
+
+interface SpotWithRelations extends Omit<SpotType, 'lat' | 'lng' | 'price'> {
+  reviews: Array<{ stars: number }>;
+  images: Array<{ url: string }>;
+  owner: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
+  lat: Decimal | number;
+  lng: Decimal | number;
+  price: Decimal | number;
+}
+
+
+
+
+
+
+
 export interface Review {
   id: number
   userId: number

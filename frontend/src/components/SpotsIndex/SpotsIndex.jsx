@@ -1,16 +1,32 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchAllSpotsThunk } from '../../store/spots';
 import './SpotsIndex.css';
 
 const SpotsIndex = () => {
   const dispatch = useDispatch();
   const allSpots = useSelector((state) => state.spots.allSpots);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchAllSpotsThunk());
+    const loadSpots = async () => {
+      setIsLoading(true);
+      try {
+        const result = await dispatch(fetchAllSpotsThunk());
+        if (!result) throw new Error('Failed to load spots');
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadSpots();
   }, [dispatch]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="spots-grid">

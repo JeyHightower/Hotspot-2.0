@@ -1,9 +1,9 @@
 {
   "env": "development",
-  "port": 3000,
+  "port": 5000,
   "host": "localhost",
   "cors": {
-    "origin": "http://localhost:5173",
+    "origin": "http://localhost:5000",
     "credentials": true
   },
   "security": {

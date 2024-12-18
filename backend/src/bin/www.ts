@@ -2,20 +2,22 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import config from "../config/index.js";
-const { port } = config;
-
 import { app, prisma } from "../utils/app.js";
 
-async function main() {
-  app.listen(port, () => console.log("listening on port", port, "..."));
-}
+const { port } = config;
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+const server = app.listen(port, () => {
+  console.log("Server listening on port", port);
+});
+
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
+  server.close();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  await prisma.$disconnect();
+  server.close();
+  process.exit(0);
+});
