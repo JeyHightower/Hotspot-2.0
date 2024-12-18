@@ -1,4 +1,6 @@
-import nodeConfig from "./config.node.json" assert { type: "json" };
+const nodeConfig = await import("./config.node.json", {
+  assert: { type: "json" },
+});
 
 const data = {
   environment: process.env["NODE_ENV"] || "development",
