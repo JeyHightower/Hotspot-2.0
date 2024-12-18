@@ -1071,19 +1071,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^22.10.2":
   version: 22.10.2
   resolution: "@types/node@npm:22.10.2"
   dependencies:
     undici-types: "npm:~6.20.0"
   checksum: 10c0/2c7b71a040f1ef5320938eca8ebc946e6905caa9bbf3d5665d9b3774a8d15ea9fab1582b849a6d28c7fc80756a62c5666bc66b69f42f4d5dafd1ccb193cdb4ac
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:18.16.0":
-  version: 18.16.0
-  resolution: "@types/node@npm:18.16.0"
-  checksum: 10c0/6e158e0e8a49f597f590f1d4c94a7b89b7ae707c0134540359559b14427e94dbde289c7557c8a2fe33baaaad478248a819fdccaa2b97a76dfa47bc61ab7f2ab6
   languageName: node
   linkType: hard
 
@@ -2261,7 +2254,7 @@ __metadata:
     "@types/helmet": "npm:^4.0.0"
     "@types/jsonwebtoken": "npm:9.0.2"
     "@types/morgan": "npm:^1.9.9"
-    "@types/node": "npm:18.16.0"
+    "@types/node": "npm:^22.10.2"
     bcryptjs: "npm:2.4.3"
     cookie-parser: "npm:^1.4.6"
     cors: "npm:^2.8.5"
