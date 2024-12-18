@@ -5,5 +5,8 @@
   "workspaces": [
     "backend",
     "frontend"
-  ]
+  ],
+  "dependencies": {
+    "inotify": "^1.4.6"
+  }
 }

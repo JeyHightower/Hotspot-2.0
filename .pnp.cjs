@@ -37,6 +37,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["inotify", "npm:1.4.6"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -2672,7 +2673,8 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["hotspot-root", "workspace:."]\
+          ["hotspot-root", "workspace:."],\
+          ["inotify", "npm:1.4.6"]\
         ],\
         "linkType": "SOFT"\
       }]\

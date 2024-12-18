@@ -2306,6 +2306,8 @@ __metadata:
 "hotspot-root@workspace:.":
   version: 0.0.0-use.local
   resolution: "hotspot-root@workspace:."
+  dependencies:
+    inotify: "npm:^1.4.6"
   languageName: unknown
   linkType: soft
 
@@ -2401,7 +2403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inotify@npm:>= 0.1.6":
+"inotify@npm:>= 0.1.6, inotify@npm:^1.4.6":
   version: 1.4.6
   resolution: "inotify@npm:1.4.6"
   dependencies:
