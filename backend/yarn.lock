@@ -480,7 +480,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^22.10.2":
   version: 22.10.2
   resolution: "@types/node@npm:22.10.2"
   dependencies:
@@ -1426,6 +1426,7 @@ __metadata:
     "@types/helmet": "npm:^4.0.0"
     "@types/jsonwebtoken": "npm:9.0.2"
     "@types/morgan": "npm:^1.9.9"
+    "@types/node": "npm:^22.10.2"
     bcryptjs: "npm:2.4.3"
     cookie-parser: "npm:^1.4.6"
     cors: "npm:^2.8.5"
