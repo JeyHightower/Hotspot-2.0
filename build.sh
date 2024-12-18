@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-export NODE_VERSION=20.10.0
+# Set Node version to meet Prisma requirements
+export NODE_VERSION=18.18.0
 export NODE_ENV=production
 
 corepack enable
