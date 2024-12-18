@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/bin/www.js",
-    "prod": "NODE_ENV=production node -r dotenv/config dist/bin/www.js"
+    "prod": "NODE_ENV=production node -r dotenv/config dist/bin/www.js",
+    "dev": "NODE_ENV=development nodemon -r dotenv/config src/bin/www.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.0.1",
