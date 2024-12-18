@@ -2,11 +2,9 @@
 
 set -euo pipefail
 
-# Set Node version for Prisma compatibility
-export NODE_VERSION=18.18.0
+export NODE_VERSION=20.10.0
 export NODE_ENV=production
 
-# Initialize Yarn properly
 corepack enable
 yarn set version 4.5.3
 
