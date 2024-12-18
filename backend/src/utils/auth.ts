@@ -23,7 +23,7 @@ const err = () => {
   throw Error('no secret');
 };
 
-const expiresIn = parseInt(expiresInStr!);
+const expiresIn = Number(expiresInStr) || 604800;
 const secret = secretRaw || err();
 export function setTokenCookie(
   res: Response,

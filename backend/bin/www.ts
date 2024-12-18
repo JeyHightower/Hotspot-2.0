@@ -1,13 +1,12 @@
-
 //#!/usr/bin/env node
 
 import dotenv from "dotenv";
 dotenv.config();
 
-import config from "../config/index.js";
+import config from "../src/config/index.js";
 const { port } = config;
 
-import { app, prisma } from "../app.js";
+import { app, prisma } from "../src/utils/app.js";
 
 async function main() {
 	app.listen(port, () => console.log("listening on port", port, "..."));

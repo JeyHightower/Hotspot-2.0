@@ -25,30 +25,35 @@ router.post(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { credential, password } = req.body;
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [{ username: credential }, { email: credential }],
-      },
-    });
+    try {
+      const user = await prisma.user.findFirst({
+        where: {
+          OR: [{ username: credential }, { email: credential }],
+        },
+      });
 
-    if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
-      res.status(401);
-      res.json({ message: 'Invalid credentials' });
-      return;
+      if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
+        res.status(401).json({
+          message: 'Invalid credentials',
+          errors: { credential: 'The provided credentials were invalid.' }
+        });
+        return;
+      }
+
+      const safeUser = {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName
+      };
+
+      await setTokenCookie(res, safeUser);
+      res.json({ user: safeUser });
+    } catch (error) {
+      next(error);
     }
-
-    const safeUser = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-    };
-
-    setTokenCookie(res, safeUser);
-
-    res.json({
-      user: { ...safeUser, firstName: user.firstName, lastName: user.lastName },
-    });
-  },
+  }
 );
 
 router.delete('/', (_req: Request, res: Response): void => {

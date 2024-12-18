@@ -36,13 +36,24 @@ const LoginFormModal = () => {
     }
   };
 
-  const handleDemoLogin = () => {
-    dispatch(
-      sessionActions.loginThunk({
-        credential: 'Demo-lition',
-        password: 'password1',
-      }),
-    ).then(closeModal);
+  const handleDemoLogin = (e) => {
+    e.preventDefault();
+    return dispatch(sessionActions.loginThunk({ 
+      credential: "demo@user.io",
+      password: "password"
+    }))
+    .then(closeModal)
+    .catch((error) => {
+      if (error instanceof Response) {
+        error.json().then(data => {
+          console.log("Error data:", data);
+          if (data?.errors) setErrors(data.errors);
+        });
+      } else {
+        console.log("Login error:", error);
+        setErrors({ credential: 'An error occurred during login' });
+      }
+    });
   };
 
   const loginDisabled = credential.length < 4 || password.length < 6;

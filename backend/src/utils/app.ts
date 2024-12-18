@@ -23,7 +23,7 @@ app.use(express.json());
 if (!isProduction) {
   app.use(
     cors({
-      origin: isProduction ? 'https://your-production-url.com' : 'http://localhost:5000',
+      origin: isProduction ? 'https://your-production-url.com' : 'http://localhost:5173',
       credentials: true
     })
   );

@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response, Router } from "express";
 import { check, checkSchema } from "express-validator";
 import {
@@ -8,7 +9,6 @@ import {
 
 import { prisma } from "../../dbclient.js";
 import { requireAuth } from "../../utils/auth.js";
-import { Decimal } from "@prisma/client/runtime/library";
 
 interface SpotType {
   id: number;
@@ -179,7 +179,7 @@ router.get("/:spotId", async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const { reviews, images, owner, ...rest } = spot;
+  const { reviews, images, owner, ...rest } = spot as SpotWithRelations;
   const lat = typeof rest.lat === 'object' ? Number(rest.lat.toString()) : Number(rest.lat);
   const lng = typeof rest.lng === 'object' ? Number(rest.lng.toString()) : Number(rest.lng);
   const price = typeof rest.price === 'object' ? Number(rest.price.toString()) : Number(rest.price);

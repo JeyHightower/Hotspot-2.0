@@ -1,9 +1,9 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response, Router } from "express";
 import { check } from "express-validator";
 import { prisma } from "../../dbclient.js";
 import { requireAuth } from "../../utils/auth.js";
 import { handleValidationErrors } from "../../utils/validation.js";
-import { Decimal } from '@prisma/client/runtime/library';
 
 const router = Router();
 
@@ -42,16 +42,29 @@ router.get(
     const sequelized = reviews.map((r: ReviewType) => {
       const spot = {
         ...r.spot,
-        lat: typeof r.spot.lat === 'object' ? Number(r.spot.lat.toString()) : Number(r.spot.lat),
-        lng: typeof r.spot.lng === 'object' ? Number(r.spot.lng.toString()) : Number(r.spot.lng),
-        price: typeof r.spot.price === 'object' ? Number(r.spot.price.toString()) : Number(r.spot.price),
-        previewImage: r.spot.images?.[0]?.url ?? ""
+        lat:
+          typeof r.spot.lat === "object"
+            ? Number(r.spot.lat.toString())
+            : Number(r.spot.lat),
+        lng:
+          typeof r.spot.lng === "object"
+            ? Number(r.spot.lng.toString())
+            : Number(r.spot.lng),
+        price:
+          typeof r.spot.price === "object"
+            ? Number(r.spot.price.toString())
+            : Number(r.spot.price),
+        previewImage: r.spot.images?.[0]?.url ?? "",
       };
 
       return {
-        User: { id: r.userId, firstName: r.user.firstName, lastName: r.user.lastName },
+        User: {
+          id: r.userId,
+          firstName: r.user.firstName,
+          lastName: r.user.lastName,
+        },
         Spot: spot,
-        ReviewImages: r.images.map(img => ({ id: img.id, url: img.url }))
+        ReviewImages: r.images.map((img) => ({ id: img.id, url: img.url })),
       };
     });
 
