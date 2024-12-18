@@ -43,15 +43,12 @@ const LoginFormModal = () => {
       password: "password"
     }))
     .then(closeModal)
-    .catch((error) => {
+    .catch(async (error) => {
+      console.log("Login error response:", error);
       if (error instanceof Response) {
-        error.json().then(data => {
-          console.log("Error data:", data);
-          if (data?.errors) setErrors(data.errors);
-        });
-      } else {
-        console.log("Login error:", error);
-        setErrors({ credential: 'An error occurred during login' });
+        const data = await error.json();
+        console.log("Error data:", data);
+        setErrors(data.errors || { credential: 'Invalid credentials' });
       }
     });
   };

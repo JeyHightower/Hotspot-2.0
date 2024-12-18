@@ -579,67 +579,26 @@ router.get(
   getChecks,
   handleValidationErrors,
   async (req: Request, res: Response): Promise<void> => {
-    const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
-      req.query;
-
-    type WhereType = {
-      lat?: { gte?: number; lte?: number };
-      lng?: { gte?: number; lte?: number };
-      price?: { gte?: number; lte?: number };
-    };
-    const where: WhereType = {};
-
-    let parsedSize = 20;
-    if (size !== undefined) {
-      parsedSize = Number(size);
-    }
-
-    let pars;
-    let parsedPage = 1;
-    if (page !== undefined) {
-      parsedPage = Number(page);
-    }
-
-    where.lat = {};
-
-    if (minLat !== undefined) {
-      where.lat.gte = Number(minLat);
-    }
-    if (maxLat !== undefined) {
-      where.lat.lte = Number(maxLat);
-    }
-
-    where.lng = {};
-
-    if (minLng !== undefined) {
-      where.lng.gte = Number(minLng);
-    }
-    if (maxLng !== undefined) {
-      where.lng.lte = Number(maxLng);
-    }
-
-    where.price = {};
-
-    if (minPrice !== undefined) {
-      where.price.gte = Number(minPrice);
-    }
-    if (maxPrice !== undefined) {
-      where.price.lte = Number(maxPrice);
-    }
-
     const allSpots = await prisma.spot.findMany({
       include: {
-        images: { where: { preview: true }, select: { url: true } },
+        images: { 
+          where: { preview: true }, 
+          select: { url: true } 
+        },
         reviews: { select: { stars: true } },
       },
-      orderBy: { id: "desc" },
-      where,
-      skip: parsedSize * (parsedPage - 1),
-      take: parsedSize,
     });
 
-    const modspots = allSpots.map(transformSpot);
-    res.json({ Spots: modspots, page: parsedPage, size: parsedSize });
+    const modspots = allSpots.map((spot: SpotWithRelations) => ({
+      ...transformSpot(spot),
+      previewImage: spot.images[0]?.url || ""
+    }));
+
+    res.json({ 
+      Spots: modspots,  // Make sure we're sending an object with a Spots array
+      page: 1,
+      size: modspots.length
+    });
   }
 );
 

@@ -10,7 +10,7 @@ const DELETE_SPOT = 'spots/deleteSpot';
 //!ACTION CREATORS:
 const getAllSpots = (spots) => ({
   type: GET_ALL_SPOTS,
-  spots,
+  spots
 });
 
 const getSingleSpot = (spot) => ({
@@ -110,9 +110,14 @@ const spotsReducer = (state = initialState, action) => {
   const handlers = {
     [GET_ALL_SPOTS]: (state, action) => {
       const newAllSpots = {};
-      action.spots.Spots.forEach((spot) => {
-        newAllSpots[spot.id] = spot;
-      });
+      if (action.spots && action.spots.Spots) {
+        action.spots.Spots.forEach((spot) => {
+          newAllSpots[spot.id] = {
+            ...spot,
+            previewImage: spot.previewImage || ""
+          };
+        });
+      }
       return {
         ...state,
         allSpots: newAllSpots,
