@@ -1,23 +1,21 @@
 #!/bin/bash
 
-# Set Node version to meet Prisma requirements
+# Set Node version and environment
 export NODE_VERSION=18.18.0
 export NODE_ENV=production
 
+# Activate latest npm
 corepack prepare npm@latest --activate
 
-echo "Starting production build..."
-npm install
-
+# Backend build
 cd backend
-rm -rf node_modules
-rm package-lock.json
-npm cache clean --force
-npm install
+npm install --omit=optional
 npx prisma generate
-npx build
+npx tsc
 
 # Frontend build
 cd ../frontend
-npm install
+npm install --omit=optional
+vite build
+
 cd ..
