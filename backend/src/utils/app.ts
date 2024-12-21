@@ -1,7 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import csurf from "csurf";
-import express, { RequestHandler } from "express";
+import express, { Request, Response, NextFunction, RequestHandler } from "express";
 import "express-async-errors";
 import helmet from 'helmet';
 import morgan from "morgan";
@@ -44,13 +44,13 @@ app.use(csurf({
 }) as unknown as RequestHandler);
 
 // 4. Routes
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   const token = req.csrfToken();
   res.cookie('XSRF-TOKEN', token);
   next();
 });
 
-app.get("/api/csrf/restore", (req, res) => {
+app.get("/api/csrf/restore", (req: Request, res: Response) => {
   const token = req.csrfToken?.() || "";
   res.cookie("XSRF-TOKEN", token);
   res.json({ "XSRF-Token": token });

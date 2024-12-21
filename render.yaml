@@ -3,7 +3,7 @@ services:
     name: hotspot-backend
     env: node
     buildCommand: ./build.sh
-    startCommand: cd backend && yarn prod
+    startCommand: cd backend && npm prod
     envVars:
       - key: NODE_ENV
         value: production

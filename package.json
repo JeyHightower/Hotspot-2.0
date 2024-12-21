@@ -1,21 +1,11 @@
 {
-  "name": "hotspot-2.0",
-  "version": "1.0.0",
-  "description": "## Database Schema Design",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.1.0",
     "@reduxjs/toolkit": "^2.5.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csurf": "^1.10.0",
+    "csurf": "^1.2.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-async-errors": "^3.1.1",
@@ -28,7 +18,7 @@
     "prisma": "^6.1.0",
     "react-icons": "^5.4.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^6.28.0",
+    "react-router-dom": "^6.28.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "reselect": "^5.1.1"
@@ -44,7 +34,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.2",
     "@vitejs/plugin-react-swc": "^3.7.2",
-    "dotenv-cli": "^7.4.4",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.17.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0",
@@ -56,8 +46,8 @@
     "react-dom": "^19.0.0",
     "redux-logger": "^3.0.6",
     "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
     "vite": "^6.0.5",
     "vite-plugin-eslint": "^1.8.1"
-  },
-  "packageManager": "yarn@4.5.3"
+  }
 }

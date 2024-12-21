@@ -1,25 +1,23 @@
 #!/bin/bash
 
-set -euo pipefail
-
 # Set Node version to meet Prisma requirements
 export NODE_VERSION=18.18.0
 export NODE_ENV=production
 
-corepack enable
-yarn set version 4.5.3
+corepack prepare npm@latest --activate
 
 echo "Starting production build..."
+npm install
 
-# Backend build
 cd backend
-yarn install
-yarn prisma generate
+rm -rf node_modules
+rm package-lock.json
+npm cache clean --force
+npm install
+npx prisma generate
 npx build
 
 # Frontend build
 cd ../frontend
-yarn install
-yarn build
-
+npm install
 cd ..
