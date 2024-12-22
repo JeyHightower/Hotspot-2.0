@@ -1,4 +1,11 @@
 {
+  "name": "hotspot-2.0",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend && npm run serve --prefix frontend"
+  },
   "dependencies": {
     "@prisma/client": "^6.1.0",
     "@reduxjs/toolkit": "^2.5.0",
@@ -48,6 +55,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "vite": "^6.0.5",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite-plugin-eslint": "^1.8.1",
+    "concurrently": "^7.0.0"
   }
 }
