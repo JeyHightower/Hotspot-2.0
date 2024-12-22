@@ -1,9 +1,9 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response, Router } from "express";
 import { check } from "express-validator";
-import { prisma } from "../../dbclient.js";
-import { requireAuth } from "../../utils/auth.js";
-import { handleValidationErrors } from "../../utils/validation.js";
+import { prisma } from "../../dbclient";
+import { requireAuth } from "../../utils/auth";
+import { handleValidationErrors } from "../../utils/validation";
 
 const router = Router();
 

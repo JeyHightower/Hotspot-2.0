@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 // import { PrismaClient } from '@prisma/client';
 import { validationResult, ValidationError } from 'express-validator';
-import { prisma } from '../dbclient.js';
+import { prisma } from '../dbclient';
 
 
 

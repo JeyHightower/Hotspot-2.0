@@ -1,26 +1,26 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { check } from 'express-validator';
-import { handleValidationErrors } from '../../utils/validation.js';
+import { NextFunction, Request, Response, Router } from "express";
+import { check } from "express-validator";
+import { handleValidationErrors } from "../../utils/validation";
 
 const router = Router();
 
-import bcrypt from 'bcryptjs';
-import { prisma } from '../../dbclient.js';
-import { setTokenCookie } from '../../utils/auth.js';
+import bcrypt from "bcryptjs";
+import { prisma } from "../../dbclient";
+import { setTokenCookie } from "../../utils/auth";
 
 const validateLogin = [
-  check('credential')
+  check("credential")
     .exists({ checkFalsy: true })
     .notEmpty()
-    .withMessage('Please provide a valid email or username.'),
-  check('password')
+    .withMessage("Please provide a valid email or username."),
+  check("password")
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a password.'),
+    .withMessage("Please provide a password."),
   handleValidationErrors,
 ];
 
 router.post(
-  '/',
+  "/",
   validateLogin,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { credential, password } = req.body;
@@ -34,8 +34,8 @@ router.post(
 
       if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
         res.status(401).json({
-          message: 'Invalid credentials',
-          errors: { credential: 'The provided credentials were invalid.' }
+          message: "Invalid credentials",
+          errors: { credential: "The provided credentials were invalid." },
         });
         return;
       }
@@ -45,7 +45,7 @@ router.post(
         email: user.email,
         username: user.username,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
       };
 
       await setTokenCookie(res, safeUser);
@@ -56,12 +56,12 @@ router.post(
   }
 );
 
-router.delete('/', (_req: Request, res: Response): void => {
-  res.clearCookie('token');
-  res.json({ message: 'success' });
+router.delete("/", (_req: Request, res: Response): void => {
+  res.clearCookie("token");
+  res.json({ message: "success" });
 });
 
-router.get('/', (req: Request, res: Response): void => {
+router.get("/", (req: Request, res: Response): void => {
   const { user } = req;
   if (user) {
     const safeUser = {
@@ -69,10 +69,10 @@ router.get('/', (req: Request, res: Response): void => {
       email: user.email,
       username: user.username,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
     };
     res.json({
-      user: safeUser
+      user: safeUser,
     });
   } else {
     res.json({ user: null });

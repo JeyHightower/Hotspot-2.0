@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { check } from "express-validator";
-import { handleValidationErrors, parseI32 } from "../../utils/validation.js";
+import { handleValidationErrors, parseI32 } from "../../utils/validation";
 const router = Router();
 
-import { prisma } from "../../dbclient.js";
-import { requireAuth } from "../../utils/auth.js";
+import { prisma } from "../../dbclient";
+import { requireAuth } from "../../utils/auth";
 
 function formatDate(d: Date): string {
   return d.toISOString().split("T")[0]!;

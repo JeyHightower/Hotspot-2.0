@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import config from "../config/index.js";
-import { app, prisma } from "../app.js";
+import config from "../config/index";
+import { app, prisma } from "../app";
 
 const { port } = config;
 

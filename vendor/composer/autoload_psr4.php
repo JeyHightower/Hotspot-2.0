@@ -6,4 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Contracts\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher-contracts'),
+    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
+    'Psr\\EventDispatcher\\' => array($vendorDir . '/psr/event-dispatcher/src'),
+    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
 );

@@ -1,13 +1,9 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response, Router } from "express";
-import { check, checkSchema } from "express-validator";
-import {
-  bookingOverlap,
-  handleValidationErrors,
-  parseI32,
-} from "../../utils/validation.js";
-import { prisma } from "../../dbclient.js";
-import { requireAuth } from "../../utils/auth.js";
+import { check } from "express-validator";
+import { prisma } from "../../dbclient";
+import { requireAuth } from "../../utils/auth";
+import { handleValidationErrors, parseI32 } from "../../utils/validation";
 
 interface SpotType {
   id: number;
@@ -552,6 +548,6 @@ router.post(
   }
 );
 
-export default function(path: string, handler: any) {
-    throw new Error("Function not implemented.");
+export default function (path: string, handler: any) {
+  throw new Error("Function not implemented.");
 }

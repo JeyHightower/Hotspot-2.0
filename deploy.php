@@ -2,8 +2,12 @@
 namespace Deployer;
 
 require 'recipe/common.php';
+require 'config/logger.php';
 
 // Config
+
+set('logger', $logger);
+set('errorListener', $errorListener);
 
 set('repository', 'https://github.com/JeyHightower/Hotspot-2.0.git');
 
@@ -34,9 +38,26 @@ task('build', function () {
     run('cd {{release_path}} && npm run build');
 });
 
+// Remove the group task and use a simple task definition
 task('deploy', [
     'deploy:prepare',
     'deploy:vendors',
     'build',
     'deploy:publish'
 ]);
+
+namespace Deployer;
+
+task('npm:dev', function() {
+    $auth_token = get('auth_token');
+    
+    // Set proper connection parameters
+    set('ssh_multiplexing', false);
+    set('http_user', 'deployer');
+    
+    within('{{release_path}}', function() {
+        run('npm run dev');
+    });
+});
+// Add failure handler
+after('deploy:failed', 'deploy:unlock');

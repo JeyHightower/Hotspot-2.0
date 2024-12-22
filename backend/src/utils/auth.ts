@@ -1,13 +1,14 @@
-// backend/utils/auth.js
-import jwt from 'jsonwebtoken';
-import config from '../config/index.js';
+// backend/utils/auth
+import jwt from "jsonwebtoken";
+import config from "../config/index";
 
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
-import { prisma } from '../dbclient.js';
+import { prisma, prisma as prismaClient } from "../dbclient";
 
-type User = NonNullable<Awaited<ReturnType<typeof prismaClient.user.findUnique>>>;
-import { prisma as prismaClient } from '../dbclient.js';
+type User = NonNullable<
+  Awaited<ReturnType<typeof prismaClient.user.findUnique>>
+>;
 declare global {
   namespace Express {
     export interface Request {
@@ -20,14 +21,14 @@ const { jwtConfig } = config;
 const { secret: secretRaw, expiresIn: expiresInStr } = jwtConfig;
 
 const err = () => {
-  throw Error('no secret');
+  throw Error("no secret");
 };
 
 const expiresIn = Number(expiresInStr) || 604800;
 const secret = secretRaw || err();
 export function setTokenCookie(
   res: Response,
-  user: { id: number; email: string; username: string },
+  user: { id: number; email: string; username: string }
 ): string {
   const safeUser = {
     id: user.id,
@@ -37,11 +38,11 @@ export function setTokenCookie(
 
   const token = jwt.sign({ data: safeUser }, secret, { expiresIn });
 
-  res.cookie('token', token, {
+  res.cookie("token", token, {
     maxAge: expiresIn * 1000,
     httpOnly: true,
     secure: config.isProduction,
-    sameSite: config.isProduction ? 'lax' : 'none',
+    sameSite: config.isProduction ? "lax" : "none",
   });
 
   return token;
@@ -50,14 +51,14 @@ export function setTokenCookie(
 export function restoreUser(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void {
   let token: string | null = null;
 
-  if ('token' in req.cookies) {
-    token = req.cookies['token'];
+  if ("token" in req.cookies) {
+    token = req.cookies["token"];
   }
-  return jwt.verify(token ?? '', secret, {}, async (err, jwtPayload) => {
+  return jwt.verify(token ?? "", secret, {}, async (err, jwtPayload) => {
     if (err) {
       return next();
     }
@@ -67,11 +68,11 @@ export function restoreUser(
 
       req.user = await prisma.user.findUnique({ where: { id: id } });
     } catch (e) {
-      res.clearCookie('token');
+      res.clearCookie("token");
       return next();
     }
 
-    if (!req.user) res.clearCookie('token');
+    if (!req.user) res.clearCookie("token");
 
     return next();
   });
@@ -80,9 +81,9 @@ export function restoreUser(
 export function requireAuth(req: Request, _res: Response, next: NextFunction) {
   if (req.user) return next();
 
-  const err = new Error('Authentication required') as any;
-  err.title = 'Authentication required';
-  err.errors = { message: 'Authentication required' };
+  const err = new Error("Authentication required") as any;
+  err.title = "Authentication required";
+  err.errors = { message: "Authentication required" };
   err.status = 401;
 
   return next(err);
