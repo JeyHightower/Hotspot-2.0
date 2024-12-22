@@ -8,7 +8,7 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types"]

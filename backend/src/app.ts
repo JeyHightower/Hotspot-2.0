@@ -13,8 +13,7 @@ import morgan from "morgan";
 
 import data from "./config";
 import { prisma } from "./dbclient";
-import routes from "./routes/index.js";
-
+import routes from "./routes/index"
 const app = express();
 const { environment } = data;
 const isProduction = environment === "production";

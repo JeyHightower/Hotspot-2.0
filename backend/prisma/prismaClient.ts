@@ -5,8 +5,11 @@ import { watch } from 'fs';
 declare global {
   var prisma: PrismaClient | undefined
 }
+if (!global.prisma) {
+  global.prisma = new PrismaClient();
+}
 
-const prisma = new PrismaClient();
+prisma = global.prisma;
 
 dotenv.config();
 
@@ -39,8 +42,7 @@ watch('./prisma', (eventType, filename) => {
   }
 });
 
-export const prismaClient = prisma;
-
+export const prismaClient = global.prisma || prisma;
 if (process?.env?.NODE_ENV !== 'production') {
     (global as { prisma?: PrismaClient }).prisma = prismaClient;
 }
