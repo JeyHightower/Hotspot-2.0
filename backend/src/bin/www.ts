@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import config from "../config/index.js";
-import { app, prisma } from "../utils/app.js";
+import { app, prisma } from "../app.js";
 
 const { port } = config;
 

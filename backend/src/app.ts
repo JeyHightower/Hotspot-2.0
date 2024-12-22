@@ -1,14 +1,19 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import csurf from "csurf";
-import express, { Request, Response, NextFunction, RequestHandler } from "express";
+import express, {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 import "express-async-errors";
-import helmet from 'helmet';
+import helmet from "helmet";
 import morgan from "morgan";
 
-import data from "../config/index.js";
-import { prisma } from "../dbclient.js";
-import routes from "../routes/index.js";
+import data from "./config";
+import { prisma } from "./dbclient";
+import routes from "./routes/index.js";
 
 const app = express();
 const { environment } = data;
@@ -20,38 +25,41 @@ app.use(cookieParser());
 app.use(express.json());
 
 // 2. Security middleware
-if (!isProduction) {
-  app.use(
-    cors({
-      origin: isProduction ? 'https://your-production-url.com' : 'http://localhost:5173',
-      credentials: true
-    })
-  );
-}
+app.use(
+  cors({
+    origin: isProduction
+      ? "https://your-production-url.com"
+      : "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-// Import helmet at the top of the file with other imports
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 // 3. CSRF Protection
-app.use(csurf({
-  cookie: {
-    secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
-    httpOnly: true
-  }
-}) as unknown as RequestHandler);
+app.use(
+  csurf({
+    cookie: {
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+      httpOnly: true,
+    },
+  }) as unknown as RequestHandler
+);
 
 // 4. Routes
 app.use((req: Request, res: Response, next: NextFunction) => {
   const token = req.csrfToken();
-  res.cookie('XSRF-TOKEN', token);
+  res.cookie("XSRF-TOKEN", token);
   next();
 });
 
 app.get("/api/csrf/restore", (req: Request, res: Response) => {
-  const token = req.csrfToken?.() || "";
+  const token = req.csrfToken();
   res.cookie("XSRF-TOKEN", token);
   res.json({ "XSRF-Token": token });
 });

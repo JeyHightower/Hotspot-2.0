@@ -22,6 +22,7 @@ router.get(
           },
         },
         images: { select: { url: true, id: true } },
+        user: { select: { firstName: true, lastName: true } },
       },
     });
 
@@ -36,6 +37,8 @@ router.get(
         [key: string]: any;
       };
       images: Array<{ url: string; id: number }>;
+      user: { firstName: string; lastName: string };
+      userId: number;
       [key: string]: any;
     }
 
@@ -58,6 +61,13 @@ router.get(
       };
 
       return {
+        id: r.id,
+        userId: r.userId,
+        spotId: r.spotId,
+        review: r.review,
+        stars: r.stars,
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
         User: {
           id: r.userId,
           firstName: r.user.firstName,

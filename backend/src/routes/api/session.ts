@@ -69,10 +69,10 @@ router.get('/', (req: Request, res: Response): void => {
       email: user.email,
       username: user.username,
       firstName: user.firstName,
-      lastName: user.lastName,
+      lastName: user.lastName
     };
     res.json({
-      user: safeUser,
+      user: safeUser
     });
   } else {
     res.json({ user: null });
