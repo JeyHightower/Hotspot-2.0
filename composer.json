@@ -1,7 +1,0 @@
-{
-    "require": {
-        "deployer/deployer": "^7.5",
-        "monolog/monolog": "^3.8",
-        "symfony/event-dispatcher": "^7.2"
-    }
-}

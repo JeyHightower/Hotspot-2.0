@@ -6,8 +6,7 @@ dotenv.config();
 import config from "../src/config/index.js";
 const { port } = config;
 
-import { app, prisma } from "../src/utils/app.js";
-
+import { app, prisma } from "../src/app";
 async function main() {
 	app.listen(port, () => console.log("listening on port", port, "..."));
 }
