@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { check } from "express-validator";
 import { handleValidationErrors } from "../../utils/validation";
 
-import { prisma } from "../../dbclient";
+import { prismaClient } from "../../prisma/prismaClient";
 import { setTokenCookie } from "../../utils/auth";
 
 const router = Router();

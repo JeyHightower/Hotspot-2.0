@@ -1,31 +1,29 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from "express";
 // import { PrismaClient } from '@prisma/client';
-import { validationResult, ValidationError } from 'express-validator';
-import { prisma } from '../dbclient';
-
-
+import { ValidationError, validationResult } from "express-validator";
 
 // Remove the redundant declaration of prisma
 // const prisma = new PrismaClient();
 export function handleValidationErrors(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
     const errors: { [key: string]: string } = {};
 
-    validationErrors
-      .array()
-      .forEach((error: ValidationError) => {
-        if ('path' in error && 'msg' in error) {
-          errors[error.path as string] = error.msg as string;
-        }
-      });
+    validationErrors.array().forEach((error: ValidationError) => {
+      if ("path" in error && "msg" in error) {
+        errors[error.path as string] = error.msg as string;
+      }
+    });
 
-    const err = new Error('Bad Request') as Error & { errors?: typeof errors; status?: number };
+    const err = new Error("Bad Request") as Error & {
+      errors?: typeof errors;
+      status?: number;
+    };
     err.errors = errors;
     err.status = 400;
     return next(err);
@@ -37,11 +35,10 @@ export function handleValidationErrors(
 // const prisma = new PrismaClient();
 type Booking = Awaited<ReturnType<typeof prisma.booking.findFirst>>;
 
-
 export function bookingOverlap(
   spot: number,
   start: Date,
-  end: Date,
+  end: Date
 ): Promise<Booking | null> {
   return prisma.booking.findFirst({
     where: {

@@ -1,7 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response, Router } from "express";
 import { check } from "express-validator";
-import { prisma } from "../../dbclient";
 import { requireAuth } from "../../utils/auth";
 import { handleValidationErrors, parseI32 } from "../../utils/validation";
 
@@ -109,11 +108,99 @@ function formatDate(d: Date): string {
   return d.toISOString().split("T")[0]!;
 }
 
-router.get(
-  "/current",
+router.get("/", async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get query parameters with defaults
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const search = req.query.search as string;
+    const category = req.query.category as string;
+    const sortBy = (req.query.sortBy as string) || "createdAt";
+    const order = ((req.query.order as string) || "desc").toLowerCase();
+
+    // Calculate offset for pagination
+    const offset = (page - 1) * limit;
+
+    // Build query conditions
+    let whereClause: any = {};
+    if (search) {
+      whereClause.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+      ];
+    }
+    if (category) {
+      whereClause.category = category;
+    }
+
+    // Fetch spots with pagination and filtering
+    const [spots, total] = await prisma!.$transaction([
+      prisma!.spot.findMany({
+        where: whereClause,
+        include: {
+          images: true,
+          reviews: {
+            select: {
+              stars: true,
+            },
+          },
+          owner: {
+            select: {
+              id: true,
+              username: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: {
+          [sortBy]: order,
+        },
+        skip: offset,
+        take: limit,
+      }),
+
+      prisma!.spot.count({ where: whereClause }),
+    ]);
+
+    // Calculate average ratings
+    const spotsWithRatings = spots.map((spot) => ({
+      ...spot,
+      averageRating:
+        (spot as SpotWithRelations).reviews.length > 0
+
+          ? (spot as SpotWithRelations).reviews.reduce((sum: number, review: { stars: number }) => sum + review.stars, 0) /
+            (spot as SpotWithRelations).reviews.length
+          : 0,
+      reviewCount: (spot as SpotWithRelations).reviews.length,
+    }));
+
+    res.json({
+      status: "success",
+      data: {
+        spots: spotsWithRatings,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching spots:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch spots",
+    });
+  }
+
+
+});
+router.get(  "/current",
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
-    const allSpots = await prisma.spot.findMany({
+    const allSpots = await prisma?.spot.findMany({
       where: { ownerId: req.user!.id },
       include: {
         images: {
@@ -124,13 +211,13 @@ router.get(
       },
     });
 
-    const modspots = allSpots.map((spot: SpotWithRelations) => ({
+    const modifiedSpots = allSpots.map((spot: SpotWithRelations) => ({
       ...transformSpot(spot),
       previewImage: spot.images[0]?.url || "",
     }));
 
     res.json({
-      Spots: modspots,
+      Spots: modifiedSpots,
     });
   }
 );
@@ -169,7 +256,7 @@ const validateNewSpot = [
 
 router.get("/:spotId", async (req: Request, res: Response): Promise<void> => {
   const spot = await getSpot(req.params.spotId, res, (spotId) =>
-    prisma.spot.findUnique({
+    prisma?.spot.findUnique({
       where: { id: spotId },
       include: {
         reviews: {
@@ -256,7 +343,7 @@ router.put(
       return;
     }
 
-    const updated = await prisma.spot.update({
+    const updated = await prisma?.spot.update({
       where: { id: spot.id },
       data: {
         address,
@@ -291,7 +378,7 @@ router.delete(
     const user = req.user!;
 
     const spot = await getSpot(req.params.spotId, res, (spotId) =>
-      prisma.spot.findFirst({
+      prisma?.spot.findFirst({
         where: { id: spotId },
         select: { id: true, ownerId: true },
       })
@@ -306,7 +393,7 @@ router.delete(
       return;
     }
 
-    await prisma.spot.delete({ where: { id: spot.id } });
+    await prisma?.spot.delete({ where: { id: spot.id } });
     res.json({ message: "Successfully deleted" });
   }
 );
@@ -327,7 +414,7 @@ router.get(
     if (!spot) return;
 
     if (spot.ownerId === user.id) {
-      const bookings = await prisma.booking.findMany({
+      const bookings = await prisma?.booking.findMany({
         where: { spotId: spot.id },
         include: {
           user: {
@@ -401,7 +488,7 @@ router.get(
 
     if (!spot) return;
 
-    const reviews = await prisma.review.findMany({
+    const reviews = await prisma?.review.findMany({
       where: { spotId: spot.id },
       include: {
         user: {
@@ -450,7 +537,7 @@ router.post(
       return;
     }
 
-    const rev = await prisma.review.create({
+    const rev = await prisma?.review.create({
       data: {
         userId: user.id,
         spotId: spot.id,
@@ -478,7 +565,7 @@ router.post(
     const { url, preview } = req.body;
 
     let spot = await getSpot(req.params["spotId"], res, (spotId) =>
-      prisma.spot.findFirst({ where: { id: spotId } })
+      prisma?.spot.findFirst({ where: { id: spotId } })
     );
 
     if (!spot) {
@@ -492,7 +579,7 @@ router.post(
       return;
     }
 
-    const img = await prisma.spotImage.create({
+    const img = await prisma?.spotImage.create({
       data: { url, preview, spotId: spot.id },
     });
 
@@ -532,7 +619,7 @@ router.post(
     const user = req.user!;
 
     const spot = await getSpot(req.params["spotId"], res, (id) =>
-      prisma.spot.findUnique({ where: { id } })
+      prisma?.spot.findUnique({ where: { id } })
     );
 
     if (!spot) {
@@ -548,6 +635,6 @@ router.post(
   }
 );
 
-export default function (path: string, handler: any) {
+export default function () {
   throw new Error("Function not implemented.");
 }

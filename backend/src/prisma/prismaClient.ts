@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-import * as dotenv from 'dotenv';
+import { PrismaClient } from "@prisma/client";
+import * as dotenv from "dotenv";
 
 declare global {
-  var prisma: PrismaClient | undefined
+  var prisma: PrismaClient | undefined;
 }
 
 const prisma = global.prisma || new PrismaClient();

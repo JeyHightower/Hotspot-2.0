@@ -5,7 +5,7 @@
     "description": "Airbnb clone application"
   },
   "database": {
-    "url": "postgresql://user:password@localhost:5432/hotspot",
+    "url": "postgresql://user:password@localhost:5432/hotspot_db",
     "ssl": false
   },
   "api": {

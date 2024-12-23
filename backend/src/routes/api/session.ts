@@ -5,7 +5,7 @@ import { handleValidationErrors } from "../../utils/validation";
 const router = Router();
 
 import bcrypt from "bcryptjs";
-import { prisma } from "../../dbclient";
+import { prismaClient } from "../../prisma/prismaClient";
 import { setTokenCookie } from "../../utils/auth";
 
 const validateLogin = [

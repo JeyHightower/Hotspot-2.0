@@ -4,7 +4,7 @@ import config from "../config/index";
 
 import { NextFunction, Request, Response } from "express";
 
-import { prisma, prisma as prismaClient } from "../dbclient";
+import { prismaClient } from "../prisma/prismaClient";
 
 type User = NonNullable<
   Awaited<ReturnType<typeof prismaClient.user.findUnique>>

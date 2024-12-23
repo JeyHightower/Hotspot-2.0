@@ -12,8 +12,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import data from "./config";
-import { prisma } from "./dbclient";
-import routes from "./routes/index"
+import routes from "./routes/index";
 const app = express();
 const { environment } = data;
 const isProduction = environment === "production";
@@ -89,8 +88,10 @@ app.use(
   }
 );
 
+import { prismaClient } from './prisma/prismaClient';
+
 // Test Prisma connection
-prisma
+prismaClient
   .$connect()
   .then(() => {
     console.log("Successfully connected to database");
@@ -100,4 +101,4 @@ prisma
     process.exit(1);
   });
 
-export { app, prisma };
+export { app, prismaClient };
