@@ -2,10 +2,10 @@ import Cookies from 'js-cookie';
 
 export async function csrfFetch(url, options = {}) {
   // Set options.url to the development URL when in development
-  const baseUrl = process.env.NODE_ENV === 'production' 
+  const baseUrl = process.env.NODE_ENV === 'production'
     ? 'https://your-production-url.com'
-    : 'http://localhost:8000';
-    
+    : 'http://localhost:5000';
+
   options.method = options.method || 'GET';
   options.headers = options.headers || {};
   options.credentials = 'include';
@@ -16,7 +16,7 @@ export async function csrfFetch(url, options = {}) {
   }
 
   const res = await fetch(`${baseUrl}${url}`, options);
-  
+
   if (res.status >= 400) throw res;
   return res;
 }

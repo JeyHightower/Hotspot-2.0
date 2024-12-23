@@ -3,7 +3,7 @@
   "port": 5000,
   "host": "localhost",
   "cors": {
-    "origin": "http://localhost:5000",
+    "origin": "http://localhost:5173",
     "credentials": true
   },
   "security": {

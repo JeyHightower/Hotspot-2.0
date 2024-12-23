@@ -168,9 +168,10 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       ...spot,
       averageRating:
         (spot as SpotWithRelations).reviews.length > 0
-
-          ? (spot as SpotWithRelations).reviews.reduce((sum: number, review: { stars: number }) => sum + review.stars, 0) /
-            (spot as SpotWithRelations).reviews.length
+          ? (spot as SpotWithRelations).reviews.reduce(
+              (sum: number, review: { stars: number }) => sum + review.stars,
+              0
+            ) / (spot as SpotWithRelations).reviews.length
           : 0,
       reviewCount: (spot as SpotWithRelations).reviews.length,
     }));
@@ -194,10 +195,9 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       message: "Failed to fetch spots",
     });
   }
-
-
 });
-router.get(  "/current",
+router.get(
+  "/current",
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
     const allSpots = await prisma?.spot.findMany({
@@ -635,6 +635,4 @@ router.post(
   }
 );
 
-export default function () {
-  throw new Error("Function not implemented.");
-}
+export default router;
