@@ -10,6 +10,7 @@ import express, {
 import "express-async-errors";
 import helmet from "helmet";
 import morgan from "morgan";
+import { prismaClient as prisma } from "./prismaClient";
 
 import data from "./config";
 import routes from "./routes/index";
@@ -88,10 +89,9 @@ app.use(
   }
 );
 
-import { prismaClient } from './prisma/prismaClient';
 
 // Test Prisma connection
-prismaClient
+prisma
   .$connect()
   .then(() => {
     console.log("Successfully connected to database");
@@ -101,4 +101,4 @@ prismaClient
     process.exit(1);
   });
 
-export { app, prismaClient };
+export { app, prisma };

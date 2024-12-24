@@ -1,7 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response, Router } from "express";
 import { check } from "express-validator";
-import { prismaclient} from "../../prisma/prismaClient";
+import { prismaClient as prisma } from  "../../prismaClient"
 import { requireAuth } from "../../utils/auth";
 import { handleValidationErrors } from "../../utils/validation";
 

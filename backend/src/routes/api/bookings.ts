@@ -3,7 +3,7 @@ import { check } from "express-validator";
 import { handleValidationErrors, parseI32 } from "../../utils/validation";
 const router = Router();
 
-import { prismaClient } from "../../prisma/prismaClient";
+import { prismaClient as prisma } from  "../../prismaClient"
 import { requireAuth } from "../../utils/auth";
 
 function formatDate(d: Date): string {

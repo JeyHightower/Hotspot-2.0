@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 // import { PrismaClient } from '@prisma/client';
 import { ValidationError, validationResult } from "express-validator";
+import { prismaClient as prisma } from  "../prismaClient"
 
 // Remove the redundant declaration of prisma
 // const prisma = new PrismaClient();

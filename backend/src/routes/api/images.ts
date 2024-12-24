@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 
 const router = Router();
 
-import { prismaClient } from "../../prisma/prismaClient";
+import { prismaClient as prisma } from  "../../prismaClient"
 import { requireAuth } from "../../utils/auth";
 
 // ! Delete spot by imageId

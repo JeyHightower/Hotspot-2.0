@@ -3,6 +3,7 @@ import { Request, Response, Router } from "express";
 import { check } from "express-validator";
 import { requireAuth } from "../../utils/auth";
 import { handleValidationErrors, parseI32 } from "../../utils/validation";
+import { prismaClient as prisma } from  "../../prismaClient"
 
 interface SpotType {
   id: number;
