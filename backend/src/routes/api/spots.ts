@@ -139,7 +139,10 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       prisma!.spot.findMany({
         where: whereClause,
         include: {
-          images: true,
+          images: {
+            where: { preview: true },
+            select: { url: true }
+          },
           reviews: {
             select: {
               stars: true,

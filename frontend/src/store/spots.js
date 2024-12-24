@@ -41,6 +41,7 @@ export const fetchAllSpotsThunk = () => async (dispatch) => {
       throw new Error('Network response was not ok');
     }
     const spots = await response.json();
+    console.log('Raw spots data:', spots); // Add this line
     dispatch(getAllSpots(spots));
     return spots;
   } catch (error) {
@@ -125,11 +126,12 @@ const spotsReducer = (state = initialState, action) => {
   const handlers = {
     [GET_ALL_SPOTS]: (state, action) => {
       const newAllSpots = {};
-      if (action.spots && action.spots.Spots) {
-        action.spots.Spots.forEach((spot) => {
+      const spots = action.spots.data.spots;
+      if (spots) {
+        spots.forEach((spot) => {
           newAllSpots[spot.id] = {
             ...spot,
-            previewImage: spot.previewImage || ""
+            previewImage: spot.images?.[0]?.url || spot.imageUrl || null
           };
         });
       }

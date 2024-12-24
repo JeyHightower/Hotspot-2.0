@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "../src/dbclient.js";
+import { PrismaClient  } from '@prisma/client'
 
+const prisma = new PrismaClient();
 async function main() {
   // Create demo user with upsert
   await prisma.user.upsert({
