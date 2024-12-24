@@ -4,7 +4,7 @@ dotenv.config();
 import config from "../dist/config/index.js";
 const { port } = config;
 
-import { app, prismaClient } from "../src/app";
+import { app, prisma } from "../src/app";
 
 async function main() {
   console.log("\n=== Server Initialization ===");
@@ -21,6 +21,6 @@ async function main() {
 
 main().catch(async (e) => {
   console.error("❌ Server failed to start:", e);
-  await prismaClient.$disconnect();
+  await prisma.$disconnect();
   process.exit(1);
 });
