@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaCircleUser, FaBars } from 'react-icons/fa6';
-import * as sessionActions from '../../store/session';
-import OpenModalMenuItem from './OpenModalMenuItem';
-import LoginFormModal from '../LoginFormModal/LoginFormModal';
-import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import { useEffect, useRef, useState } from "react";
+import { FaBars, FaCircleUser } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import * as sessionActions from "../../store/session";
+import LoginFormModal from "../LoginFormModal/LoginFormModal";
+import SignupFormModal from "../SignupFormModal/SignupFormModal";
+import OpenModalMenuItem from "./OpenModalMenuItem";
 
 const ProfileButton = ({ user }) => {
   const dispatch = useDispatch();
@@ -27,9 +27,9 @@ const ProfileButton = ({ user }) => {
       }
     };
 
-    document.addEventListener('click', closeMenu);
+    document.addEventListener("click", closeMenu);
 
-    return () => document.removeEventListener('click', closeMenu);
+    return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
   const closeMenu = () => setShowMenu(false);
@@ -38,10 +38,10 @@ const ProfileButton = ({ user }) => {
     e.preventDefault();
     dispatch(sessionActions.logoutThunk());
     closeMenu();
-    navigate('/');
+    navigate("/");
   };
 
-  const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden');
+  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <>
@@ -54,7 +54,9 @@ const ProfileButton = ({ user }) => {
           <>
             <span className="user-info">Hello, {user.firstName}</span>
             <span className="user-email">{user.email}</span>
-            <Link to="/spots/manage" onClick={closeMenu}>Manage Spots</Link>
+            <Link to="/spots/manage" onClick={closeMenu}>
+              Manage Spots
+            </Link>
             <button className="logout-button" onClick={logout}>
               Log Out
             </button>

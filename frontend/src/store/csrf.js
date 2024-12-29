@@ -10,6 +10,12 @@ export async function csrfFetch(url, options = {}) {
   options.headers = options.headers || {};
   options.credentials = 'include';
 
+  // Add Authorization header if there's a token in localStorage
+  const token = localStorage.getItem('token');
+  if (token) {
+    options.headers.Authorization = `Bearer ${token}`;
+  }
+
   if (options.method.toUpperCase() !== 'GET') {
     options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/json';
     options.headers['XSRF-Token'] = Cookies.get('XSRF-TOKEN');
@@ -20,7 +26,6 @@ export async function csrfFetch(url, options = {}) {
   if (res.status >= 400) throw res;
   return res;
 }
-
 // Add proper error handling for CSRF restore
 export async function restoreCSRF() {
   try {
