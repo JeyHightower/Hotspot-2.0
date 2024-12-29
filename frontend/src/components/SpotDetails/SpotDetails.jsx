@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { deleteReviewThunk } from '../../store/reviews';
-import { fetchSingleSpotThunk } from '../../store/spots';
+import { fetchSingleSpotThunk, fetchUserSpotsThunk } from '../../store/spots';
 import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
@@ -24,6 +24,9 @@ const SpotDetails = () => {
   useEffect(() => {
     dispatch(fetchSingleSpotThunk(spotId));
   }, [dispatch, spotId]);
+
+ 
+
 
   if (!spot || !spot.id) return <div>Loading...</div>;
 

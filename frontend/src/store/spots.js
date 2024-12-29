@@ -102,7 +102,7 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
 
 export const fetchUserSpotsThunk = () => async (dispatch) => {
   try {
-    const response = await csrfFetch("/api/spots/current");
+    const response = await csrfFetch("/api/spots/current"); // Correct endpoint
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
