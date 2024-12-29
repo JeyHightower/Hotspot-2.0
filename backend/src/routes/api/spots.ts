@@ -22,14 +22,24 @@ async function getSpot<T>(
   res: Response,
   cb: (id: number) => Promise<T | null>
 ): Promise<T | null> {
-  const spotId = parseSpotId(id, res);
-  if (spotId === null) return null;
+  if (!id) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+    return null;
+  }
+
+  const spotId = parseInt(id, 10);
+  if (isNaN(spotId)) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+    return null;
+  }
 
   const data = await cb(spotId);
-  if (data) return data;
+  if (!data) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+    return null;
+  }
 
-  res.status(404).json({ message: "Spot couldn't be found" });
-  return null;
+  return data;
 }
 
 function transformSpot(spot: SpotWithRelations): object {
@@ -62,6 +72,35 @@ function parseSpotId(spotId: string | undefined, res: Response): number | null {
 }
 
 router.get("/current", requireAuth, async (req: Request, res: Response) => {
+  console.log("Current user in /current route:", req.user);
+
+  try {
+    const allSpots = await prisma.spot.findMany({
+      where: { ownerId: req.user!.id },
+      include: {
+        images: { where: { preview: true }, select: { url: true } },
+        reviews: { select: { stars: true } },
+      },
+    });
+
+    console.log("Found spots for user:", allSpots);
+
+    const transformedSpots = allSpots.map((spot) =>
+      transformSpot(spot as SpotWithRelations)
+    );
+
+    console.log("Transformed spots:", transformedSpots);
+
+    return res.json({
+      Spots: transformedSpots,
+    });
+  } catch (error) {
+    console.error("Error in /current route:", error);
+    return res.status(500).json({ message: "Failed to fetch spots" });
+  }
+});
+
+router.get("/manage", requireAuth, async (req: Request, res: Response) => {
   const allSpots = await prisma.spot.findMany({
     where: { ownerId: req.user!.id },
     include: {
@@ -70,7 +109,7 @@ router.get("/current", requireAuth, async (req: Request, res: Response) => {
     },
   });
 
-  res.json({
+  return res.json({
     Spots: allSpots.map((spot) => transformSpot(spot as SpotWithRelations)),
   });
 });
@@ -118,13 +157,10 @@ const getSpotById: RequestHandler = async (req, res) => {
     })
   );
 
-  if (!spot) {
-    res.status(404).json({ message: "Spot couldn't be found" });
-    return;
-  }
+  if (!spot) return;
 
   const { reviews, images, owner, ...rest } = spot as SpotWithRelations;
-  res.json({
+  return res.json({
     ...rest,
     numReviews: reviews.length,
     avgStarRating: reviews.length
@@ -251,7 +287,7 @@ router.delete("/:spotId", requireAuth, async (req: Request, res: Response) => {
   }
 
   await prisma.spot.delete({ where: { id: spot.id } });
-  res.json({ message: "Successfully deleted" });
+  return res.json({ message: "Successfully deleted" });
 });
 
 // Get all bookings for a spot
@@ -360,7 +396,7 @@ router.post(
       },
     });
 
-    res.status(201).json(newReview);
+    return res.status(201).json(newReview);
   }
 );
 

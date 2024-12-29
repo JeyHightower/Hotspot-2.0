@@ -1,4 +1,4 @@
-import { createContext, useRef, useState } from 'react';
+import { createContext, useRef, useState } from "react";
 
 export const ModalContext = createContext();
 
@@ -9,7 +9,7 @@ const ModalProvider = ({ children }) => {
 
   const closeModal = () => {
     setModalContent(null);
-    if (typeof onModalClose === 'function') {
+    if (typeof onModalClose === "function") {
       setOnModalClose(null);
       onModalClose();
     }
@@ -23,7 +23,8 @@ const ModalProvider = ({ children }) => {
         setModalContent,
         setOnModalClose,
         closeModal,
-      }}>
+      }}
+    >
       {children}
       <div ref={modalRef} />
     </ModalContext.Provider>

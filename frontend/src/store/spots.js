@@ -51,7 +51,8 @@ export const fetchAllSpotsThunk = () => async (dispatch) => {
 };
 
 export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
-  if (!spotId) return;
+  if (!spotId || isNaN(Number(spotId))) return;
+
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`);
     const spot = await response.json();
@@ -102,11 +103,23 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
 
 export const fetchUserSpotsThunk = () => async (dispatch) => {
   try {
+    console.log("Making request to /api/spots/current");
     const response = await csrfFetch("/api/spots/current");
+
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      const error = await response.json();
+      console.error("Response not ok:", error);
+      throw new Error(error.message || "Failed to fetch spots");
     }
+
     const spots = await response.json();
+    console.log("Successfully fetched user spots:", spots);
+
+    if (!spots.Spots) {
+      console.error("Unexpected response format:", spots);
+      throw new Error("Invalid response format");
+    }
+
     dispatch(getAllSpots(spots));
     return spots;
   } catch (error) {
@@ -127,6 +140,7 @@ const spotsReducer = (state = initialState, action) => {
     [GET_ALL_SPOTS]: (state, action) => {
       const newAllSpots = {};
       const spots = action.spots.Spots;
+      console.log("Reducer received spots:", spots); // Add logging
       if (spots) {
         spots.forEach((spot) => {
           newAllSpots[spot.id] = {

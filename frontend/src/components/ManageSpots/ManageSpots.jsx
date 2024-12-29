@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { deleteSpotThunk, fetchAllSpotsThunk } from '../../store/spots';
-import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
-import OpenModalButton from '../OpenModalButton/OpenModalButton';
-import SpotTile from '../SpotTile/SpotTile';
-import UpdateSpotModal from '../UpdateSpotModal/UpdateSpotModal';
-import './ManageSpots.css';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { deleteSpotThunk, fetchAllSpotsThunk } from "../../store/spots";
+import DeleteConfirmModal from "../DeleteConfirmModal/DeleteConfirmModal";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import SpotTile from "../SpotTile/SpotTile";
+import UpdateSpotModal from "../UpdateSpotModal/UpdateSpotModal";
+import "./ManageSpots.css";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const ManageSpots = () => {
   const allSpots = useSelector((state) => state.spots.allSpots);
 
   const userSpots = Object.values(allSpots).filter(
-    (spot) => spot.ownerId === user?.id,
+    (spot) => spot.ownerId === user?.id
   );
 
   const handleUpdateSuccess = (spotId) => {
@@ -34,7 +34,7 @@ const ManageSpots = () => {
   };
 
   if (!user) {
-    navigate('/');
+    navigate("/");
     return null;
   }
 
@@ -43,8 +43,9 @@ const ManageSpots = () => {
       <h1>Manage Spots</h1>
       {userSpots.length === 0 ? (
         <button
-          onClick={() => navigate('/spots/new')}
-          className="create-spot-button">
+          onClick={() => navigate("/spots/new")}
+          className="create-spot-button"
+        >
           Create a New Spot
         </button>
       ) : (
@@ -85,3 +86,4 @@ const ManageSpots = () => {
 };
 
 export default ManageSpots;
+

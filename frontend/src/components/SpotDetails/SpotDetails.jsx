@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { deleteReviewThunk } from '../../store/reviews';
-import { fetchSingleSpotThunk } from '../../store/spots';
-import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
-import OpenModalButton from '../OpenModalButton/OpenModalButton';
-import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
-import './SpotDetails.css';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { deleteReviewThunk } from "../../store/reviews";
+import { fetchSingleSpotThunk } from "../../store/spots";
+import DeleteConfirmModal from "../DeleteConfirmModal/DeleteConfirmModal";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import ReviewFormModal from "../ReviewFormModal/ReviewFormModal";
+import "./SpotDetails.css";
 
 const SpotDetails = () => {
   const { spotId } = useParams();
@@ -16,13 +16,15 @@ const SpotDetails = () => {
   const user = useSelector((state) => state.session.user);
 
   const hasReviewed = spot?.Reviews?.some(
-    (review) => review.userId === user?.id,
+    (review) => review.userId === user?.id
   );
   const Owner = spot?.Owner;
   const reviews = spot?.Reviews || [];
 
   useEffect(() => {
-    dispatch(fetchSingleSpotThunk(spotId));
+    if (spotId && !isNaN(Number(spotId))) {
+      dispatch(fetchSingleSpotThunk(spotId));
+    }
   }, [dispatch, spotId]);
 
   if (!spot || !spot.id) return <div>Loading...</div>;
@@ -40,7 +42,7 @@ const SpotDetails = () => {
   } = spot;
 
   const isComingSoon = () => {
-    alert('Feature coming soon');
+    alert("Feature coming soon");
   };
 
   const canReview = user && !hasReviewed && user.id !== Owner?.id;
@@ -51,11 +53,11 @@ const SpotDetails = () => {
   // };
 
   const reviewSummary = () => {
-    if (!numReviews) return 'New';
+    if (!numReviews) return "New";
     return (
       <>
-        {Number(avgRating).toFixed(1)} · {numReviews}{' '}
-        {numReviews === 1 ? 'Review' : 'Reviews'}
+        {Number(avgRating).toFixed(1)} · {numReviews}{" "}
+        {numReviews === 1 ? "Review" : "Reviews"}
       </>
     );
   };
