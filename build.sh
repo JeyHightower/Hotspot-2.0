@@ -17,8 +17,8 @@ npm install --save-dev @types/bcryptjs @types/cookie-parser @types/cors @types/c
 
 # Generate Prisma client and run migrations
 npx prisma generate
-npx prisma migrate deploy
-npx prisma db seed
+# npx prisma migrate deploy
+# npx prisma db seed
 
 # frontend
 cd ../frontend

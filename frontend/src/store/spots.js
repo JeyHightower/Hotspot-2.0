@@ -1,16 +1,16 @@
-import { csrfFetch } from './csrf';
+import { csrfFetch } from "./csrf";
 
 //!ACTION TYPES:
-const GET_ALL_SPOTS = 'spots/getAllSpots';
-const GET_SINGLE_SPOT = 'spots/getSingleSpot';
-const CREATE_SPOT = 'spots/createSpot';
-const DELETE_SPOT = 'spots/deleteSpot';
+const GET_ALL_SPOTS = "spots/getAllSpots";
+const GET_SINGLE_SPOT = "spots/getSingleSpot";
+const CREATE_SPOT = "spots/createSpot";
+const DELETE_SPOT = "spots/deleteSpot";
 // const UPDATE_SPOT = 'spots/updateSpot';
 
 //!ACTION CREATORS:
 const getAllSpots = (spots) => ({
   type: GET_ALL_SPOTS,
-  spots
+  spots,
 });
 
 const getSingleSpot = (spot) => ({
@@ -36,16 +36,16 @@ const deleteSpot = (spotId) => ({
 //!THUNK ACTIONS:
 export const fetchAllSpotsThunk = () => async (dispatch) => {
   try {
-    const response = await csrfFetch('/api/spots');
+    const response = await csrfFetch("/api/spots");
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
     const spots = await response.json();
-    console.log('Raw spots data:', spots); // Add this line
+    console.log("Raw spots data:", spots); // Add this line
     dispatch(getAllSpots(spots));
     return spots;
   } catch (error) {
-    console.error('Error fetching spots:', error);
+    console.error("Error fetching spots:", error);
     return null;
   }
 };
@@ -58,14 +58,14 @@ export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
     dispatch(getSingleSpot(spot));
     return spot;
   } catch (error) {
-    console.error('Error fetching spot:', error);
+    console.error("Error fetching spot:", error);
     return null;
   }
 };
 
 export const updateSpotThunk = (spotId, spotData) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`, {
-    method: 'PUT',
+    method: "PUT",
     body: JSON.stringify(spotData),
   });
   if (response.ok) {
@@ -76,10 +76,10 @@ export const updateSpotThunk = (spotId, spotData) => async (dispatch) => {
 };
 
 export const createSpotThunk = (spotData) => async (dispatch) => {
-  const response = await csrfFetch('/api/spots', {
-    method: 'POST',
+  const response = await csrfFetch("/api/spots", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(spotData),
   });
@@ -91,7 +91,7 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
 
 export const deleteSpotThunk = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
 
   if (response.ok) {
@@ -102,15 +102,15 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
 
 export const fetchUserSpotsThunk = () => async (dispatch) => {
   try {
-    const response = await csrfFetch('/api/spots/current');
+    const response = await csrfFetch("/api/spots/current");
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
     const spots = await response.json();
     dispatch(getAllSpots(spots));
     return spots;
   } catch (error) {
-    console.error('Error fetching spots:', error);
+    console.error("Error fetching spots:", error);
     return null;
   }
 };
@@ -126,12 +126,12 @@ const spotsReducer = (state = initialState, action) => {
   const handlers = {
     [GET_ALL_SPOTS]: (state, action) => {
       const newAllSpots = {};
-      const spots = action.spots.data.spots;
+      const spots = action.spots.Spots;
       if (spots) {
         spots.forEach((spot) => {
           newAllSpots[spot.id] = {
             ...spot,
-            previewImage: spot.images?.[0]?.url || spot.imageUrl || null
+            previewImage: spot.previewImage || spot.images?.[0]?.url || null,
           };
         });
       }
