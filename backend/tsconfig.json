@@ -10,7 +10,11 @@
     "rootDir": "./",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
   "include": ["src/**/*", "bin/**/*", "prisma/**/*"],
   "exclude": ["node_modules", "dist"]

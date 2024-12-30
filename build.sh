@@ -42,8 +42,13 @@ npm prune --production
 
 cd ..
 
-# Copy frontend build to backend static directory
+# Ensure frontend build is in the correct location
+rm -rf backend/dist/frontend
 mkdir -p backend/dist/frontend
 cp -r frontend/dist/* backend/dist/frontend/
+
+# Verify the static files are in place
+echo "Verifying frontend files..."
+ls -la backend/dist/frontend
 
 

@@ -24,10 +24,10 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
 app.use((req, res, next) => {
-  if (req.path.endsWith('.js')) {
-    res.type('application/javascript');
-  } else if (req.path.endsWith('.css')) {
-    res.type('text/css');
+  if (req.path.endsWith(".js")) {
+    res.type("application/javascript");
+  } else if (req.path.endsWith(".css")) {
+    res.type("text/css");
   }
   next();
 });
@@ -36,8 +36,8 @@ app.use((req, res, next) => {
 app.use(
   cors({
     origin: true,
-      // ? "https://your-production-url.com"
-      // : "http://localhost:5173",
+    // ? "https://your-production-url.com"
+    // : "http://localhost:5173",
     credentials: true,
   })
 );
@@ -48,7 +48,7 @@ app.use(
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: {
       policy: "cross-origin",
-    }
+    },
   })
 );
 
@@ -76,6 +76,21 @@ app.get("/api/csrf/restore", (req: Request, res: Response) => {
   res.json({ "XSRF-Token": token });
 });
 
+// Static file serving
+if (isProduction) {
+  // Serve frontend static files
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  // Serve the static files from the React app
+  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
+  // Handles any requests that don't match the ones above
+  app.get(/^(?!\/?api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+  });
+}
+
+// API routes
 app.use(routes);
 
 // 5. Error handling
@@ -102,18 +117,6 @@ app.use(
   }
 );
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "../frontend/dist"),  {
-  setHeaders: (res, path) => {
-    if (path.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    } else if (path.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
-    }
-  }
-}));
-
-
 // Test Prisma connection
 prisma
   .$connect()
@@ -124,9 +127,5 @@ prisma
     console.error("Failed to connect to database:", err);
     process.exit(1);
   });
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
 
 export { app, prisma };
