@@ -1,11 +1,10 @@
 .spots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 32px;
-  padding: 40px;
-  max-width: 1600px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #fff5f5, #fff);
 }
 
 .spot-link {
@@ -36,14 +35,22 @@ transition: transform var(--transition-normal);
   align-items: center;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .spots-grid {
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      padding: 20px;
-      gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
-  transform: translateY(-4px);
+
+@media screen and (max-width: 768px) {
+  .spots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .spots-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .spot-image {
@@ -87,3 +94,4 @@ transition: transform var(--transition-normal);
   margin-left: auto;
   white-space: nowrap;
 }
+
