@@ -20,10 +20,10 @@
     "react-icons": "^5.4.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.28.1",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+     "vite": "^4.5.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^4.5.5"
+    "@vitejs/plugin-react": "^4.3.4"
   }
 }
