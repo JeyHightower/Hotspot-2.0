@@ -1,5 +1,8 @@
-import dotenv from "dotenv";
-dotenv.config();
+try {
+  require("dotenv").config();
+} catch (error) {
+  console.log("No .env file found, using process.env variables");
+}
 
 import config from "../dist/config/index.js";
 const { port } = config;

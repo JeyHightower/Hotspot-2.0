@@ -40,7 +40,6 @@
   },
   "devDependencies": {
     "@types/express-validator": "^2.20.33",
-    "dotenv": "16.0.3",
     "prisma": "^6.1.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0"

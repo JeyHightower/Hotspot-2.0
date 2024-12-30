@@ -11,14 +11,18 @@ corepack prepare npm@latest --activate
 cd backend
 
 # Clean install dependencies
-rm -rf node_modules package-lock.json
+rm -rf node_modules package-lock.json dist
 npm cache clean --force
-npm install dotenv@16.0.3 --save
-npm install --production
+
+# Install all dependencies (not just production)
+npm install
 
 # Generate Prisma client and build
 npx prisma generate
 npm run build
+
+# Remove dev dependencies after build
+npm prune --production
 
 # frontend
 cd ../frontend
