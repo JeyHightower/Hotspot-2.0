@@ -23,13 +23,21 @@ const isProduction = environment === "production";
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
+app.use((req, res, next) => {
+  if (req.path.endsWith('.js')) {
+    res.type('application/javascript');
+  } else if (req.path.endsWith('.css')) {
+    res.type('text/css');
+  }
+  next();
+});
 
 // 2. Security middleware
 app.use(
   cors({
-    origin: isProduction
-      ? "https://your-production-url.com"
-      : "http://localhost:5173",
+    origin: true,
+      // ? "https://your-production-url.com"
+      // : "http://localhost:5173",
     credentials: true,
   })
 );
@@ -37,6 +45,10 @@ app.use(
 app.use(
   helmet({
     contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
+    }
   })
 );
 
@@ -91,7 +103,16 @@ app.use(
 );
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+app.use(express.static(path.join(__dirname, "../frontend/dist"),  {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
+
 
 // Test Prisma connection
 prisma
@@ -105,7 +126,7 @@ prisma
   });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 export { app, prisma };
