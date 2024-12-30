@@ -64,14 +64,29 @@ export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
 };
 
 export const updateSpotThunk = (spotId, spotData) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}`, {
-    method: "PUT",
-    body: JSON.stringify(spotData),
-  });
-  if (response.ok) {
-    const spot = await response.json();
-    dispatch(getSingleSpot(spot));
-    return spot;
+  try {
+    // Add default lat/lng if not provided
+    const dataToSend = {
+      ...spotData,
+      lat: spotData.lat || 0,
+      lng: spotData.lng || 0,
+    };
+
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    if (response.ok) {
+      const spot = await response.json();
+      dispatch(getSingleSpot(spot));
+      return spot;
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
