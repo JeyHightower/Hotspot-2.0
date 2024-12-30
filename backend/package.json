@@ -9,8 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only ./bin/www.ts",
-    "build": "tsc",
-    "start": "node dist/bin/www.js"
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/bin/www.js",
+    "postbuild": "cp -r src/config dist/src/ || true"
   },
   "keywords": [],
   "author": "",

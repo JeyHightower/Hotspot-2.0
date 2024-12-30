@@ -4,7 +4,7 @@ try {
   console.log("No .env file found, using process.env variables");
 }
 
-import config from "../dist/config/index.js";
+import config from "../src/config/index.js";
 const { port } = config;
 
 import { app, prisma } from "../src/app";

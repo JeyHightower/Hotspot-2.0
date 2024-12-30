@@ -19,7 +19,15 @@ npm install
 
 # Generate Prisma client and build
 npx prisma generate
+
+# Ensure dist directory is clean
+rm -rf dist
+
+# Build TypeScript
 npm run build
+
+# Verify the build
+ls -la dist/bin/www.js || echo "Build failed - www.js not found"
 
 # Remove dev dependencies after build
 npm prune --production
