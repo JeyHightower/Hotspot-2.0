@@ -146,7 +146,7 @@ const SpotDetails = () => {
   };
 
   return (
-    <div className="spot-details">
+    <div className="spot-details-container">
       <div className="spot-header">
         <h1 className="spot-name">{name}</h1>
         <p className="spot-location">
@@ -154,26 +154,35 @@ const SpotDetails = () => {
         </p>
       </div>
 
-      <ImageGallery images={SpotImages} />
-
-      <div className="content-wrapper">
-        <div className="host-info">
-          <h2>
-            Hosted by {Owner?.firstName} {Owner?.lastName}
-          </h2>
-          <p className="description">{description}</p>
+      <div className="image-and-info-container">
+        <div className="spot-images-section">
+          <ImageGallery images={SpotImages} />
         </div>
 
-        <div className="callout-box">
-          <div className="price-rating">
-            <span className="price">
-              <span className="amount">${price}</span> night
-            </span>
-            <span className="rating">{reviewSummary()}</span>
+        <div className="spot-info-section">
+          <div className="host-and-description">
+            <div className="host-info">
+              <h2>
+                Hosted by {Owner?.firstName} {Owner?.lastName}
+              </h2>
+            </div>
+
+            <div className="description-container">
+              <p className="description">{description}</p>
+            </div>
           </div>
-          <button className="reserve-button" onClick={isComingSoon}>
-            Reserve
-          </button>
+
+          <div className="callout-box">
+            <div className="price-rating">
+              <span className="price">
+                <span className="amount">${price}</span> night
+              </span>
+              <span className="rating">{reviewSummary()}</span>
+            </div>
+            <button className="reserve-button" onClick={isComingSoon}>
+              Reserve
+            </button>
+          </div>
         </div>
       </div>
 

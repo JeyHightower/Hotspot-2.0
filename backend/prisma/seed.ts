@@ -83,13 +83,25 @@ async function main() {
     },
   });
 
-  await prisma.spotImage.create({
-    data: {
-      spotId: evilSpot.id,
-      url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
-      preview: true,
-    },
-  });
+  // Replace the single image creation with multiple images
+  const evilSpotImages = [
+    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6", // Preview image (original)
+    "https://images.unsplash.com/photo-1587061949409-02df41d5e562", // Deceptive river view
+    "https://images.unsplash.com/photo-1586375300773-8384e3e4916f", // Mysterious cabin exterior
+    "https://images.unsplash.com/photo-1595877244574-e90ce41ce089", // Eerie interior
+    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4", // Distant water view
+  ];
+
+  // Create all images for the evil spot
+  for (const [index, url] of evilSpotImages.entries()) {
+    await prisma.spotImage.create({
+      data: {
+        spotId: evilSpot.id,
+        url,
+        preview: index === 0, // First image is preview
+      },
+    });
+  }
 
   await prisma.review.create({
     data: {

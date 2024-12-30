@@ -1,6 +1,6 @@
 /* import '../styles/index.css'; */
 
-.spot-details {
+.spot-details-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
@@ -21,18 +21,30 @@
   color: #717171;
 }
 
+.image-and-info-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.spot-images-section {
+  width: 100%;
+}
+
 .spot-images-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 8px;
-  margin-bottom: 32px;
   height: 400px;
+  margin-bottom: 0;
 }
 
 .main-image {
   grid-column: 1;
   grid-row: 1 / span 2;
   height: 100%;
+  overflow: hidden;
 }
 
 .main-image-content {
@@ -53,6 +65,7 @@
 .small-image {
   position: relative;
   height: 100%;
+  overflow: hidden;
 }
 
 .small-image-content {
@@ -69,28 +82,47 @@
   border-radius: 0 0 12px 0;
 }
 
-.content-wrapper {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 48px;
-  padding-top: 24px;
+.spot-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.host-and-description {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.host-info {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .host-info h2 {
   font-size: 22px;
-  margin-bottom: 16px;
+  margin: 0;
+}
+
+.description-container {
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .description {
   font-size: 16px;
   line-height: 1.5;
   color: #222;
+  margin: 0;
 }
 
 .callout-box {
+  position: sticky;
+  top: 24px;
   padding: 24px;
   border: 1px solid #ddd;
   border-radius: 12px;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -136,17 +168,41 @@
   background-color: #ff4346;
 }
 
-@media (max-width: 768px) {
-  .content-wrapper {
+@media (max-width: 1024px) {
+  .image-and-info-container {
     grid-template-columns: 1fr;
   }
 
+  .spot-images-section {
+    margin-bottom: 24px;
+  }
+
+  .callout-box {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
   .spot-images-grid {
     grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .main-image {
+    grid-column: 1;
+    grid-row: auto;
+    height: 300px;
   }
 
   .secondary-images {
     grid-column: 1;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 150px);
+  }
+
+  .main-image-content,
+  .small-image-content {
+    border-radius: 12px;
   }
 }
 
