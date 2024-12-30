@@ -14,10 +14,6 @@ npm cache clean --force
 npm install
 npm run build
 
-# Verify frontend build
-echo "Verifying frontend build..."
-ls -la dist
-
 cd ..
 
 # backend
@@ -28,8 +24,10 @@ rm -rf node_modules package-lock.json dist
 npm cache clean --force
 npm install
 
-# Generate Prisma client and build
+# Database setup and seeding
 npx prisma generate
+npx prisma db push --accept-data-loss
+npx prisma db seed
 
 # Build TypeScript
 npm run build
@@ -39,16 +37,7 @@ mkdir -p dist/frontend/dist
 cp -r ../frontend/dist/* dist/frontend/dist/
 chmod -R 755 dist/frontend/dist
 
-# Verify the builds
-echo "Verifying backend build..."
-ls -la dist/bin/www.js || echo "Build failed - www.js not found"
-
-echo "Verifying frontend files in backend..."
-ls -la dist/frontend/dist
-
 # Remove dev dependencies after build
 npm prune --production
 
 cd ..
-
-
