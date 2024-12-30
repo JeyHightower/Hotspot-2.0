@@ -1,4 +1,12 @@
 #!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
+
+echo "NODE_ENV is: $NODE_ENV"
+echo "Checking DATABASE_URL..."
+if [ -z "$DATABASE_URL" ]; then
+    echo "DATABASE_URL is not set!"
+    exit 1
+fi
 
 # Set environment
 export NODE_VERSION=18.18.0
@@ -24,10 +32,15 @@ rm -rf node_modules package-lock.json dist
 npm cache clean --force
 npm install
 
-# Database setup and seeding
+# Database setup (add these before seeding)
+echo "Generating Prisma Client..."
 npx prisma generate
+
+echo "Pushing database schema..."
 npx prisma db push --accept-data-loss
-npx prisma db seed
+
+echo "Running database seed..."
+NODE_ENV=production npx prisma db seed
 
 # Build TypeScript
 npm run build

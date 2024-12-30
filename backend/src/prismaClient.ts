@@ -1,16 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import * as dotenv from "dotenv";
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
-
-const prisma = global.prisma || new PrismaClient();
-
-if (!global.prisma) {
-  global.prisma = prisma;
-}
-
 dotenv.config();
+
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"],
+});
+
+if (process.env.NODE_ENV === "production") {
+  console.log("Database URL:", process.env.DATABASE_URL);
+  console.log("Initializing Prisma Client in production mode");
+}
 
 export const prismaClient = prisma;

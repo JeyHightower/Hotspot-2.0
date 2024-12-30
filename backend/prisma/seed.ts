@@ -3,6 +3,10 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is not set");
+}
+
 const addImagesForSpot = async (spotId: number, urls: string[]) => {
   for (const [index, url] of urls.entries()) {
     await prisma.spotImage.create({
