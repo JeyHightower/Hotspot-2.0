@@ -10,18 +10,19 @@ corepack prepare npm@latest --activate
 # backend
 cd backend
 
-# Install dependencies and type definitions
-npm install
-npm install --save-dev @types/bcryptjs @types/cookie-parser @types/cors @types/csurf \
-  @types/express @types/jsonwebtoken @types/morgan express-validator
+# Clean install dependencies
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install --production
 
-# Generate Prisma client and run migrations
+# Generate Prisma client and build
 npx prisma generate
-# npx prisma migrate deploy
-# npx prisma db seed
+npm run build
 
 # frontend
 cd ../frontend
+rm -rf node_modules package-lock.json
+npm cache clean --force
 npm install
 npm run build
 cd ..
