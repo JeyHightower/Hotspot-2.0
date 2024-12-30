@@ -10,37 +10,38 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only ./bin/www.ts",
     "build": "tsc",
-    "start": "node dist/app.js"
+    "start": "node dist/bin/www.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.1.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "csurf": "^1.10.0",
-    "express": "^4.21.2",
-    "express-async-errors": "^3.1.1",
-    "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0"
-  },
-  "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/csurf": "^1.11.5",
     "@types/express": "^5.0.0",
-    "@types/express-validator": "^2.20.33",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.2",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "csurf": "^1.10.0",
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
     "express-validator": "^7.2.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/express-validator": "^2.20.33",
     "prisma": "^6.1.0",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.7.2"
+    "ts-node-dev": "^2.0.0"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
