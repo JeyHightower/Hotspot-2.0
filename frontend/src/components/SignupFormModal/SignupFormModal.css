@@ -1,71 +1,50 @@
 .signup-form-modal {
-  padding: 10px;
-  max-height: 80vh;
+  padding: 0cqh;
+  margin-top: 100px;
+  z-index: 1000; /* Set maximum height for the modal */
+  overflow-y: auto; /* Allow scrolling if content exceeds max-height */
 }
 
 .signup-form-modal h1 {
-  margin-bottom: 8px;
+  margin-top: 100px;
   font-size: 18px;
+  z-index: 1000;
 }
 
 .signup-form-modal .form-group {
-  margin-bottom: 6px;
+  margin-bottom: 0px; /* Space between form groups */
 }
 
 .signup-form-modal input {
   padding: 6px;
   margin-top: 2px;
   height: 30px;
+  border: 1px solid #ccc; /* Added border for better visibility */
+  border-radius: 4px; /* Added border-radius for a smoother look */
 }
 
 .signup-form-modal button {
-  margin-top: 8px;
+  margin-top: 0; /* Space above the button */
   padding: 6px;
   height: 32px;
+  background-color: #ff5a5f; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove default border */
+  border-radius: 4px; /* Rounded corners for the button */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.signup-form-modal button:hover {
+  background-color: #ff4346; /* Darker shade on hover */
 }
 
 .signup-form-modal label {
   font-size: 11px;
-  margin-bottom: 2px;
+  margin-bottom: 0; /* Space below the label */
 }
 
 .error-message {
   font-size: 10px;
-  margin: 2px 0;
-}
-
-.signup-form-modal {
-  padding: 10px;
-  max-height: 80vh;
-}
-
-.signup-form-modal h1 {
-  margin-bottom: 8px;
-  font-size: 18px;
-}
-
-.signup-form-modal .form-group {
-  margin-bottom: 6px;
-}
-
-.signup-form-modal input {
-  padding: 6px;
-  margin-top: 2px;
-  height: 30px;
-}
-
-.signup-form-modal button {
-  margin-top: 8px;
-  padding: 6px;
-  height: 32px;
-}
-
-.signup-form-modal label {
-  font-size: 11px;
-  margin-bottom: 2px;
-}
-
-.error-message {
-  font-size: 10px;
-  margin: 2px 0;
+  color: red; /* Color for error messages */
+  margin: 2px 0; /* Space around error messages */
 }
