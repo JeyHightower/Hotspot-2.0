@@ -33,7 +33,7 @@
   font-size: 24px;
   font-weight: 600;
   text-align: center;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -58,7 +58,7 @@
 
 .modal-base input:focus,
 .modal-base textarea:focus {
-  border-color: #FF416C;
+  border-color: #ff416c;
   box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.1);
   outline: none;
 }
@@ -67,7 +67,7 @@
 .modal-base button {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
   color: white;
   border: none;
   border-radius: 8px;
@@ -119,6 +119,6 @@
 }
 
 .modal-base::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #FF416C, #FF4B2B);
+  background: linear-gradient(180deg, #ff416c, #ff4b2b);
   border-radius: 4px;
 }
