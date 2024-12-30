@@ -7,6 +7,14 @@ export NODE_ENV=production
 # Activate npm
 corepack prepare npm@latest --activate
 
+# frontend first
+cd frontend
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+npm run build
+cd ..
+
 # backend
 cd backend
 
@@ -32,12 +40,10 @@ ls -la dist/bin/www.js || echo "Build failed - www.js not found"
 # Remove dev dependencies after build
 npm prune --production
 
-# frontend
-cd ../frontend
-rm -rf node_modules package-lock.json
-npm cache clean --force
-npm install
-npm run build
 cd ..
+
+# Copy frontend build to backend static directory
+mkdir -p backend/dist/frontend
+cp -r frontend/dist/* backend/dist/frontend/
 
 

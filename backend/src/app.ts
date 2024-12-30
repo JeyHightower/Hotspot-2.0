@@ -10,6 +10,7 @@ import express, {
 import "express-async-errors";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "path";
 import { prismaClient as prisma } from "./prismaClient";
 
 import data from "./config";
@@ -35,7 +36,7 @@ app.use(
 
 app.use(
   helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false,
   })
 );
 
@@ -89,6 +90,8 @@ app.use(
   }
 );
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // Test Prisma connection
 prisma
@@ -100,5 +103,9 @@ prisma
     console.error("Failed to connect to database:", err);
     process.exit(1);
   });
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+});
 
 export { app, prisma };
