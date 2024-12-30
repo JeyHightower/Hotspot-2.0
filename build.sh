@@ -34,21 +34,20 @@ rm -rf dist
 # Build TypeScript
 npm run build
 
+# Create frontend directory and copy build files
+mkdir -p dist/frontend/dist
+cp -r ../frontend/dist/* dist/frontend/dist/
+
 # Verify the build
 ls -la dist/bin/www.js || echo "Build failed - www.js not found"
+
+# Verify frontend files
+echo "Verifying frontend files..."
+ls -la dist/frontend/dist
 
 # Remove dev dependencies after build
 npm prune --production
 
 cd ..
-
-# Ensure frontend build is in the correct location
-rm -rf backend/dist/frontend
-mkdir -p backend/dist/frontend
-cp -r frontend/dist/* backend/dist/frontend/
-
-# Verify the static files are in place
-echo "Verifying frontend files..."
-ls -la backend/dist/frontend
 
 

@@ -78,15 +78,17 @@ app.get("/api/csrf/restore", (req: Request, res: Response) => {
 
 // Static file serving
 if (isProduction) {
-  // Serve frontend static files
+  // Serve static files from the React app
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  // Serve the static files from the React app
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
   // Handles any requests that don't match the ones above
   app.get(/^(?!\/?api).*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"), (err) => {
+      if (err) {
+        console.error("Error serving index.html:", err);
+        res.status(500).send("Error serving static files");
+      }
+    });
   });
 }
 
