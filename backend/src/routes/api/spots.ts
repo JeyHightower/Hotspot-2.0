@@ -62,6 +62,7 @@ function parseSpotId(spotId: string | undefined, res: Response): number | null {
 }
 
 router.get("/current", requireAuth, async (req: Request, res: Response) => {
+  console.log(req.user)
   const allSpots = await prisma.spot.findMany({
     where: { ownerId: req.user!.id },
     include: {

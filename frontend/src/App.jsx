@@ -45,7 +45,7 @@ const router = createBrowserRouter([
             element: <CreateSpotModal />,
           },
           {
-            path: "current",
+            path: "manage",
             element: <ManageSpots />,
           },
         ],

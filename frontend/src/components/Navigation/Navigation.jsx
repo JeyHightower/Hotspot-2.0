@@ -3,14 +3,16 @@ import { useSelector } from 'react-redux';
 import './Navigation.css';
 import ProfileButton from './ProfileButton';
 import { useModal } from '../Context/useModal';
+import { useNavigate } from 'react-router-dom';
 import CreateSpotModal from '../CreateSpotModal/CreateSpotModal';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
   const { setModalContent } = useModal();
+  const navigate = useNavigate();
 
   const openCreateSpotModal = () => {
-    setModalContent(<CreateSpotModal />);
+    navigate('/spots/new');
   };
 
   return (
