@@ -55,8 +55,19 @@ export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`);
     const spot = await response.json();
-    dispatch(getSingleSpot(spot));
-    return spot;
+
+    // Also fetch reviews for this spot
+    const reviewsResponse = await csrfFetch(`/api/spots/${spotId}/reviews`);
+    const reviewsData = await reviewsResponse.json();
+
+    // Combine spot and reviews data
+    const spotWithReviews = {
+      ...spot,
+      Reviews: reviewsData.Reviews,
+    };
+
+    dispatch(getSingleSpot(spotWithReviews));
+    return spotWithReviews;
   } catch (error) {
     console.error("Error fetching spot:", error);
     return null;

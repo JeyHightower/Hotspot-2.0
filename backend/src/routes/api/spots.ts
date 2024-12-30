@@ -321,52 +321,98 @@ router.get("/:spotId/reviews", async (req: Request, res: Response) => {
   return res.json({ Reviews: out });
 }) as RequestHandler;
 
-const validateNewReview = [
+const validateReview = [
   check("review")
     .exists({ checkFalsy: true })
-    .isString()
-    .withMessage("Review text is required"),
-  check("stars").exists({ checkFalsy: true }).isInt({ min: 1, max: 5 }),
-
+    .withMessage("Review text is required")
+    .isLength({ min: 10 })
+    .withMessage("Review must be at least 10 characters long"),
+  check("stars")
+    .exists({ checkFalsy: true })
+    .withMessage("Stars rating is required")
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
   handleValidationErrors,
 ];
 
 router.post(
   "/:spotId/reviews",
   requireAuth,
-  validateNewReview,
-  async (req: Request, res: Response) => {
-    const user = req.user!;
+  validateReview,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const spotId = parseInt(req.params.spotId);
+      const userId = req.user!.id;
+      const { review, stars } = req.body;
 
-    const { review, stars } = req.body;
-
-    const spot = await getSpot(req.params["spotId"], res, (spotId) =>
-      prisma.spot.findFirst({
+      // Check if spot exists
+      const spot = await prisma.spot.findUnique({
         where: { id: spotId },
-        include: { reviews: { where: { userId: user.id } } },
-      })
-    );
+      });
 
-    if (!spot) {
-      return;
+      if (!spot) {
+        return res.status(404).json({
+          message: "Spot couldn't be found",
+        });
+      }
+
+      // Check if user is the owner
+      if (spot.ownerId === userId) {
+        return res.status(403).json({
+          message: "Spot owner can't leave a review",
+        });
+      }
+
+      // Check if user already has a review for this specific spot
+      const existingReview = await prisma.review.findFirst({
+        where: {
+          AND: [{ spotId: spotId }, { userId: userId }],
+        },
+      });
+
+      if (existingReview) {
+        return res.status(403).json({
+          message: "User already has a review for this spot",
+        });
+      }
+
+      // Create the review
+      const newReview = await prisma.review.create({
+        data: {
+          spotId,
+          userId,
+          review,
+          stars: Number(stars),
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+
+      // Format the response
+      const formattedReview = {
+        id: newReview.id,
+        userId: newReview.userId,
+        spotId: newReview.spotId,
+        review: newReview.review,
+        stars: newReview.stars,
+        createdAt: newReview.createdAt,
+        updatedAt: newReview.updatedAt,
+        User: newReview.user,
+        ReviewImages: [],
+      };
+
+      return res.status(201).json(formattedReview);
+    } catch (error) {
+      console.error("Review creation error:", error);
+      next(error);
     }
-
-    if (spot.reviews.length) {
-      return res
-        .status(500)
-        .json({ message: "User already has a review for this spot" });
-    }
-
-    const rev = await prisma.review.create({
-      data: {
-        userId: user.id,
-        spotId: spot.id,
-        review: String(review),
-        stars: Number(stars),
-      },
-    });
-
-    return res.status(201).json(rev);
   }
 ) as RequestHandler;
 

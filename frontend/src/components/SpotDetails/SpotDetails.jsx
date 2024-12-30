@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { deleteReviewThunk } from "../../store/reviews";
@@ -23,9 +23,14 @@ const SpotDetails = () => {
 
   const Owner = spot?.Owner;
   const reviews = spot?.Reviews || [];
+  console.log("Reviews:", reviews);
 
   useEffect(() => {
-    dispatch(fetchSingleSpotThunk(spotId));
+    const fetchData = async () => {
+      await dispatch(fetchSingleSpotThunk(spotId));
+      console.log("Spot data:", spot);
+    };
+    fetchData();
   }, [dispatch, spotId]);
 
   const isComingSoon = () => {
@@ -48,18 +53,22 @@ const SpotDetails = () => {
 
   const reviewSummary = () => {
     if (!numReviews) return "New";
+    const rating = avgRating ? parseFloat(avgRating).toFixed(1) : "New";
     return (
       <>
         <FaStar className="star-filled" />
-        {Number(avgRating).toFixed(1)} · {numReviews}{" "}
-        {numReviews === 1 ? "Review" : "Reviews"}
+        {rating} · {numReviews} {numReviews === 1 ? "Review" : "Reviews"}
       </>
     );
   };
 
-  const handleDeleteReview = (reviewId) => async () => {
-    await dispatch(deleteReviewThunk(reviewId));
-    dispatch(fetchSingleSpotThunk(spotId));
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await dispatch(deleteReviewThunk(reviewId));
+      await dispatch(fetchSingleSpotThunk(spotId));
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+    }
   };
 
   // Sort reviews to show newest first
@@ -119,7 +128,11 @@ const SpotDetails = () => {
       </div>
 
       <div className="reviews-section">
-        <h2>{reviewSummary()}</h2>
+        <h2>
+          <FaStar className="star-filled" />
+          {avgRating ? `${Number(avgRating).toFixed(1)} · ` : "New · "}
+          {numReviews} {numReviews === 1 ? "Review" : "Reviews"}
+        </h2>
 
         {canPostReview && (
           <OpenModalButton
@@ -128,7 +141,8 @@ const SpotDetails = () => {
               <ReviewFormModal
                 spotId={spotId}
                 onReviewSubmit={() => {
-                  dispatch(fetchSingleSpotThunk(spotId));
+                  console.log("Review submitted, refreshing data...");
+                  return dispatch(fetchSingleSpotThunk(spotId));
                 }}
               />
             }
@@ -136,25 +150,34 @@ const SpotDetails = () => {
         )}
 
         <div className="reviews-list">
-          {sortedReviews.map((review) => (
-            <div key={review.id} className="review-item">
-              <div className="review-header">
-                <h3>{review.User?.firstName}</h3>
-                <span className="review-date">
-                  {formatDate(review.createdAt)}
-                </span>
+          {sortedReviews.length > 0 ? (
+            sortedReviews.map((review) => (
+              <div key={review.id} className="review-item">
+                <div className="review-header">
+                  <h3>{review.User?.firstName}</h3>
+                  <span className="review-date">
+                    {formatDate(review.createdAt)}
+                  </span>
+                </div>
+                <div className="review-stars">
+                  {[...Array(review.stars)].map((_, i) => (
+                    <FaStar key={i} className="star-filled" />
+                  ))}
+                </div>
+                <p className="review-text">{review.review}</p>
+                {user?.id === review.userId && (
+                  <button
+                    onClick={() => handleDeleteReview(review.id)}
+                    className="delete-review-button"
+                  >
+                    <FaTrash /> Delete Review
+                  </button>
+                )}
               </div>
-              <p className="review-text">{review.review}</p>
-              {user?.id === review.userId && (
-                <button
-                  onClick={handleDeleteReview(review.id)}
-                  className="delete-review-button"
-                >
-                  Delete
-                </button>
-              )}
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No reviews yet</p>
+          )}
         </div>
       </div>
     </div>

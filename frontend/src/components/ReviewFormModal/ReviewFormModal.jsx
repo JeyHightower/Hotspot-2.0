@@ -24,21 +24,33 @@ const ReviewFormModal = ({ spotId, onReviewSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate input
+    if (review.length < 10) {
+      setErrors({ server: "Review must be at least 10 characters long" });
+      return;
+    }
+    if (stars === 0) {
+      setErrors({ server: "Please select a star rating" });
+      return;
+    }
+
     const reviewData = {
-      spotId,
-      review,
-      stars,
+      spotId: Number(spotId),
+      review: review.trim(),
+      stars: Number(stars),
     };
 
     try {
       const newReview = await dispatch(createReviewThunk(reviewData));
       if (newReview) {
-        if (onReviewSubmit) {
-          await onReviewSubmit(); // Wait for the spot refresh
-        }
         closeModal();
+        if (onReviewSubmit) {
+          await onReviewSubmit();
+        }
       }
     } catch (error) {
+      console.error("Review submission error:", error);
       setErrors({
         server:
           error.message || "An error occurred while submitting your review",
