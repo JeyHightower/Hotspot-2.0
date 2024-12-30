@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { deleteReviewThunk } from "../../store/reviews";
 import { fetchSingleSpotThunk } from "../../store/spots";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import ReviewFormModal from "../ReviewFormModal/ReviewFormModal";
 import "./SpotDetails.css";
 
 const SpotDetails = () => {
@@ -16,6 +18,9 @@ const SpotDetails = () => {
   const hasReviewed = spot?.Reviews?.some(
     (review) => review.userId === user?.id
   );
+  const isOwner = spot?.ownerId === user?.id;
+  const canPostReview = user && !hasReviewed && !isOwner;
+
   const Owner = spot?.Owner;
   const reviews = spot?.Reviews || [];
 
@@ -55,6 +60,19 @@ const SpotDetails = () => {
   const handleDeleteReview = (reviewId) => async () => {
     await dispatch(deleteReviewThunk(reviewId));
     dispatch(fetchSingleSpotThunk(spotId));
+  };
+
+  // Sort reviews to show newest first
+  const sortedReviews = [...reviews].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    });
   };
 
   return (
@@ -97,6 +115,46 @@ const SpotDetails = () => {
               Reserve
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className="reviews-section">
+        <h2>{reviewSummary()}</h2>
+
+        {canPostReview && (
+          <OpenModalButton
+            buttonText="Post Your Review"
+            modalComponent={
+              <ReviewFormModal
+                spotId={spotId}
+                onReviewSubmit={() => {
+                  dispatch(fetchSingleSpotThunk(spotId));
+                }}
+              />
+            }
+          />
+        )}
+
+        <div className="reviews-list">
+          {sortedReviews.map((review) => (
+            <div key={review.id} className="review-item">
+              <div className="review-header">
+                <h3>{review.User?.firstName}</h3>
+                <span className="review-date">
+                  {formatDate(review.createdAt)}
+                </span>
+              </div>
+              <p className="review-text">{review.review}</p>
+              {user?.id === review.userId && (
+                <button
+                  onClick={handleDeleteReview(review.id)}
+                  className="delete-review-button"
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

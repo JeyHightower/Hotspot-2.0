@@ -130,3 +130,85 @@
     grid-column: 1;
   }
 }
+
+.reviews-section {
+  margin-top: 40px;
+}
+
+.reviews-section h2 {
+  margin-bottom: 24px;
+}
+
+/* Style for the Post Review button */
+.reviews-section button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ff385c, #e31c5f);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.reviews-section button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 56, 92, 0.2);
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.review-item {
+  padding: 24px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  background: white;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.review-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+.review-date {
+  color: #717171;
+  font-size: 14px;
+}
+
+.review-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #222;
+  margin-bottom: 16px;
+}
+
+.delete-review-button {
+  background: #ff385c;
+  padding: 8px 16px;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+/* Override general button styles for specific buttons */
+.reviews-section .post-review-button {
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, #ff385c, #e31c5f);
+}
+
+.reviews-section .delete-review-button {
+  background: #ff385c;
+}
