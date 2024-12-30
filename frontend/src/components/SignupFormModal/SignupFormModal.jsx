@@ -1,22 +1,30 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import * as sessionActions from '../../store/session';
-import { useModal } from '../Context/useModal';
-import './SignupFormModal.css';
-import '../styles/ModalBase.css';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import * as sessionActions from "../../store/session";
+import { useModal } from "../Context/useModal";
+import "../styles/ModalBase.css";
+import "./SignupFormModal.css";
 
 const SignupFormModal = () => {
-  console.log('Rendering SignupFormModal');
+  console.log("Rendering SignupFormModal");
   const dispatch = useDispatch();
 
-  const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+
+  const signupDisabled =
+    username.length < 4 ||
+    !firstName ||
+    !lastName ||
+    !email ||
+    password.length < 6 ||
+    !confirmPassword;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,7 +37,7 @@ const SignupFormModal = () => {
           firstName,
           lastName,
           password,
-        }),
+        })
       )
         .then(closeModal)
         .catch(async (res) => {
@@ -41,20 +49,16 @@ const SignupFormModal = () => {
     }
     return setErrors({
       confirmPassword:
-        'Confirm Password field must be the same as the Password field',
+        "Confirm Password field must be the same as the Password field",
     });
   };
 
-  const signupDisabled =
-    username.length < 4 ||
-    !firstName ||
-    !lastName ||
-    !email ||
-    password.length < 6 ||
-    !confirmPassword;
   return (
     <div className="modal-overlay" onClick={closeModal}>
-      <div className="modal-base update-spot-modal" onClick={e => e.stopPropagation()}>
+      <div
+        className="modal-base signup-form-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -146,7 +150,9 @@ const SignupFormModal = () => {
             )}
           </div>
 
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={signupDisabled}>
+            Sign Up
+          </button>
         </form>
       </div>
     </div>
