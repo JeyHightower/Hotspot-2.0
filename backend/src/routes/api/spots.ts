@@ -128,45 +128,48 @@ const validateNewSpot = [
   handleValidationErrors,
 ];
 
-router.get("/:spotId", async (req: Request, res: Response) => {
-  const spot = await getSpot(req.params.spotId, res, (spotId) =>
-    prisma.spot.findFirst({
-      where: { id: spotId },
-      include: {
-        images: { select: { id: true, url: true, preview: true } },
-        reviews: { select: { stars: true } },
-        owner: {
-          select: { id: true, firstName: true, lastName: true },
+router.get(
+  "/:spotId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const spot = await getSpot(req.params.spotId, res, (spotId) =>
+      prisma.spot.findFirst({
+        where: { id: spotId },
+        include: {
+          images: { select: { id: true, url: true, preview: true } },
+          reviews: { select: { stars: true } },
+          owner: {
+            select: { id: true, firstName: true, lastName: true },
+          },
         },
-      },
-    })
-  );
+      })
+    );
 
-  if (!spot) {
-    return;
+    if (!spot) {
+      return next();
+    }
+
+    const { reviews, images, owner, lat, lng, price, ...rest } = spot;
+
+    const ret = {
+      ...rest,
+      lat: Number(lat),
+      lng: Number(lng),
+      price: Number(price),
+      numReviews: reviews.length,
+      avgStarRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
+      SpotImages: images,
+      Owner: owner,
+    };
+
+    res.json(ret);
   }
-
-  const { reviews, images, owner, lat, lng, price, ...rest } = spot;
-
-  const ret = {
-    ...rest,
-    lat: Number(lat),
-    lng: Number(lng),
-    price: Number(price),
-    numReviews: reviews.length,
-    avgStarRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
-    SpotImages: images,
-    Owner: owner,
-  };
-
-  return res.json(ret);
-}) as RequestHandler;
+) as RequestHandler;
 
 router.put(
   "/:spotId",
   requireAuth,
   validateNewSpot,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     let user = req.user!;
 
     const {
@@ -186,16 +189,17 @@ router.put(
     );
 
     if (!spot) {
-      return;
+      return next();
     }
 
     if (spot.ownerId !== user.id) {
-      return res
+      res
         .status(403)
         .json({ message: "You do not have permission to edit this spot" });
+      return;
     }
 
-    let updated = await prisma.spot.update({
+    const updated = await prisma.spot.update({
       where: { id: spot.id },
       data: {
         address,
@@ -211,34 +215,39 @@ router.put(
       },
     });
 
-    return res.status(200).json({ ...updated, lat, lng, price });
+    res.status(200).json({ ...updated, lat, lng, price });
   }
 ) as RequestHandler;
 
-router.delete("/:spotId", requireAuth, async (req: Request, res: Response) => {
-  let user = req.user!;
+router.delete(
+  "/:spotId",
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    let user = req.user!;
 
-  const spot = await getSpot(req.params["spotId"], res, (spotId) =>
-    prisma.spot.findFirst({
-      where: { id: spotId },
-      select: { id: true, ownerId: true },
-    })
-  );
+    const spot = await getSpot(req.params["spotId"], res, (spotId) =>
+      prisma.spot.findFirst({
+        where: { id: spotId },
+        select: { id: true, ownerId: true },
+      })
+    );
 
-  if (!spot) {
-    return;
+    if (!spot) {
+      return next();
+    }
+
+    if (spot.ownerId !== user.id) {
+      res
+        .status(403)
+        .json({ message: "You do not have permission to delete this spot" });
+      return;
+    }
+
+    await prisma.spot.delete({ where: { id: spot.id } });
+
+    res.status(200).json({ message: "Successfully deleted" });
   }
-
-  if (spot.ownerId !== user.id) {
-    return res
-      .status(403)
-      .json({ message: "You do not have permission to delete this spot" });
-  }
-
-  await prisma.spot.delete({ where: { id: spot.id } });
-
-  return res.status(200).json({ message: "Successfully deleted" });
-}) as RequestHandler;
+) as RequestHandler;
 
 router.get(
   "/:spotId/bookings",
