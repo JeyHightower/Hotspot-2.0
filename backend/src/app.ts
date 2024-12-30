@@ -23,21 +23,29 @@ const isProduction = environment === "production";
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
-app.use((req, res, next) => {
-  if (req.path.endsWith(".js")) {
-    res.type("application/javascript");
-  } else if (req.path.endsWith(".css")) {
-    res.type("text/css");
-  }
-  next();
-});
+
+// Static file serving in production
+if (isProduction) {
+  // Serve static files from the React app with proper MIME types
+  app.use(
+    express.static(path.join(__dirname, "../frontend/dist"), {
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith(".js")) {
+          res.setHeader("Content-Type", "application/javascript");
+        } else if (filePath.endsWith(".css")) {
+          res.setHeader("Content-Type", "text/css");
+        } else if (filePath.endsWith(".html")) {
+          res.setHeader("Content-Type", "text/html");
+        }
+      },
+    })
+  );
+}
 
 // 2. Security middleware
 app.use(
   cors({
     origin: true,
-    // ? "https://your-production-url.com"
-    // : "http://localhost:5173",
     credentials: true,
   })
 );
@@ -76,13 +84,16 @@ app.get("/api/csrf/restore", (req: Request, res: Response) => {
   res.json({ "XSRF-Token": token });
 });
 
-// Static file serving
-if (isProduction) {
-  // Serve static files from the React app
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+// API routes
+app.use(routes);
 
-  // Handles any requests that don't match the ones above
-  app.get(/^(?!\/?api).*/, (req, res) => {
+// Move catch-all route to the end, after API routes
+if (isProduction) {
+  app.get("*", (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith("/api")) {
+      return next();
+    }
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"), (err) => {
       if (err) {
         console.error("Error serving index.html:", err);
@@ -91,9 +102,6 @@ if (isProduction) {
     });
   });
 }
-
-// API routes
-app.use(routes);
 
 // 5. Error handling
 app.use(
