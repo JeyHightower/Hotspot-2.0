@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 export async function csrfFetch(url, options = {}) {
   // Set options.url to the development URL when in development
   const baseUrl = process.env.NODE_ENV === 'production'
-    ? 'https://your-production-url.com'
+    ? 'https://hotspot-2-0-vz4v.onrender.com'
     : 'http://localhost:5000';
 
   options.method = options.method || 'GET';
