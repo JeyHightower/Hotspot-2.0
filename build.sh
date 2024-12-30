@@ -13,6 +13,7 @@ cd backend
 # Clean install dependencies
 rm -rf node_modules package-lock.json
 npm cache clean --force
+npm install dotenv@16.0.3 --save
 npm install --production
 
 # Generate Prisma client and build
