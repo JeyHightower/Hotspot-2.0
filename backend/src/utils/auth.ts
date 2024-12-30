@@ -4,7 +4,7 @@ import config from "../config/index";
 
 import { NextFunction, Request, Response } from "express";
 
-import { prismaClient as prisma, prismaClient } from  "../prismaClient"
+import { prismaClient as prisma, prismaClient } from "../prismaClient";
 
 type User = NonNullable<
   Awaited<ReturnType<typeof prismaClient.user.findUnique>>
@@ -41,13 +41,13 @@ export function setTokenCookie(
   res.cookie("token", token, {
     maxAge: expiresIn * 1000,
     httpOnly: true,
-    secure: config.isProduction,
-    sameSite: config.isProduction ? "lax" : "none",
+    secure: config.isProduction, // true in prod, false in dev
+    sameSite: config.isProduction ? "strict" : "lax",
+    path: "/",
   });
 
   return token;
 }
-
 export function restoreUser(
   req: Request,
   res: Response,
