@@ -43,6 +43,7 @@ model Spot {
   images      SpotImage[]
 
   @@index([ownerId])
+  @@unique([address, city, state], name: "address_city_state")
 }
 
 model Review {

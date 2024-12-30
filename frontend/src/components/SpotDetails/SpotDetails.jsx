@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaStar, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,61 @@ import { fetchSingleSpotThunk } from "../../store/spots";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewFormModal from "../ReviewFormModal/ReviewFormModal";
 import "./SpotDetails.css";
+
+const ImageGallery = ({ images }) => {
+  const [showAllImages, setShowAllImages] = useState(false);
+  const mainImage = images?.find((img) => img.preview) || images?.[0];
+  const additionalImages = images?.filter((img) => !img.preview).slice(0, 4);
+
+  if (showAllImages) {
+    return (
+      <div className="full-gallery-overlay">
+        <button
+          className="close-gallery"
+          onClick={() => setShowAllImages(false)}
+        >
+          ×
+        </button>
+        <div className="full-gallery-grid">
+          {images?.map((image, index) => (
+            <div key={index} className="gallery-image">
+              <img src={image.url} alt={`View ${index + 1}`} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="spot-images-grid">
+      <div className="main-image" onClick={() => setShowAllImages(true)}>
+        {mainImage && (
+          <img
+            src={mainImage.url}
+            alt="Main view of property"
+            className="main-image-content"
+          />
+        )}
+      </div>
+      <div className="secondary-images">
+        {additionalImages?.map((image, index) => (
+          <div
+            key={index}
+            className="small-image"
+            onClick={() => setShowAllImages(true)}
+          >
+            <img
+              src={image.url}
+              alt={`Additional view ${index + 1}`}
+              className="small-image-content"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const SpotDetails = () => {
   const { spotId } = useParams();
@@ -51,6 +106,12 @@ const SpotDetails = () => {
     numReviews,
   } = spot;
 
+  const mainImage = SpotImages?.find((img) => img.preview) || SpotImages?.[0];
+  const additionalImages = SpotImages?.filter((img) => !img.preview).slice(
+    0,
+    4
+  );
+
   const reviewSummary = () => {
     if (!numReviews) return "New";
     const rating = avgRating ? parseFloat(avgRating).toFixed(1) : "New";
@@ -86,44 +147,33 @@ const SpotDetails = () => {
 
   return (
     <div className="spot-details">
-      <div className="spot-details-container">
+      <div className="spot-header">
         <h1 className="spot-name">{name}</h1>
         <p className="spot-location">
           {city}, {state}, {country}
         </p>
+      </div>
 
-        <div className="spot-images-grid">
-          <div className="main-image">
-            {SpotImages?.[0] && <img src={SpotImages[0].url} alt="Main view" />}
-          </div>
-          <div className="secondary-images">
-            {SpotImages?.slice(1, 5).map((image, index) => (
-              <div key={index} className="small-image">
-                <img src={image.url} alt={`View ${index + 2}`} />
-              </div>
-            ))}
-          </div>
+      <ImageGallery images={SpotImages} />
+
+      <div className="content-wrapper">
+        <div className="host-info">
+          <h2>
+            Hosted by {Owner?.firstName} {Owner?.lastName}
+          </h2>
+          <p className="description">{description}</p>
         </div>
 
-        <div className="content-wrapper">
-          <div className="host-info">
-            <h2>
-              Hosted by {Owner?.firstName} {Owner?.lastName}
-            </h2>
-            <p className="description">{description}</p>
+        <div className="callout-box">
+          <div className="price-rating">
+            <span className="price">
+              <span className="amount">${price}</span> night
+            </span>
+            <span className="rating">{reviewSummary()}</span>
           </div>
-
-          <div className="callout-box">
-            <div className="price-rating">
-              <span className="price">
-                <span className="amount">${price}</span> night
-              </span>
-              <span className="rating">{reviewSummary()}</span>
-            </div>
-            <button className="reserve-button" onClick={isComingSoon}>
-              Reserve
-            </button>
-          </div>
+          <button className="reserve-button" onClick={isComingSoon}>
+            Reserve
+          </button>
         </div>
       </div>
 

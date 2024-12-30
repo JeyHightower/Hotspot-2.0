@@ -6,6 +6,10 @@
   padding: 24px;
 }
 
+.spot-header {
+  margin-bottom: 24px;
+}
+
 .spot-name {
   font-size: 26px;
   font-weight: 600;
@@ -14,40 +18,55 @@
 
 .spot-location {
   font-size: 16px;
-  margin-bottom: 24px;
+  color: #717171;
 }
 
 .spot-images-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  height: 400px;
 }
 
 .main-image {
   grid-column: 1;
   grid-row: 1 / span 2;
+  height: 100%;
 }
 
-.main-image img {
+.main-image-content {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px 0 0 12px;
 }
 
 .secondary-images {
   grid-column: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 8px;
 }
 
-.small-image img {
+.small-image {
+  position: relative;
+  height: 100%;
+}
+
+.small-image-content {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+}
+
+.small-image:nth-child(2) img {
+  border-radius: 0 12px 0 0;
+}
+
+.small-image:nth-child(4) img {
+  border-radius: 0 0 12px 0;
 }
 
 .content-wrapper {
@@ -237,4 +256,64 @@
 
 .reviews-section .delete-review-button {
   background: #ff385c;
+}
+
+/* Add these styles for the full gallery view */
+.full-gallery-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.close-gallery {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.full-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gallery-image {
+  position: relative;
+  padding-top: 75%;
+}
+
+.gallery-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Add hover effects for the image grid */
+.main-image,
+.small-image {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.main-image:hover,
+.small-image:hover {
+  opacity: 0.9;
 }
