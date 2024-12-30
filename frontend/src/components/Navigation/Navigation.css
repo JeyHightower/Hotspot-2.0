@@ -5,9 +5,9 @@ nav {
   box-shadow: 0 2px 15px rgba(255, 65, 108, 0.08);
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 1;
   backdrop-filter: blur(8px);
-  height: 80px;
+  height: auto;
 }
 
 /* Logo and navigation links */
@@ -130,14 +130,14 @@ a:hover {
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
-  
+
   /* Cool gradient background - Teal/Blue opposite to red theme */
   background: linear-gradient(90deg, #00F2FE, #4FACFE);
-  
+
   /* Text styling */
   color: white;
   letter-spacing: 0.5px;
-  
+
   /* Smooth transitions */
   transition: all 0.3s ease;
 }

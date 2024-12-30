@@ -1,42 +1,40 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createSpotThunk } from '../../store/spots';
-import { useModal } from '../Context/useModal';
-import './CreateSpotModal.css';
-import '../styles/ModalBase.css';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createSpotThunk } from "../../store/spots";
+import { useModal } from "../Context/useModal";
+import "./CreateSpotModal.css";
 
 const CreateSpotModal = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { closeModal } = useModal();
+
   const [formData, setFormData] = useState({
-    country: '',
-    address: '',
-    city: '',
-    state: '',
-    description: '',
-    name: '',
-    price: '',
-    previewImage: '',
-    images: ['', '', '', ''],
+    country: "",
+    address: "",
+    city: "",
+    state: "",
+    description: "",
+    name: "",
+    price: "",
+    previewImage: "",
+    images: ["", "", "", ""],
   });
 
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
     const validationErrors = {};
-    if (!formData.country) validationErrors.country = 'Country is required';
+    if (!formData.country) validationErrors.country = "Country is required";
     if (!formData.address)
-      validationErrors.address = 'Street address is required';
-    if (!formData.city) validationErrors.city = 'City is required';
-    if (!formData.state) validationErrors.state = 'State is required';
+      validationErrors.address = "Street address is required";
+    if (!formData.city) validationErrors.city = "City is required";
+    if (!formData.state) validationErrors.state = "State is required";
     if (formData.description.length < 30)
-      validationErrors.description = 'Description needs 30 or more characters';
-    if (!formData.name) validationErrors.name = 'Name is required';
-    if (!formData.price) validationErrors.price = 'Price per night is required';
+      validationErrors.description = "Description needs 30 or more characters";
+    if (!formData.name) validationErrors.name = "Name is required";
+    if (!formData.price) validationErrors.price = "Price per night is required";
     if (!formData.previewImage)
-      validationErrors.previewImage = 'Preview image is required';
+      validationErrors.previewImage = "Preview image is required";
     return validationErrors;
   };
 
@@ -51,15 +49,16 @@ const CreateSpotModal = () => {
 
     try {
       const newSpot = await dispatch(createSpotThunk(formData));
-      navigate(`/spots/${newSpot.id}`);
+      closeModal();
+      window.location.href = `/spots/${newSpot.id}`;
     } catch (error) {
       setErrors({ submit: error.message });
     }
   };
 
   return (
-    <div className="modal-base create-spot-modal" onClick={closeModal}>
-      <div className="modal-create-spot" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-base create-spot-modal">
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="create-spot-form">
           <h1>Create a New Spot</h1>
           <form onSubmit={handleSubmit}>
@@ -152,7 +151,7 @@ const CreateSpotModal = () => {
             <section>
               <h2>Create a title for your spot</h2>
               <p>
-                Catch guests&apos attention with a spot title that highlights
+                Catch guests&apos' attention with a spot title that highlights
                 what makes your place special.
               </p>
               <input
@@ -214,6 +213,7 @@ const CreateSpotModal = () => {
                 />
               ))}
             </section>
+
             <button type="submit">Create Spot</button>
           </form>
         </div>
