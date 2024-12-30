@@ -1,7 +1,7 @@
 import { FaStar } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import ToolTip from "../ToolTip";
 import "./SpotTile.css";
-import Tooltip from "./ToolTip";
 
 const SpotTile = ({ spot, actions }) => {
   const navigate = useNavigate();
@@ -69,9 +69,9 @@ const SpotTile = ({ spot, actions }) => {
                 </span>
               )}
             </div>
-            <Tooltip tooltipText={spot.name}>
+            <ToolTip tooltipText={spot.name}>
               <h3 className="spot-name">{spot.name}</h3>
-            </Tooltip>
+            </ToolTip>
           </div>
         </div>
       </Link>

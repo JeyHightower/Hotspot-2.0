@@ -15,11 +15,63 @@ export NODE_ENV=production
 # Activate npm
 corepack prepare npm@latest --activate
 
-# frontend first
+# Frontend build
 cd frontend
-rm -rf node_modules package-lock.json
+rm -rf node_modules package-lock.json dist
 npm cache clean --force
 npm install
+
+# Create ToolTip component if it doesn't exist
+mkdir -p src/components/ToolTip
+if [ ! -f "src/components/ToolTip/index.jsx" ]; then
+    echo "Creating ToolTip component..."
+    cat > src/components/ToolTip/index.jsx << 'EOL'
+import React from 'react';
+import './ToolTip.css';
+
+const ToolTip = ({ text, children }) => {
+  return (
+    <div className="tooltip-container">
+      {children}
+      <div className="tooltip-text">{text}</div>
+    </div>
+  );
+};
+
+export default ToolTip;
+EOL
+fi
+
+if [ ! -f "src/components/ToolTip/ToolTip.css" ]; then
+    echo "Creating ToolTip styles..."
+    cat > src/components/ToolTip/ToolTip.css << 'EOL'
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+}
+EOL
+fi
+
 npm run build
 
 cd ..
