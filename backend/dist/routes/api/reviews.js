@@ -1,12 +1,23 @@
-import { Router } from "express";
-import { check } from "express-validator";
-import { prisma } from "../../dbclient.js";
-import { requireAuth } from "../../utils/auth.js";
-import { handleValidationErrors } from "../../utils/validation.js";
-const router = Router();
-router.get("/current", requireAuth, async (req, res) => {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const express_validator_1 = require("express-validator");
+const prismaClient_1 = require("../../prismaClient");
+const auth_1 = require("../../utils/auth");
+const validation_1 = require("../../utils/validation");
+const router = (0, express_1.Router)();
+router.get("/current", auth_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
-    const reviews = await prisma.review.findMany({
+    const reviews = yield prismaClient_1.prismaClient.review.findMany({
         where: { userId: user.id },
         include: {
             spot: {
@@ -15,23 +26,26 @@ router.get("/current", requireAuth, async (req, res) => {
                 },
             },
             images: { select: { url: true, id: true } },
+            user: { select: { firstName: true, lastName: true } },
         },
     });
     const sequelized = reviews.map((r) => {
-        const spot = {
-            ...r.spot,
-            lat: typeof r.spot.lat === "object"
+        var _a, _b, _c;
+        const spot = Object.assign(Object.assign({}, r.spot), { lat: typeof r.spot.lat === "object"
                 ? Number(r.spot.lat.toString())
-                : Number(r.spot.lat),
-            lng: typeof r.spot.lng === "object"
+                : Number(r.spot.lat), lng: typeof r.spot.lng === "object"
                 ? Number(r.spot.lng.toString())
-                : Number(r.spot.lng),
-            price: typeof r.spot.price === "object"
+                : Number(r.spot.lng), price: typeof r.spot.price === "object"
                 ? Number(r.spot.price.toString())
-                : Number(r.spot.price),
-            previewImage: r.spot.images?.[0]?.url ?? "",
-        };
+                : Number(r.spot.price), previewImage: (_c = (_b = (_a = r.spot.images) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.url) !== null && _c !== void 0 ? _c : "" });
         return {
+            id: r.id,
+            userId: r.userId,
+            spotId: r.spotId,
+            review: r.review,
+            stars: r.stars,
+            createdAt: r.createdAt,
+            updatedAt: r.updatedAt,
             User: {
                 id: r.userId,
                 firstName: r.user.firstName,
@@ -42,23 +56,23 @@ router.get("/current", requireAuth, async (req, res) => {
         };
     });
     res.json({ Reviews: sequelized });
-});
-router.delete("/:reviewId", requireAuth, async (req, res) => {
+}));
+router.delete("/:reviewId", auth_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reviewId = Number(req.params["reviewId"]);
-    if (isNaN(reviewId) || reviewId > 2 ** 31) {
+    if (isNaN(reviewId) || reviewId > Math.pow(2, 31)) {
         res.status(404).json({ message: "Review couldn't be found" });
         return;
     }
     const userId = req.user.id;
     try {
-        const review = await prisma.review.findUnique({
+        const review = yield prismaClient_1.prismaClient.review.findUnique({
             where: {
                 id: reviewId,
                 userId: userId,
             },
         });
         if (!review) {
-            if (!(await prisma.review.findUnique({ where: { id: reviewId } }))) {
+            if (!(yield prismaClient_1.prismaClient.review.findUnique({ where: { id: reviewId } }))) {
                 res.status(404).json({
                     message: "Review couldn't be found",
                 });
@@ -69,7 +83,7 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
             });
             return;
         }
-        await prisma.review.delete({
+        yield prismaClient_1.prismaClient.review.delete({
             where: { id: reviewId },
         });
         res.status(200).json({
@@ -81,12 +95,12 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
             message: "Internal Server Error",
         });
     }
-});
+}));
 const validateReviewImage = [
-    check("url").isString().withMessage("must pass a url string"),
-    handleValidationErrors,
+    (0, express_validator_1.check)("url").isString().withMessage("must pass a url string"),
+    validation_1.handleValidationErrors,
 ];
-router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, res) => {
+router.post("/:reviewId/images", auth_1.requireAuth, validateReviewImage, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     let reviewId;
     try {
@@ -100,7 +114,7 @@ router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, r
         return;
     }
     const { url } = req.body;
-    const review = await prisma.review.findFirst({
+    const review = yield prismaClient_1.prismaClient.review.findFirst({
         where: { id: Number(reviewId) },
         include: { images: true },
     });
@@ -117,7 +131,7 @@ router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, r
             });
             return;
         }
-        let img = await prisma.reviewImage.create({
+        let img = yield prismaClient_1.prismaClient.reviewImage.create({
             data: {
                 reviewId: review.id,
                 url,
@@ -128,19 +142,19 @@ router.post("/:reviewId/images", requireAuth, validateReviewImage, async (req, r
     else {
         res.status(404).json({ message: "Review couldn't be found" });
     }
-});
+}));
 const validateReviewEdit = [
-    check("review")
+    (0, express_validator_1.check)("review")
         .exists({ values: "falsy" })
         .isString()
         .withMessage("Review text is required"),
-    check("stars")
+    (0, express_validator_1.check)("stars")
         .exists({ values: "falsy" })
         .isInt({ min: 1, max: 5 })
         .withMessage("Stars must be an integer from 1 to 5"),
-    handleValidationErrors,
+    validation_1.handleValidationErrors,
 ];
-router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
+router.put("/:reviewId", auth_1.requireAuth, validateReviewEdit, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const { review, stars } = req.body;
     let reviewId;
@@ -155,7 +169,7 @@ router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
         return;
     }
     try {
-        const changed = await prisma.review.update({
+        const changed = yield prismaClient_1.prismaClient.review.update({
             data: {
                 review,
                 stars,
@@ -166,7 +180,7 @@ router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
         res.status(200).json(changed);
     }
     catch (e) {
-        if (await prisma.review.findFirst({ where: { id: Number(reviewId) } })) {
+        if (yield prismaClient_1.prismaClient.review.findFirst({ where: { id: Number(reviewId) } })) {
             res
                 .status(403)
                 .json({ message: "You do not have permission to edit this review" });
@@ -174,5 +188,5 @@ router.put("/:reviewId", requireAuth, validateReviewEdit, async (req, res) => {
         }
         res.status(404).json({ message: "Review couldn't be found" });
     }
-});
-export default router;
+}));
+exports.default = router;

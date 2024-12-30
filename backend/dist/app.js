@@ -11,9 +11,9 @@ const express_1 = __importDefault(require("express"));
 require("express-async-errors");
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
+const prismaClient_1 = require("./prismaClient");
+Object.defineProperty(exports, "prisma", { enumerable: true, get: function () { return prismaClient_1.prismaClient; } });
 const config_1 = __importDefault(require("./config"));
-const dbclient_1 = require("./dbclient");
-Object.defineProperty(exports, "prisma", { enumerable: true, get: function () { return dbclient_1.prisma; } });
 const index_1 = __importDefault(require("./routes/index"));
 const app = (0, express_1.default)();
 exports.app = app;
@@ -24,32 +24,31 @@ app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 // 2. Security middleware
-if (!isProduction) {
-    app.use((0, cors_1.default)({
-        origin: isProduction ? 'https://your-production-url.com' : 'http://localhost:5173',
-        credentials: true
-    }));
-}
-// Import helmet at the top of the file with other imports
+app.use((0, cors_1.default)({
+    origin: isProduction
+        ? "https://your-production-url.com"
+        : "http://localhost:5173",
+    credentials: true,
+}));
 app.use((0, helmet_1.default)({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginResourcePolicy: { policy: "cross-origin" },
 }));
 // 3. CSRF Protection
 app.use((0, csurf_1.default)({
     cookie: {
         secure: isProduction,
-        sameSite: isProduction ? 'strict' : 'lax',
-        httpOnly: true
-    }
+        sameSite: isProduction ? "strict" : "lax",
+        httpOnly: true,
+    },
 }));
 // 4. Routes
 app.use((req, res, next) => {
     const token = req.csrfToken();
-    res.cookie('XSRF-TOKEN', token);
+    res.cookie("XSRF-TOKEN", token);
     next();
 });
 app.get("/api/csrf/restore", (req, res) => {
-    const token = req.csrfToken?.() || "";
+    const token = req.csrfToken();
     res.cookie("XSRF-TOKEN", token);
     res.json({ "XSRF-Token": token });
 });
@@ -70,7 +69,7 @@ app.use((err, req, res, next) => {
     });
 });
 // Test Prisma connection
-dbclient_1.prisma
+prismaClient_1.prismaClient
     .$connect()
     .then(() => {
     console.log("Successfully connected to database");
