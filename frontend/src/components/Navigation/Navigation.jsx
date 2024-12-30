@@ -4,6 +4,7 @@ import './Navigation.css';
 import ProfileButton from './ProfileButton';
 import { useModal } from '../Context/useModal';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import CreateSpotModal from '../CreateSpotModal/CreateSpotModal';
 
 function Navigation({ isLoaded }) {
@@ -12,7 +13,7 @@ function Navigation({ isLoaded }) {
   const navigate = useNavigate();
 
   const openCreateSpotModal = () => {
-    navigate('/spots/new');
+    setModalContent(<CreateSpotModal />);
   };
 
   return (
@@ -39,5 +40,4 @@ function Navigation({ isLoaded }) {
     </nav>
   );
 }
-
 export default Navigation;
