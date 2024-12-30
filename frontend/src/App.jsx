@@ -1,4 +1,5 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import "./App.css";
 import Layout from "./Layout";
 import CreateSpotModal from "./components/CreateSpotModal/CreateSpotModal";
 import ManageSpots from "./components/ManageSpots/ManageSpots";
@@ -14,10 +15,15 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <div className="welcome-container">
-            <h1 className="welcome-message">
-              Where Sunshine and Adventure Meet: Find Your Perfect Stay in the
-              World&apos;s Hottest Destinations!
-            </h1>
+            <div className="welcome-header">
+              <h1 className="welcome-message">
+                Where Luxury Meets Adventure
+                <span className="welcome-subtitle">
+                  Discover extraordinary stays in the world's most sought-after
+                  destinations
+                </span>
+              </h1>
+            </div>
             <SpotsIndex />
           </div>
         ),

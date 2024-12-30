@@ -40,23 +40,64 @@
 .read-the-docs {
   color: #888;
 }
-.welcome-message {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  text-align: center;
-  background: linear-gradient(90deg, #FF4E50, #F9D423);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin: 20px 0;
-  padding: 0 20px;
-  line-height: 1.4;
-  text-shadow: 0 2px 4px rgba(255, 65, 108, 0.1);
+
+.welcome-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
+.welcome-header {
+  text-align: center;
+  margin: 40px 0 48px;
+  padding: 0 20px;
+}
+
+.welcome-message {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #222222;
+  margin: 0;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "Circular", -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica Neue, sans-serif;
+}
+
+.welcome-subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #717171;
+  display: block;
+}
+
+/* Media Queries for Responsiveness */
 @media (max-width: 768px) {
   .welcome-message {
-    font-size: 20px;
+    font-size: 2rem;
+  }
+
+  .welcome-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .welcome-header {
+    margin: 32px 0 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-message {
+    font-size: 1.75rem;
+  }
+
+  .welcome-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .welcome-header {
+    margin: 24px 0 32px;
   }
 }
