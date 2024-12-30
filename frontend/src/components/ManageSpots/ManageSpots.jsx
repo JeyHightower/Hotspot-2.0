@@ -22,7 +22,7 @@ const ManageSpots = () => {
     dispatch(fetchUserSpotsThunk());
   }, [dispatch]);
 
-  const handleUpdateSuccess = (spotId) => {
+  const handleUpdate = (spotId) => {
     navigate(`/spots/${spotId}`);
   };
 
@@ -61,7 +61,7 @@ const ManageSpots = () => {
                       modalComponent={
                         <UpdateSpotModal
                           spotId={spot.id}
-                          onSuccess={() => handleUpdateSuccess(spot.id)}
+                          onUpdate={handleUpdate}
                         />
                       }
                     />
