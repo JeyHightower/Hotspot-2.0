@@ -8,8 +8,10 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true
   },
   "include": ["src/**/*", "bin/**/*", "prisma/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,9 +1,6 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
-const config = {
+export default {
   environment: process.env.NODE_ENV || "development",
-  port: process.env.PORT || 5000,
+  port: process.env.PORT || 8000,
   dbFile: process.env.DB_FILE,
   database: {
     url: process.env.DATABASE_URL,
@@ -14,5 +11,3 @@ const config = {
   },
   isProduction: process.env.NODE_ENV === "production",
 };
-
-export default config;
