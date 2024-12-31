@@ -7,14 +7,16 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": ".",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types"],
+    "noImplicitAny": false
   },
   "include": ["src/**/*", "bin/**/*", "prisma/**/*"],
   "exclude": ["node_modules", "dist"]

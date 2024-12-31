@@ -45,7 +45,10 @@ npm run seed || {
 }
 
 # Build TypeScript
-npm run build
+npm run build || {
+    echo "TypeScript build failed"
+    exit 1
+}
 
 # Create frontend directory and copy build files
 mkdir -p dist/frontend/dist
