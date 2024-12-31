@@ -1,0 +1,19 @@
+{
+  "app": {
+    "name": "Hotspot-2.0",
+    "version": "1.0.0",
+    "description": "Airbnb clone application"
+  },
+  "database": {
+    "url": "postgresql://user:password@localhost:5432/hotspot_db",
+    "ssl": false
+  },
+  "api": {
+    "prefix": "/api",
+    "version": "v1",
+    "rateLimits": {
+      "windowMs": 900000,
+      "max": 100
+    }
+  }
+}

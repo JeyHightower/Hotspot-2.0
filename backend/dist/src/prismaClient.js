@@ -36,9 +36,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.prismaClient = void 0;
 const client_1 = require("@prisma/client");
 const dotenv = __importStar(require("dotenv"));
-const prisma = global.prisma || new client_1.PrismaClient();
-if (!global.prisma) {
-    global.prisma = prisma;
-}
 dotenv.config();
+const prisma = new client_1.PrismaClient({
+    log: ["query", "info", "warn", "error"],
+});
+if (process.env.NODE_ENV === "production") {
+    console.log("Database URL:", process.env.DATABASE_URL);
+    console.log("Initializing Prisma Client in production mode");
+}
 exports.prismaClient = prisma;
+//# sourceMappingURL=prismaClient.js.map

@@ -20,3 +20,4 @@ router.use("/reviews", reviews_1.default);
 router.use("/bookings", bookings_1.default);
 router.use(images_1.default);
 exports.default = router;
+//# sourceMappingURL=api.js.map

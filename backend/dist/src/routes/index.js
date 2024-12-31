@@ -13,8 +13,7 @@ router.get("/test", (req, res) => {
 });
 // API routes
 router.get("/api/csrf/restore", (req, res) => {
-    var _a;
-    const token = ((_a = req.csrfToken) === null || _a === void 0 ? void 0 : _a.call(req)) || "";
+    const token = req.csrfToken?.() || "";
     res.cookie("XSRF-TOKEN", token);
     res.json({ "XSRF-Token": token });
 });
@@ -31,3 +30,4 @@ router.get(/^(?!\/?api).*/, (req, res) => {
     return res.sendFile(path_1.default.resolve("../frontend", "dist", "index.html"));
 });
 exports.default = router;
+//# sourceMappingURL=index.js.map

@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,15 +20,15 @@ const validateLogin = [
         .withMessage("Please provide a password."),
     validation_1.handleValidationErrors,
 ];
-router.post("/", validateLogin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
     try {
-        const user = yield prismaClient_1.prismaClient.user.findFirst({
+        const user = await prismaClient_1.prismaClient.user.findFirst({
             where: {
                 OR: [{ username: credential }, { email: credential }],
             },
         });
-        if (!user || !(yield bcryptjs_1.default.compare(password, user.hashedPassword))) {
+        if (!user || !(await bcryptjs_1.default.compare(password, user.hashedPassword))) {
             res.status(401).json({
                 message: "Invalid credentials",
                 errors: { credential: "The provided credentials were invalid." },
@@ -51,13 +42,13 @@ router.post("/", validateLogin, (req, res, next) => __awaiter(void 0, void 0, vo
             firstName: user.firstName,
             lastName: user.lastName,
         };
-        yield (0, auth_1.setTokenCookie)(res, safeUser);
+        await (0, auth_1.setTokenCookie)(res, safeUser);
         res.json({ user: safeUser });
     }
     catch (error) {
         next(error);
     }
-}));
+});
 router.delete("/", (_req, res) => {
     res.clearCookie("token");
     res.json({ message: "success" });
@@ -81,3 +72,4 @@ router.get("/", (req, res) => {
     }
 });
 exports.default = router;
+//# sourceMappingURL=session.js.map

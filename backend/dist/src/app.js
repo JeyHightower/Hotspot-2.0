@@ -9,7 +9,6 @@ const cors_1 = __importDefault(require("cors"));
 const csurf_1 = __importDefault(require("csurf"));
 const express_1 = __importDefault(require("express"));
 require("express-async-errors");
-const fs_1 = __importDefault(require("fs"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const path_1 = __importDefault(require("path"));
@@ -28,23 +27,19 @@ app.use(express_1.default.json());
 // Static file serving in production
 if (isProduction) {
     // Serve static files from the React app with proper MIME types
-    app.use("/assets", express_1.default.static(path_1.default.join(__dirname, "../frontend/dist/assets"), {
+    app.use(express_1.default.static(path_1.default.join(__dirname, "../frontend/dist"), {
         setHeaders: (res, filePath) => {
             if (filePath.endsWith(".js")) {
                 res.setHeader("Content-Type", "application/javascript");
-                res.setHeader("Cache-Control", "public, max-age=31536000");
             }
             else if (filePath.endsWith(".css")) {
                 res.setHeader("Content-Type", "text/css");
-                res.setHeader("Cache-Control", "public, max-age=31536000");
             }
             else if (filePath.endsWith(".html")) {
                 res.setHeader("Content-Type", "text/html");
             }
         },
     }));
-    // Serve the main frontend directory
-    app.use(express_1.default.static(path_1.default.join(__dirname, "../frontend/dist")));
 }
 // 2. Security middleware
 app.use((0, cors_1.default)({
@@ -52,15 +47,7 @@ app.use((0, cors_1.default)({
     credentials: true,
 }));
 app.use((0, helmet_1.default)({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'", "https:"],
-        },
-    },
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: {
         policy: "cross-origin",
@@ -90,18 +77,11 @@ app.use(index_1.default);
 // Move catch-all route to the end, after API routes
 if (isProduction) {
     app.get("*", (req, res, next) => {
+        // Skip API routes
         if (req.path.startsWith("/api")) {
             return next();
         }
-        const indexPath = path_1.default.resolve(__dirname, "../frontend/dist/index.html");
-        console.log(`Request path: ${req.path}`);
-        console.log(`Looking for index.html at: ${indexPath}`);
-        if (!fs_1.default.existsSync(indexPath)) {
-            console.error(`File not found: ${indexPath}`);
-            res.status(404).send("Frontend files not found");
-            return;
-        }
-        res.sendFile(indexPath, (err) => {
+        res.sendFile(path_1.default.join(__dirname, "../frontend/dist/index.html"), (err) => {
             if (err) {
                 console.error("Error serving index.html:", err);
                 res.status(500).send("Error serving static files");
@@ -134,3 +114,4 @@ prismaClient_1.prismaClient
     console.error("Failed to connect to database:", err);
     process.exit(1);
 });
+//# sourceMappingURL=app.js.map

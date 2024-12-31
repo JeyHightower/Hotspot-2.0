@@ -1,13 +1,14 @@
+import dotenv from "dotenv";
+import { app, prisma } from "../src/app";
+import config from "../src/config";
+
 try {
-  require("dotenv").config();
+  dotenv.config();
 } catch (error) {
   console.log("No .env file found, using process.env variables");
 }
 
-import config from "../src/config";
 const { port } = config;
-
-import { app, prisma } from "../src/app";
 
 async function main() {
   console.log("\n=== Server Initialization ===");

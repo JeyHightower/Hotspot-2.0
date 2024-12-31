@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -46,11 +37,11 @@ const validateSignup = [
         .withMessage("lastName must be passed"),
     validation_1.handleValidationErrors,
 ];
-router.post("/", validateSignup, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", validateSignup, async (req, res, next) => {
     const { email, password, username, firstName, lastName } = req.body;
-    const hashedPassword = yield bcryptjs_1.default.hash(password, 2);
+    const hashedPassword = await bcryptjs_1.default.hash(password, 2);
     try {
-        const user = yield prismaClient_1.prismaClient.user.create({
+        const user = await prismaClient_1.prismaClient.user.create({
             data: { email, username, hashedPassword, firstName, lastName },
         });
         const safeUser = {
@@ -63,7 +54,7 @@ router.post("/", validateSignup, (req, res, next) => __awaiter(void 0, void 0, v
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
-        yield (0, auth_1.setTokenCookie)(res, safeUser);
+        await (0, auth_1.setTokenCookie)(res, safeUser);
         res.json({ user: safeUser });
     }
     catch (e) {
@@ -81,5 +72,6 @@ router.post("/", validateSignup, (req, res, next) => __awaiter(void 0, void 0, v
             next(new Error("An unknown error occurred"));
         }
     }
-}));
+});
 exports.default = router;
+//# sourceMappingURL=users.js.map

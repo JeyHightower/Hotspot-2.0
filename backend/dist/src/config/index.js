@@ -13,3 +13,4 @@ exports.default = {
     },
     isProduction: process.env.NODE_ENV === "production",
 };
+//# sourceMappingURL=index.js.map

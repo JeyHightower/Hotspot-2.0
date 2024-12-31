@@ -6,3 +6,4 @@ const prisma = new client_1.PrismaClient({
     engineType: 'binary'
 });
 exports.default = prisma;
+//# sourceMappingURL=prismaClient.js.map
