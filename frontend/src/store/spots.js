@@ -106,7 +106,7 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
 
   try {
     // First create the spot
-    const response = await fetch("/api/spots", {
+    const response = await csrfFetch("/api/spots", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(spot),
@@ -121,7 +121,7 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
 
     // Then add the preview image
     if (previewImage) {
-      await fetch(`/api/spots/${newSpot.id}/images`, {
+      await csrfFetch(`/api/spots/${newSpot.id}/images`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -134,7 +134,7 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
     // Add additional images
     for (let imageUrl of images) {
       if (imageUrl) {
-        await fetch(`/api/spots/${newSpot.id}/images`, {
+        await csrfFetch(`/api/spots/${newSpot.id}/images`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -145,6 +145,7 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
       }
     }
 
+    dispatch(createSpot(newSpot));
     return newSpot;
   } catch (error) {
     throw error;
