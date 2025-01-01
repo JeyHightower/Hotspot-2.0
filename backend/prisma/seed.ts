@@ -19,9 +19,19 @@ const addImagesForSpot = async (spotId: number, urls: string[]) => {
   }
 };
 
+// Add type for User
+type UserType = {
+  id: number;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  hashedPassword: string;
+};
+
 async function main() {
   // Create demo user with upsert
-  await prisma.user.upsert({
+  const demoUser = (await prisma.user.upsert({
     where: { username: "Demo-lition" },
     update: {},
     create: {
@@ -31,10 +41,10 @@ async function main() {
       lastName: "Doe",
       hashedPassword: await bcrypt.hash("password", 10),
     },
-  });
+  })) as UserType;
 
   // Create other users with upsert
-  const otherUsers = [
+  const otherUsersData = [
     {
       email: "user1@user.io",
       username: "FakeUser1",
@@ -51,15 +61,18 @@ async function main() {
     },
   ];
 
-  for (const userData of otherUsers) {
-    await prisma.user.upsert({
+  const otherUsers = [] as UserType[];
+
+  for (const userData of otherUsersData) {
+    const user = (await prisma.user.upsert({
       where: { username: userData.username },
       update: {},
       create: userData,
-    });
+    })) as UserType;
+    otherUsers.push(user);
   }
 
-  let evil = await prisma.user.upsert({
+  const evil = (await prisma.user.upsert({
     where: { username: "city-destroyer" },
     update: {},
     create: {
@@ -69,7 +82,7 @@ async function main() {
       lastName: "Wordsworth",
       hashedPassword: bcrypt.hashSync("eggs-and-bacon"),
     },
-  });
+  })) as UserType;
 
   let evilSpot = await prisma.spot.upsert({
     where: {
@@ -456,6 +469,7 @@ async function main() {
 
   const newSpots = [
     {
+      ownerId: otherUsers[0].id,
       address: "789 Oceanfront Drive",
       city: "La Jolla",
       state: "CA",
@@ -478,6 +492,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "1200 Park Avenue",
       city: "New York",
       state: "NY",
@@ -505,10 +520,8 @@ async function main() {
   for (const spotData of spots) {
     const { images, review, stars, ...spotInfo } = spotData;
 
-    // Create or update spot
     const spot = await prisma.spot.upsert({
       where: {
-        // Use a unique combination of fields to identify the spot
         address_city_state: {
           address: spotInfo.address,
           city: spotInfo.city,
@@ -518,7 +531,7 @@ async function main() {
       update: spotInfo,
       create: {
         ...spotInfo,
-        ownerId: 1, // Demo user's ID
+        ownerId: spotInfo.ownerId || demoUser.id,
       },
     });
 
