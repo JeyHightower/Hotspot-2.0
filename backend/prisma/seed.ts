@@ -71,8 +71,25 @@ async function main() {
     },
   });
 
-  let evilSpot = await prisma.spot.create({
-    data: {
+  let evilSpot = await prisma.spot.upsert({
+    where: {
+      address_city_state: {
+        address: "nowhere",
+        city: "Threadsdale",
+        state: "WY",
+      },
+    },
+    update: {
+      ownerId: evil.id,
+      country: "US",
+      lat: 42.9662275,
+      lng: -108.0898237,
+      name: "Uncle Johns Riverside Cabin",
+      description:
+        "Come fishing with us and ride the waves at our beachfront resort*",
+      price: 400.0,
+    },
+    create: {
       ownerId: evil.id,
       address: "nowhere",
       city: "Threadsdale",
@@ -119,7 +136,8 @@ async function main() {
 
   const spots = [
     {
-      address: "123 Ocean Drive",
+      ownerId: otherUsers[0].id,
+      address: "123 Beach Drive",
       city: "Malibu",
       state: "CA",
       country: "USA",
@@ -141,6 +159,30 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
+      address: "456 Ocean View",
+      city: "Malibu",
+      state: "CA",
+      country: "USA",
+      lat: 34.0259,
+      lng: -118.7798,
+      name: "Luxury Beach House",
+      description:
+        "Modern beachfront home with panoramic ocean views and private beach access. Features include infinity pool, outdoor kitchen, and floor-to-ceiling windows.",
+      price: 899.99,
+      images: [
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+        "https://images.unsplash.com/photo-1528913775512-624d24b27b96",
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945",
+        "https://images.unsplash.com/photo-1567197427669-a0d3603a3586",
+      ],
+      review:
+        "Absolutely stunning property! The views are incredible and the house is immaculate.",
+      stars: 5,
+    },
+    {
+      ownerId: otherUsers[0].id,
       address: "789 Mountain View",
       city: "Aspen",
       state: "CO",
@@ -163,6 +205,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "456 Lakefront Ave",
       city: "Lake Tahoe",
       state: "CA",
@@ -185,6 +228,7 @@ async function main() {
       stars: 4,
     },
     {
+      ownerId: otherUsers[0].id,
       address: "234 Desert Way",
       city: "Scottsdale",
       state: "AZ",
@@ -207,6 +251,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "567 Vineyard Lane",
       city: "Napa",
       state: "CA",
@@ -229,6 +274,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[0].id,
       address: "890 City Lights Blvd",
       city: "New York",
       state: "NY",
@@ -251,6 +297,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "321 Forest Road",
       city: "Portland",
       state: "OR",
@@ -272,6 +319,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[0].id,
       address: "432 Palm Drive",
       city: "Miami Beach",
       state: "FL",
@@ -293,6 +341,7 @@ async function main() {
       stars: 4,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "765 Historic Row",
       city: "Charleston",
       state: "SC",
@@ -315,6 +364,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[0].id,
       address: "543 Ranch Road",
       city: "Jackson",
       state: "WY",
@@ -336,6 +386,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "876 Coastal Highway",
       city: "Monterey",
       state: "CA",
@@ -357,6 +408,7 @@ async function main() {
       stars: 4,
     },
     {
+      ownerId: otherUsers[0].id,
       address: "987 Island Way",
       city: "Honolulu",
       state: "HI",
@@ -379,6 +431,7 @@ async function main() {
       stars: 5,
     },
     {
+      ownerId: otherUsers[1].id,
       address: "456 Oceanfront Ave",
       city: "Miami Beach",
       state: "FL",

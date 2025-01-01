@@ -228,7 +228,7 @@ router.put(
         lng: Number(updated.lng),
         price: Number(updated.price),
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating spot:", error);
       res.status(500).json({
         message: "Error updating spot",
