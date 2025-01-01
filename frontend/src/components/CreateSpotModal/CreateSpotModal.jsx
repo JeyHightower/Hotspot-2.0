@@ -18,6 +18,8 @@ const CreateSpotModal = () => {
     price: "",
     previewImage: "",
     images: ["", "", "", ""],
+    lat: 37.7645358,
+    lng: -122.4730327,
   });
 
   const [errors, setErrors] = useState({});
@@ -47,8 +49,15 @@ const CreateSpotModal = () => {
       return;
     }
 
+    const spotData = {
+      ...formData,
+      price: Number(formData.price),
+      lat: Number(formData.lat),
+      lng: Number(formData.lng),
+    };
+
     try {
-      const newSpot = await dispatch(createSpotThunk(formData));
+      const newSpot = await dispatch(createSpotThunk(spotData));
       closeModal();
       window.location.href = `/spots/${newSpot.id}`;
     } catch (error) {

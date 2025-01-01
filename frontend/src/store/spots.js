@@ -102,17 +102,53 @@ export const updateSpotThunk = (spotId, spotData) => async (dispatch) => {
 };
 
 export const createSpotThunk = (spotData) => async (dispatch) => {
-  const response = await csrfFetch("/api/spots", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(spotData),
-  });
+  const { previewImage, images, ...spot } = spotData;
 
-  const newSpot = await response.json();
-  dispatch(createSpot(newSpot));
-  return newSpot;
+  try {
+    // First create the spot
+    const response = await fetch("/api/spots", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(spot),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to create spot");
+    }
+
+    const newSpot = await response.json();
+
+    // Then add the preview image
+    if (previewImage) {
+      await fetch(`/api/spots/${newSpot.id}/images`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: previewImage,
+          preview: true,
+        }),
+      });
+    }
+
+    // Add additional images
+    for (let imageUrl of images) {
+      if (imageUrl) {
+        await fetch(`/api/spots/${newSpot.id}/images`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: imageUrl,
+            preview: false,
+          }),
+        });
+      }
+    }
+
+    return newSpot;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const deleteSpotThunk = (spotId) => async (dispatch) => {
