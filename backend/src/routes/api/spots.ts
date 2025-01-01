@@ -170,38 +170,10 @@ router.put(
   requireAuth,
   validateNewSpot,
   async (req: Request, res: Response, next: NextFunction) => {
-    let user = req.user!;
+    try {
+      let user = req.user!;
 
-    const {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    } = req.body;
-
-    const spot = await getSpot(req.params["spotId"], res, (id) =>
-      prisma.spot.findUnique({ where: { id } })
-    );
-
-    if (!spot) {
-      return next();
-    }
-
-    if (spot.ownerId !== user.id) {
-      res
-        .status(403)
-        .json({ message: "You do not have permission to edit this spot" });
-      return;
-    }
-
-    const updated = await prisma.spot.update({
-      where: { id: spot.id },
-      data: {
+      const {
         address,
         city,
         state,
@@ -211,11 +183,59 @@ router.put(
         name,
         description,
         price,
-        updatedAt: new Date(),
-      },
-    });
+      } = req.body;
 
-    res.status(200).json({ ...updated, lat, lng, price });
+      console.log("Update request body:", req.body);
+
+      const spot = await getSpot(req.params["spotId"], res, (id) =>
+        prisma.spot.findUnique({ where: { id } })
+      );
+
+      if (!spot) {
+        return next();
+      }
+
+      if (spot.ownerId !== user.id) {
+        res
+          .status(403)
+          .json({ message: "You do not have permission to edit this spot" });
+        return;
+      }
+
+      const updateData = {
+        address,
+        city,
+        state,
+        country,
+        lat: typeof lat === "string" ? parseFloat(lat) : lat,
+        lng: typeof lng === "string" ? parseFloat(lng) : lng,
+        name,
+        description,
+        price: typeof price === "string" ? parseFloat(price) : price,
+        updatedAt: new Date(),
+      };
+
+      console.log("Update data:", updateData);
+
+      const updated = await prisma.spot.update({
+        where: { id: spot.id },
+        data: updateData,
+      });
+
+      res.status(200).json({
+        ...updated,
+        lat: Number(updated.lat),
+        lng: Number(updated.lng),
+        price: Number(updated.price),
+      });
+    } catch (error) {
+      console.error("Error updating spot:", error);
+      res.status(500).json({
+        message: "Error updating spot",
+        error:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
+      });
+    }
   }
 ) as RequestHandler;
 

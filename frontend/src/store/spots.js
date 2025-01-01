@@ -76,12 +76,16 @@ export const fetchSingleSpotThunk = (spotId) => async (dispatch) => {
 
 export const updateSpotThunk = (spotId, spotData) => async (dispatch) => {
   try {
-    // Add default lat/lng if not provided
+    console.log("Updating spot with data:", spotData); // Add logging
+
     const dataToSend = {
       ...spotData,
-      lat: spotData.lat || 0,
-      lng: spotData.lng || 0,
+      lat: Number(spotData.lat) || 0,
+      lng: Number(spotData.lng) || 0,
+      price: Number(spotData.price),
     };
+
+    console.log("Formatted data to send:", dataToSend); // Add logging
 
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "PUT",
@@ -91,12 +95,17 @@ export const updateSpotThunk = (spotId, spotData) => async (dispatch) => {
       body: JSON.stringify(dataToSend),
     });
 
-    if (response.ok) {
-      const spot = await response.json();
-      dispatch(getSingleSpot(spot));
-      return spot;
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Update failed:", errorData); // Add error logging
+      throw new Error(errorData.message || "Failed to update spot");
     }
+
+    const spot = await response.json();
+    dispatch(getSingleSpot(spot));
+    return spot;
   } catch (error) {
+    console.error("Update spot error:", error); // Add error logging
     throw error;
   }
 };
