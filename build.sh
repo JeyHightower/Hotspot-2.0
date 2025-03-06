@@ -51,6 +51,7 @@ npm run build || {
 }
 
 # Create frontend directory and copy build files
+# Modified to match the path expected in app.ts
 mkdir -p frontend/dist
 cp -r ../frontend/dist/* frontend/dist/
 chmod -R 755 frontend/dist
