@@ -45,7 +45,7 @@ function transformSpot(
     avgRating: reviews.reduce((a, i) => a + i.stars, 0) / reviews.length,
   };
 }
-
+console.log(typeof(avgRating))
 function parseSpotId(spotId: string | undefined, res: Response): number | null {
   const id = parseI32(spotId);
 

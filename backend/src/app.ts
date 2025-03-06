@@ -12,12 +12,10 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { prismaClient as prisma } from "./prismaClient";
-
-import data from "./config";
-import routes from "./routes/index";
+// import data from "./config"; // remove if config is not used
+// const { environment } = data; // remove if config is not used
 const app = express();
-const { environment } = data;
-const isProduction = environment === "production";
+const isProduction = process.env.NODE_ENV === "production";
 
 // 1. Basic middleware
 app.use(morgan("dev"));
@@ -43,12 +41,22 @@ if (isProduction) {
 }
 
 // 2. Security middleware
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+if (!isProduction) {
+  app.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+    })
+  );
+} else {
+  // Production CORS (could be your deployment URL)
+  app.use(
+    cors({
+      origin: true, // or your production domain
+      credentials: true,
+    })
+  );
+}
 
 app.use(
   helmet({
@@ -137,5 +145,11 @@ prisma
     console.error("Failed to connect to database:", err);
     process.exit(1);
   });
+
+// Replace or add a listener block:
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
 
 export { app, prisma };

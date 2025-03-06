@@ -51,9 +51,9 @@ npm run build || {
 }
 
 # Create frontend directory and copy build files
-mkdir -p dist/frontend/dist
-cp -r ../frontend/dist/* dist/frontend/dist/
-chmod -R 755 dist/frontend/dist
+mkdir -p frontend/dist
+cp -r ../frontend/dist/* frontend/dist/
+chmod -R 755 frontend/dist
 
 # Remove dev dependencies after build
 npm prune --production
